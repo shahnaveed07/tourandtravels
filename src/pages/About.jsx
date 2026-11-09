@@ -1,7 +1,12 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Compass, HeartHandshake, Leaf, Sparkles } from 'lucide-react';
 
 export default function About({ onEnquire }) {
+  useEffect(() => {
+    document.title = 'About Us — Brand Identity Tour & Travel';
+  }, []);
+
   return <main className="inner-page">
     <section className="inner-hero about-hero"><div className="container inner-hero-content"><div className="breadcrumbs"><Link to="/">Home</Link><span>/</span><span>About us</span></div><span className="eyebrow">A LOCAL POINT OF VIEW. A PERSONAL WAY TO TRAVEL.</span><h1>We believe the<br/><i>journey is yours.</i></h1><p>Good travel begins with listening. The rest is thoughtful planning, local understanding and room for the moments you didn't plan.</p></div></section>
     <section className="section about-story"><div className="container about-story-grid"><div className="about-story-image"><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=85" alt="Mountain valley and river" loading="lazy"/><span>THE PLACE THAT INSPIRES US</span></div><div><span className="eyebrow">OUR STORY</span><h2>Rooted in the place.<br/><i>Open to the world.</i></h2><p>Brand Identity Tour & Travel is a sample travel brand created to bring together destination discovery, accommodation planning, transport and on-trip coordination under one roof.</p><p>Our approach is simple: understand what matters to each traveller, create a practical route and make the moving parts feel connected. Every journey should have enough structure to feel easy and enough freedom to feel personal.</p><p className="about-signature">The Brand Identity team</p><button className="text-link" onClick={() => onEnquire()}>Start a conversation <ArrowUpRight size={15}/></button></div></div></section>

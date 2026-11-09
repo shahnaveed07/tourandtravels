@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://shahnaveed07.github.io/tourandtravels/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://shahnaveed07.github.io/tourandtravels/packages</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://shahnaveed07.github.io/tourandtravels/services</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://shahnaveed07.github.io/tourandtravels/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://shahnaveed07.github.io/tourandtravels/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Destinations -->
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/destinations/srinagar</loc><priority>0.8</priority></url>
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/destinations/gulmarg</loc><priority>0.8</priority></url>
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/destinations/pahalgam</loc><priority>0.8</priority></url>
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/destinations/sonamarg</loc><priority>0.8</priority></url>
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/destinations/gurez-valley</loc><priority>0.8</priority></url>
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/destinations/doodhpathri</loc><priority>0.8</priority></url>
+  <!-- Guides -->
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/travel-guides/getting-here-arrival-planning</loc><priority>0.7</priority></url>
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/travel-guides/choosing-trip-length-duration</loc><priority>0.7</priority></url>
+  <url><loc>https://shahnaveed07.github.io/tourandtravels/travel-guides/kashmir-travel-tips-essentials</loc><priority>0.7</priority></url>
+</urlset>

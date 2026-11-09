@@ -16,7 +16,7 @@ export default function Home({ onEnquire }) {
   const findTrip = (event) => {
     event.preventDefault();
     const params = new URLSearchParams();
-    if (place) params.set('q', place);
+    if (place) params.set('dest', place);
     if (duration) params.set('duration', duration);
     if (date) params.set('date', date);
     navigate(`/packages?${params.toString()}`);
@@ -28,18 +28,18 @@ export default function Home({ onEnquire }) {
         <img className="hero-image" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2400&q=90" alt="A wide mountain landscape at golden hour" />
         <div className="hero-shade" />
         <div className="container hero-content">
-          <div className="hero-copy"><span className="hero-kicker"><span /> TRAVEL, WITH A SENSE OF WONDER</span><h1>More than a place.<br/><i>A feeling.</i></h1><p>Some journeys stay with you long after the road ends. Find yours in the mountains, meadows and still waters of Kashmir.</p><div className="hero-buttons"><Link to="/packages" className="button button-light">Explore our trips <ArrowUpRight size={16}/></Link><button className="hero-text-link" onClick={() => onEnquire()}>Plan with a local <MoveRight size={17}/></button></div></div>
+          <div className="hero-copy"><span className="hero-kicker"><span /> TRAVEL, WITH A SENSE OF WONDER</span><h1>More than a place.<br/><i>A feeling.</i></h1><p>Some journeys stay with you long after the road ends. Find yours in the mountains, meadows and still waters of Kashmir.</p><div className="hero-buttons"><Link to="/packages" className="button button-light">Explore our trips <ArrowUpRight size={16}/></Link><button className="hero-text-link" onClick={() => onEnquire('Custom Kashmir Journey')}>Plan with a local <MoveRight size={17}/></button></div></div>
           <div className="hero-caption"><span className="caption-line"/><span>THE KASHMIR VALLEY</span><span className="caption-muted">34°05' N · 74°50' E</span></div>
           <div className="hero-side-note">A JOURNEY WORTH TAKING<br/>AGAIN AND AGAIN</div>
         </div>
-        <div className="hero-bottom container"><span>CURATED JOURNEYS</span><span className="hero-bottom-center">Mountains. Meadows. Memories.</span><span>01 — 06</span></div>
+        <div className="hero-bottom container"><span>CURATED JOURNEYS</span><span className="hero-bottom-center">Mountains. Meadows. Memories.</span><span>01 — 08</span></div>
       </section>
 
       <section className="trip-finder-wrap container" aria-label="Find your trip">
         <form className="trip-finder" onSubmit={findTrip}>
           <label className="finder-field"><span className="finder-icon"><MapPin size={18}/></span><span><small>WHERE TO?</small><select value={place} onChange={e => setPlace(e.target.value)}><option value="">Choose a destination</option>{destinations.map(d => <option key={d.slug} value={d.name}>{d.name}</option>)}</select></span></label>
-          <label className="finder-field"><span className="finder-icon"><CalendarDays size={18}/></span><span><small>WHEN ARE YOU GOING?</small><input type="date" value={date} onChange={e => setDate(e.target.value)} /></span></label>
-          <label className="finder-field"><span className="finder-icon"><Compass size={18}/></span><span><small>HOW LONG?</small><select value={duration} onChange={e => setDuration(e.target.value)}><option value="">Any duration</option>{['3 Days','4 Days','5 Days','6 Days','7 Days'].map(v => <option key={v}>{v}</option>)}</select></span></label>
+          <label className="finder-field"><span className="finder-icon"><CalendarDays size={18}/></span><span><small>WHEN ARE YOU GOING?</small><input type="date" value={date} min={new Date().toISOString().split('T')[0]} onChange={e => setDate(e.target.value)} /></span></label>
+          <label className="finder-field"><span className="finder-icon"><Compass size={18}/></span><span><small>HOW LONG?</small><select value={duration} onChange={e => setDuration(e.target.value)}><option value="">Any duration</option>{['2 Days','3 Days','4 Days','5 Days','6 Days','7 Days','8 Days'].map(v => <option key={v}>{v}</option>)}</select></span></label>
           <button className="button button-dark finder-submit" type="submit">Find my trip <ArrowUpRight size={16}/></button>
         </form>
       </section>
@@ -85,7 +85,7 @@ export default function Home({ onEnquire }) {
 
       <section className="section section-about-band"><div className="container about-band-grid"><div className="about-band-image"><img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1200&q=85" alt="Quiet waters at dusk" loading="lazy"/><span>ROOTED IN PLACE</span></div><div className="about-band-copy"><span className="eyebrow">BASED IN KASHMIR. HERE FOR YOUR JOURNEY.</span><h2>You bring the plans.<br/><i>We bring the local.</i></h2><p>Brand Identity Tour & Travel is a sample travel brand built around personal planning, thoughtful coordination and the belief that the journey should feel as good as the destination.</p><p>From the first idea to the final transfer, we make space for the details that matter to you.</p><Link to="/about" className="text-link">A little about us <ArrowUpRight size={15}/></Link></div></div></section>
 
-      <section className="section section-guides"><div className="container"><SectionTitle eyebrow="A LITTLE PLANNING GOES A LONG WAY" title={<>Know before <i>you go.</i></>} text="Useful ideas for a more relaxed, better-prepared journey." action={<Link to="/services" className="text-link">Travel tips & support <ArrowUpRight size={15}/></Link>} /><div className="guides-grid">{guides.map((guide, index) => <article className="guide-card" key={guide.title}><Link className="guide-image" to="/services"><img src={guide.image} alt="Kashmir travel guide" loading="lazy"/><span><ArrowUpRight size={17}/></span></Link><small>{guide.category}</small><h3>{guide.title}</h3><p>{guide.description}</p></article>)}</div></div></section>
+      <section className="section section-guides"><div className="container"><SectionTitle eyebrow="A LITTLE PLANNING GOES A LONG WAY" title={<>Know before <i>you go.</i></>} text="Useful practical ideas for a more relaxed, better-prepared Kashmir journey." /><div className="guides-grid">{guides.map((guide) => <article className="guide-card" key={guide.slug}><Link className="guide-image" to={`/travel-guides/${guide.slug}`}><img src={guide.image} alt={guide.title} loading="lazy"/><span><ArrowUpRight size={17}/></span></Link><small>{guide.category}</small><h3><Link to={`/travel-guides/${guide.slug}`}>{guide.title}</Link></h3><p>{guide.description}</p></article>)}</div></div></section>
 
       <section className="section section-why"><div className="container why-layout"><div><span className="eyebrow">WHY TRAVEL WITH US</span><h2>The little details<br/>make the <i>difference.</i></h2><p>Good travel is not just about where you go. It's about how every part of the journey comes together.</p><button onClick={() => onEnquire()} className="button button-light">Let's talk about your trip <ArrowUpRight size={16}/></button></div><div className="why-points">{[['01','A local point of view','Practical destination knowledge and thoughtful route planning.'],['02','One connected plan','Stay, transport and experiences considered together.'],['03','Space to make it yours','Flexible ideas shaped around your pace and preferences.'],['04','Clear conversations','Written details and transparent expectations before booking.']].map(row => <div className="why-point" key={row[0]}><span>{row[0]}</span><div><h3>{row[1]}</h3><p>{row[2]}</p></div><Check size={17}/></div>)}</div></div></section>
 

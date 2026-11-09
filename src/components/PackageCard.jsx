@@ -5,7 +5,14 @@ export default function PackageCard({ item, onEnquire, compact = false }) {
   return (
     <article className={`package-card${compact ? ' compact' : ''}`}>
       <Link to={`/packages/${item.slug}`} className="package-image-wrap">
-        <img src={item.image} alt={`${item.title} tour scenery`} loading="lazy" />
+        <img
+          src={item.image}
+          alt={`${item.title} tour scenery`}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85';
+          }}
+        />
         {item.tag && <span className="image-tag">{item.tag}</span>}
         <span className="image-arrow"><ArrowUpRight size={18}/></span>
       </Link>

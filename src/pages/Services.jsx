@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, CarFront, Headphones, Hotel, MapPinned, Users, Waves } from 'lucide-react';
 
@@ -11,6 +12,10 @@ const serviceDetails = [
 ];
 
 export default function Services({ onEnquire }) {
+  useEffect(() => {
+    document.title = 'Travel Services — Brand Identity Tour & Travel';
+  }, []);
+
   return <main className="inner-page">
     <section className="inner-hero services-hero"><div className="container inner-hero-content"><div className="breadcrumbs"><Link to="/">Home</Link><span>/</span><span>Services</span></div><span className="eyebrow">THE DETAILS, THOUGHTFULLY CONNECTED</span><h1>Travel well.<br/><i>We'll handle the in-between.</i></h1><p>From the first route idea to the last transfer, bring the pieces together with one considered plan.</p></div></section>
     <section className="section service-detail-section"><div className="container"><div className="service-page-intro"><span className="eyebrow">WHAT WE CAN HELP WITH</span><h2>One journey.<br/><i>Every moving part.</i></h2><p>Choose one service or combine a few into a complete travel plan. The final scope and inclusions are always confirmed in writing.</p></div><div className="service-detail-list">{serviceDetails.map(service => { const Icon = service.icon; return <article className="service-detail-row" id={service.id} key={service.id}><div className="service-detail-mark"><span>{service.no}</span><Icon size={25}/></div><div className="service-detail-copy"><h3>{service.title}</h3><p>{service.copy}</p><ul>{service.bullets.map(b => <li key={b}>{b}</li>)}</ul></div><button className="round-arrow" onClick={() => onEnquire(service.title)} aria-label={`Enquire about ${service.title}`}><ArrowUpRight size={20}/></button></article>; })}</div></div></section>
