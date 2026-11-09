@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Compass, HeartHandshake, Leaf, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Compass, HeartHandshake, Leaf, MapPin, Sparkles } from 'lucide-react';
+import { brand } from '../data.js';
 import { siteImages } from '../imageCatalog.js';
+import SocialLinks from '../components/SocialLinks.jsx';
 import usePageSEO from '../hooks/usePageSEO.js';
 
 export default function About({ onEnquire }) {
@@ -35,8 +37,21 @@ export default function About({ onEnquire }) {
             <p className="about-signature">The Brand Identity team</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', alignItems: 'center' }}>
               <button className="text-link" onClick={() => onEnquire()}>Start a conversation <ArrowUpRight size={15}/></button>
+              <a
+                href={brand.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-link"
+                aria-label="View our Sopore office on Google Maps"
+              >
+                <MapPin size={14} /> View on Google Maps <ArrowUpRight size={15}/>
+              </a>
               <Link to="/packages" className="text-link">Explore Kashmir tour packages <ArrowUpRight size={15}/></Link>
-              <Link to="/services" className="text-link">View our travel services <ArrowUpRight size={15}/></Link>
+              <Link to="/payments" className="text-link">Payment Methods <ArrowUpRight size={15}/></Link>
+            </div>
+            <div className="about-social-strip">
+              <span className="eyebrow">FOLLOW OUR VALLEY UPDATES</span>
+              <SocialLinks variant="cards" />
             </div>
           </div>
         </div>

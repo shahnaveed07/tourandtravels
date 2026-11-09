@@ -3,7 +3,22 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { brand, destinations, packages, guides, services, faqs } from '../src/data.js';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
+import { brand, destinations, packages, guides, services, faqs, paymentDetails } from '../src/data.js';
+import {
+  isUpiConfigured,
+  isBankConfigured,
+  isQrConfigured,
+  buildUpiIntentUrl,
+  formatBankDetailsText,
+  buildPaymentReferenceMessage,
+  buildPaymentReferenceWhatsAppUrl,
+  buildPaymentReferenceMailtoUrl,
+} from '../src/paymentConfig.js';
+import { getConfiguredSocialItems } from '../src/components/SocialLinks.jsx';
+import Payments from '../src/pages/Payments.jsx';
 import { siteImages } from '../src/imageCatalog.js';
 import {
   SITE_ORIGIN,
@@ -11,6 +26,7 @@ import {
   getAllPrerenderRoutes,
   getRouteSEO,
   toCanonicalUrl,
+  travelAgencySchema,
 } from '../src/seoData.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -31,7 +47,7 @@ function getAllFiles(dirPath, arrayOfFiles = []) {
   return arrayOfFiles;
 }
 
-test('Brand data has required fields and verified contact formats', () => {
+test('Brand data has required fields, verified contact formats, Google Maps link, and official social URLs', () => {
   assert.equal(brand.name, 'Brand Identity');
   assert.equal(brand.descriptor, 'Tour & Travel');
   assert.equal(brand.phone, '+91 6006343335');
@@ -40,6 +56,23 @@ test('Brand data has required fields and verified contact formats', () => {
   assert.equal(brand.pinCode, '193201');
   assert.ok(brand.address.includes('Bismillah Market, Sopore, Baramulla'));
   assert.ok(brand.mapUrl.startsWith('https://www.google.com/maps/search/?api=1&query='));
+  assert.equal(brand.social.facebook, 'https://www.facebook.com/brandidentitytourntravel');
+  assert.equal(brand.social.instagram, 'https://www.instagram.com/brandidentitytourntravel/');
+  assert.equal(brand.social.youtube, 'https://www.youtube.com/@brandidentitytourntravel');
+
+  const socialItems = getConfiguredSocialItems();
+  assert.equal(socialItems.length, 3);
+  assert.deepEqual(
+    socialItems.map((s) => s.key),
+    ['facebook', 'instagram', 'youtube']
+  );
+
+  assert.equal(travelAgencySchema.hasMap, brand.mapUrl);
+  assert.deepEqual(travelAgencySchema.sameAs, [
+    'https://www.facebook.com/brandidentitytourntravel',
+    'https://www.instagram.com/brandidentitytourntravel/',
+    'https://www.youtube.com/@brandidentitytourntravel',
+  ]);
 });
 
 test('1–3. Destination, package, and travel guide slugs are unique and non-empty', () => {
@@ -153,7 +186,7 @@ test('8. Every image path in src/data.js and src/imageCatalog.js exists on disk 
   }
 });
 
-test('9–10. public/sitemap.xml and public/robots.txt contain all 22 canonical https://www.bittkashmir.in URLs', () => {
+test('9–10. public/sitemap.xml and public/robots.txt contain all 23 canonical https://www.bittkashmir.in URLs (including /payments)', () => {
   const robotsTxt = fs.readFileSync(path.join(publicDir, 'robots.txt'), 'utf8');
   assert.ok(robotsTxt.includes('User-agent: *'), 'robots.txt must include User-agent: *');
   assert.ok(robotsTxt.includes('Allow: /'), 'robots.txt must include Allow: /');
@@ -168,8 +201,9 @@ test('9–10. public/sitemap.xml and public/robots.txt contain all 22 canonical 
   const locMatches = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   const expectedUrls = getIndexableRoutes().map((r) => toCanonicalUrl(r));
 
-  assert.equal(expectedUrls.length, 22, 'Expected 22 indexable routes (1 home + 4 static + 6 dest + 8 pkg + 3 guides)');
-  assert.equal(locMatches.length, 22, `Expected 22 <loc> entries in sitemap.xml, found ${locMatches.length}`);
+  assert.equal(expectedUrls.length, 23, 'Expected 23 indexable routes (1 home + 5 static + 6 dest + 8 pkg + 3 guides)');
+  assert.equal(locMatches.length, 23, `Expected 23 <loc> entries in sitemap.xml, found ${locMatches.length}`);
+  assert.ok(locMatches.includes('https://www.bittkashmir.in/payments'), 'sitemap.xml must include https://www.bittkashmir.in/payments');
 
   for (const expectedUrl of expectedUrls) {
     assert.ok(
@@ -233,7 +267,7 @@ test('12. Internal links, hash anchors, and external target="_blank" security at
   }
 });
 
-test('13. All route SEO configurations have unique titles, unique descriptions, single canonicals, and valid JSON-LD', () => {
+test('13. All route SEO configurations have unique titles, unique descriptions, single canonicals, and valid JSON-LD (with zero banking/UPI data in metadata)', () => {
   const allRoutes = [...getAllPrerenderRoutes(), '/404-not-found'];
   const seenTitles = new Map();
   const seenDescriptions = new Map();
@@ -276,7 +310,16 @@ test('13. All route SEO configurations have unique titles, unique descriptions, 
     const serialized = JSON.stringify(seo.jsonLd);
     assert.doesNotThrow(() => JSON.parse(serialized), `Invalid JSON-LD on route ${route}`);
     assert.ok(serialized.includes('TravelAgency'), `Route ${route} JSON-LD must include TravelAgency`);
+
+    // Ensure no bank account numbers, IFSC codes, or UPI VPA strings appear in JSON-LD or SEO metadata
+    assert.ok(!/upi:\/\/pay/i.test(serialized), `JSON-LD on ${route} must not expose UPI links`);
+    assert.ok(!/ifsc/i.test(serialized), `JSON-LD on ${route} must not expose IFSC details`);
+    assert.ok(!/accountNumber/i.test(serialized), `JSON-LD on ${route} must not expose bank account numbers`);
   }
+
+  const paymentsSeo = getRouteSEO('/payments');
+  assert.equal(paymentsSeo.canonical, 'https://www.bittkashmir.in/payments');
+  assert.ok(paymentsSeo.title.includes('Payment Methods'));
 
   // Filtered package query URLs must resolve to canonical https://www.bittkashmir.in/packages
   const filteredPackagesSEO = getRouteSEO('/packages?dest=Gulmarg&duration=4%20Days&type=Family');
@@ -317,6 +360,118 @@ test('14. Build-time prerender HTML injection & dist output verification', async
     assert.ok(fs.existsSync(path.join(distDir, 'CNAME')), 'dist/CNAME must exist');
     assert.ok(fs.existsSync(path.join(distDir, 'googlefea446053fa36602.html')), 'dist/googlefea446053fa36602.html must exist');
   }
+});
+
+test('15. Central paymentDetails configuration, UPI intent builder, bank details formatter, and Payments page rendering', () => {
+  // Default paymentDetails must be safely unconfigured with zero fake values
+  assert.equal(paymentDetails.upi.enabled, false);
+  assert.equal(paymentDetails.upi.id, '');
+  assert.equal(paymentDetails.upi.payeeName, '');
+  assert.equal(paymentDetails.bank.enabled, false);
+  assert.equal(paymentDetails.bank.accountHolder, '');
+  assert.equal(paymentDetails.bank.bankName, '');
+  assert.equal(paymentDetails.bank.accountNumber, '');
+  assert.equal(paymentDetails.bank.ifsc, '');
+  assert.equal(paymentDetails.bank.accountType, '');
+  assert.equal(paymentDetails.bank.branch, '');
+  assert.equal(paymentDetails.qr.enabled, false);
+  assert.equal(paymentDetails.qr.image, '');
+  assert.equal(paymentDetails.qr.alt, 'Brand Identity Tour & Travel official UPI payment QR');
+
+  assert.equal(isUpiConfigured(paymentDetails.upi), false);
+  assert.equal(isBankConfigured(paymentDetails.bank), false);
+  assert.equal(isQrConfigured(paymentDetails.qr), false);
+  assert.equal(buildUpiIntentUrl(paymentDetails.upi), '');
+  assert.equal(formatBankDetailsText(paymentDetails.bank), '');
+
+  // Test configured payment details and helpers
+  const sampleConfigured = {
+    upi: {
+      enabled: true,
+      id: 'bittkashmir@okaxis',
+      payeeName: 'Brand Identity Tour & Travel',
+    },
+    bank: {
+      enabled: true,
+      accountHolder: 'Brand Identity Tour & Travel',
+      bankName: 'J&K Bank',
+      accountNumber: '0011010100001234',
+      ifsc: 'JAKA0SOPORE',
+      accountType: 'Current Account',
+      branch: 'Sopore Main Branch',
+    },
+    qr: {
+      enabled: true,
+      image: '/images/payment-qr.webp',
+      alt: 'Brand Identity Tour & Travel official UPI payment QR',
+    },
+  };
+
+  assert.equal(isUpiConfigured(sampleConfigured.upi), true);
+  assert.equal(isBankConfigured(sampleConfigured.bank), true);
+  assert.equal(isQrConfigured(sampleConfigured.qr), true);
+
+  const upiUrl = buildUpiIntentUrl(sampleConfigured.upi);
+  assert.equal(
+    upiUrl,
+    'upi://pay?pa=bittkashmir%40okaxis&pn=Brand%20Identity%20Tour%20%26%20Travel&cu=INR'
+  );
+  assert.ok(!upiUrl.includes('am='), 'UPI intent URL must not hardcode a payment amount');
+
+  const bankText = formatBankDetailsText(sampleConfigured.bank);
+  assert.ok(bankText.includes('Account Holder Name: Brand Identity Tour & Travel'));
+  assert.ok(bankText.includes('Bank Name: J&K Bank'));
+  assert.ok(bankText.includes('Account Number: 0011010100001234'));
+  assert.ok(bankText.includes('IFSC Code: JAKA0SOPORE'));
+  assert.ok(bankText.includes('Account Type: Current Account'));
+  assert.ok(bankText.includes('Branch: Sopore Main Branch'));
+
+  // Test post-transfer reference message builders
+  const sampleForm = {
+    bookingRef: 'BITT-2026-104',
+    utr: '412345678901',
+    paymentDate: '2026-05-15',
+    amount: '18,500',
+    payerName: 'Aamir Khan',
+    method: 'UPI Transfer',
+  };
+  const refMsg = buildPaymentReferenceMessage(brand, sampleForm);
+  assert.ok(refMsg.includes('BITT-2026-104'));
+  assert.ok(refMsg.includes('412345678901'));
+  assert.ok(refMsg.includes('₹18,500'));
+
+  const waUrl = buildPaymentReferenceWhatsAppUrl(brand, sampleForm);
+  assert.ok(waUrl.startsWith('https://wa.me/916006343335?text='));
+
+  const mailUrl = buildPaymentReferenceMailtoUrl(brand, sampleForm);
+  assert.ok(mailUrl.startsWith('mailto:bookings@bittkashmir.in?subject='));
+
+  // Render default unconfigured Payments page
+  const unconfiguredHtml = renderToString(
+    React.createElement(StaticRouter, { location: '/payments' }, React.createElement(Payments, { config: paymentDetails }))
+  );
+  assert.ok(
+    unconfiguredHtml.includes(
+      'Please make payments only after receiving your confirmed itinerary and payment instructions from Brand Identity Tour &amp; Travel. Verify the beneficiary name and payment details before completing a transfer.'
+    ),
+    'Payments page must display exact customer safety notice'
+  );
+  assert.ok(unconfiguredHtml.includes('data-testid="upi-unconfigured"'));
+  assert.ok(unconfiguredHtml.includes('Request UPI details on WhatsApp'));
+
+  // Render configured Payments page to verify UPI, Bank, and QR rendering
+  const configuredHtml = renderToString(
+    React.createElement(StaticRouter, { location: '/payments' }, React.createElement(Payments, { config: sampleConfigured }))
+  );
+  assert.ok(configuredHtml.includes('bittkashmir@okaxis'));
+  assert.ok(configuredHtml.includes('Copy UPI ID'));
+  assert.ok(configuredHtml.includes('Open UPI App'));
+  assert.ok(configuredHtml.includes('0011010100001234'));
+  assert.ok(configuredHtml.includes('JAKA0SOPORE'));
+  assert.ok(configuredHtml.includes('Copy All Bank Details'));
+  assert.ok(configuredHtml.includes('Scan using any UPI application'));
+  assert.ok(configuredHtml.includes('View Larger QR'));
+  assert.ok(configuredHtml.includes('Download QR'));
 });
 
 test('Duration and package itinerary consistency', () => {

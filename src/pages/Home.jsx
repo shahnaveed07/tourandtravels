@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, CalendarDays, CarFront, ChevronDown, Compass, Headphones, Hotel, MapPin, MoveRight, Sparkles, Waves, Users, Check } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle.jsx';
 import PackageCard from '../components/PackageCard.jsx';
-import { destinations, packages, services, guides, faqs } from '../data.js';
+import { brand, destinations, packages, services, guides, faqs } from '../data.js';
 import { siteImages } from '../imageCatalog.js';
 import usePageSEO from '../hooks/usePageSEO.js';
 
@@ -98,7 +98,7 @@ export default function Home({ onEnquire }) {
         </div>
       </section>
 
-      <section className="section section-about-band"><div className="container about-band-grid"><div className="about-band-image"><img src={siteImages.company.office} alt="Brand Identity Tour & Travel office interior in Sopore" loading="lazy"/><span>ROOTED IN PLACE</span></div><div className="about-band-copy"><span className="eyebrow">BASED IN KASHMIR. HERE FOR YOUR JOURNEY.</span><h2>You bring the plans.<br/><i>We bring the local.</i></h2><p>Brand Identity Tour & Travel is built around personal planning, thoughtful coordination and the belief that the journey should feel as good as the destination.</p><p>From the first idea to the final transfer, we make space for the details that matter to you.</p><Link to="/about" className="text-link">A little about us <ArrowUpRight size={15}/></Link></div></div></section>
+      <section className="section section-about-band"><div className="container about-band-grid"><div className="about-band-image"><img src={siteImages.company.office} alt="Brand Identity Tour & Travel office interior in Sopore" loading="lazy"/><span>ROOTED IN PLACE</span></div><div className="about-band-copy"><span className="eyebrow">BASED IN KASHMIR. HERE FOR YOUR JOURNEY.</span><h2>You bring the plans.<br/><i>We bring the local.</i></h2><p>Brand Identity Tour & Travel is built around personal planning, thoughtful coordination and the belief that the journey should feel as good as the destination.</p><p>From the first idea to the final transfer, we make space for the details that matter to you.</p><div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'center' }}><Link to="/about" className="text-link">A little about us <ArrowUpRight size={15}/></Link><a href={brand.mapUrl} target="_blank" rel="noopener noreferrer" className="text-link">View on Google Maps <ArrowUpRight size={15}/></a></div></div></div></section>
 
       <section className="section section-guides"><div className="container"><SectionTitle eyebrow="A LITTLE PLANNING GOES A LONG WAY" title={<>Know before <i>you go.</i></>} text="Useful practical ideas for a more relaxed, better-prepared Kashmir journey." /><div className="guides-grid">{guides.map((guide) => <article className="guide-card" key={guide.slug}><Link className="guide-image" to={`/travel-guides/${guide.slug}`} aria-label={`Read travel guide: ${guide.title}`}><img src={guide.image} alt={guide.title} loading="lazy" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = siteImages.hero; }}/><span><ArrowUpRight size={17}/></span></Link><small>{guide.category}</small><h3><Link to={`/travel-guides/${guide.slug}`}>{guide.title}</Link></h3><p>{guide.description}</p></article>)}</div></div></section>
 

@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, ArrowUpRight, Phone } from 'lucide-react';
 import { brand, destinations, packages } from '../data.js';
 import { siteImages } from '../imageCatalog.js';
+import SocialLinks from './SocialLinks.jsx';
 
 const navClass = ({ isActive }) => `nav-link${isActive ? ' active' : ''}`;
 
@@ -53,7 +54,9 @@ export default function Header({ onEnquire }) {
               <Phone size={12} /> {brand.phone}
             </a>
             <span className="top-divider" />
-            <span>{brand.hours}</span>
+            <span className="top-strip-hours">{brand.hours}</span>
+            <span className="top-divider" />
+            <SocialLinks size={13} className="top-strip-social" />
           </div>
         </div>
       </div>

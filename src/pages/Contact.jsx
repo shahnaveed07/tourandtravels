@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Clock3, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { ArrowUpRight, Clock3, CreditCard, Mail, MapPin, MessageCircle, Navigation, Phone } from 'lucide-react';
 import { brand } from '../data.js';
 import { siteImages } from '../imageCatalog.js';
+import SocialLinks from '../components/SocialLinks.jsx';
 import usePageSEO from '../hooks/usePageSEO.js';
 
 export default function Contact({ onEnquire }) {
@@ -17,8 +18,14 @@ export default function Contact({ onEnquire }) {
             <span>Contact</span>
           </div>
           <span className="eyebrow">A GOOD JOURNEY STARTS WITH A CONVERSATION</span>
-          <h1>Let's talk about<br /><i>somewhere.</i></h1>
-          <p>Tell us where you want to go in Kashmir, when you plan to travel, and who is coming along.</p>
+          <h1>
+            Let&apos;s talk about
+            <br />
+            <i>somewhere.</i>
+          </h1>
+          <p>
+            Tell us where you want to go in Kashmir, when you plan to travel, and who is coming along.
+          </p>
         </div>
       </section>
 
@@ -26,14 +33,20 @@ export default function Contact({ onEnquire }) {
         <div className="container contact-layout">
           <div className="contact-info">
             <span className="eyebrow">REACH OUT TO OUR KASHMIR TEAM</span>
-            <h2>We'd love to<br /><i>hear from you.</i></h2>
+            <h2>
+              We&apos;d love to
+              <br />
+              <i>hear from you.</i>
+            </h2>
             <p>
-              Use the contact details below to speak directly with our travel coordinators, or open our detailed enquiry form to share your tentative itinerary ideas.
+              Use the contact details below to speak directly with our travel coordinators, get directions to our Sopore office, or open our enquiry form to share your tentative itinerary ideas.
             </p>
 
             <div className="contact-info-list">
               <a href={`tel:${brand.phone.replaceAll(' ', '')}`} aria-label={`Call us at ${brand.phone}`}>
-                <span><Phone size={18} /></span>
+                <span>
+                  <Phone size={18} />
+                </span>
                 <div>
                   <small>CALL DIRECTLY</small>
                   <strong>{brand.phone}</strong>
@@ -42,7 +55,9 @@ export default function Contact({ onEnquire }) {
               </a>
 
               <a href={`mailto:${brand.email}`} aria-label={`Email us at ${brand.email}`}>
-                <span><Mail size={18} /></span>
+                <span>
+                  <Mail size={18} />
+                </span>
                 <div>
                   <small>SEND AN EMAIL</small>
                   <strong>{brand.email}</strong>
@@ -51,12 +66,16 @@ export default function Contact({ onEnquire }) {
               </a>
 
               <a
-                href={`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(`Hello ${brand.name}! I would like to speak with a travel coordinator.`)}`}
+                href={`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(
+                  `Hello ${brand.name}! I would like to speak with a travel coordinator.`
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Chat on WhatsApp"
               >
-                <span><MessageCircle size={18} /></span>
+                <span>
+                  <MessageCircle size={18} />
+                </span>
                 <div>
                   <small>WHATSAPP MESSENGER</small>
                   <strong>Chat with a Coordinator</strong>
@@ -70,16 +89,31 @@ export default function Contact({ onEnquire }) {
                 rel="noopener noreferrer"
                 aria-label={`View ${brand.address} on Google Maps`}
               >
-                <span><MapPin size={18} /></span>
+                <span>
+                  <MapPin size={18} />
+                </span>
                 <div>
-                  <small>OUR OFFICE LOCATION</small>
-                  <strong>{brand.address}</strong>
+                  <small>OUR OFFICE LOCATION · GET DIRECTIONS</small>
+                  <strong>{brand.address} (PIN {brand.pinCode})</strong>
                 </div>
                 <ArrowUpRight size={16} />
               </a>
 
+              <Link to="/payments" aria-label="View payment methods and booking guidance">
+                <span>
+                  <CreditCard size={18} />
+                </span>
+                <div>
+                  <small>PAYMENT METHODS</small>
+                  <strong>UPI, Bank Transfer (NEFT / IMPS / RTGS) &amp; QR</strong>
+                </div>
+                <ArrowUpRight size={16} />
+              </Link>
+
               <div>
-                <span><Clock3 size={18} /></span>
+                <span>
+                  <Clock3 size={18} />
+                </span>
                 <div>
                   <small>OFFICE HOURS</small>
                   <strong>{brand.hours}</strong>
@@ -93,7 +127,9 @@ export default function Contact({ onEnquire }) {
               </button>
               {brand.whatsapp ? (
                 <a
-                  href={`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(`Hello ${brand.name}! I would like to enquire about traveling to Kashmir.`)}`}
+                  href={`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(
+                    `Hello ${brand.name}! I would like to enquire about traveling to Kashmir.`
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="button button-outline whatsapp-contact-btn"
@@ -107,7 +143,11 @@ export default function Contact({ onEnquire }) {
               )}
               {brand.email ? (
                 <a
-                  href={`mailto:${brand.email}?subject=${encodeURIComponent('Travel Enquiry — Brand Identity Tour & Travel')}&body=${encodeURIComponent(`Hello ${brand.name} team,\n\nI would like to enquire about planning a trip to Kashmir.\n\nWarm regards,`)}`}
+                  href={`mailto:${brand.email}?subject=${encodeURIComponent(
+                    'Travel Enquiry — Brand Identity Tour & Travel'
+                  )}&body=${encodeURIComponent(
+                    `Hello ${brand.name} team,\n\nI would like to enquire about planning a trip to Kashmir.\n\nWarm regards,`
+                  )}`}
                   className="button button-outline"
                 >
                   <Mail size={16} /> Send Email
@@ -117,30 +157,66 @@ export default function Contact({ onEnquire }) {
                   Email Pending
                 </button>
               )}
+              <a
+                href={brand.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="button button-outline"
+                aria-label="View office on Google Maps and get directions"
+              >
+                <Navigation size={15} /> View on Google Maps
+              </a>
             </div>
           </div>
 
-          <div className="contact-visual">
-            <img
-              src={siteImages.company.storefront}
-              alt="Brand Identity Tour & Travel storefront at Bismillah Market, Sopore"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = siteImages.hero;
-              }}
-            />
-            <div className="contact-visual-note">
-              <span className="eyebrow">BRAND IDENTITY TOUR & TRAVEL</span>
-              <strong>Make the journey<br /><i>your own.</i></strong>
+          <div className="contact-visual-column">
+            <div className="contact-visual">
+              <img
+                src={siteImages.company.storefront}
+                alt="Brand Identity Tour & Travel storefront at Bismillah Market, Sopore"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = siteImages.hero;
+                }}
+              />
+              <div className="contact-visual-note">
+                <span className="eyebrow">BISMILLAH MARKET, SOPORE</span>
+                <strong>
+                  Visit our head office
+                  <br />
+                  <i>in Kashmir.</i>
+                </strong>
+                <a
+                  href={brand.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link contact-map-inline"
+                >
+                  Get Directions on Google Maps <ArrowUpRight size={14} />
+                </a>
+              </div>
+            </div>
+
+            <div className="contact-social-block">
+              <span className="eyebrow">OFFICIAL SOCIAL CHANNELS</span>
+              <h3>Connect with Brand Identity Tour &amp; Travel</h3>
+              <SocialLinks variant="cards" />
             </div>
           </div>
         </div>
       </section>
 
       <section className="contact-bottom container">
-        <span>Have a specific destination in mind?</span>
-        <Link to="/destinations/srinagar">Explore Srinagar <ArrowUpRight size={15} /></Link>
-        <Link to="/packages">Browse all tour packages <ArrowUpRight size={15} /></Link>
+        <span>Explore more before you travel:</span>
+        <Link to="/destinations/srinagar">
+          Explore Srinagar <ArrowUpRight size={15} />
+        </Link>
+        <Link to="/packages">
+          Browse all tour packages <ArrowUpRight size={15} />
+        </Link>
+        <Link to="/payments">
+          Payment Methods <ArrowUpRight size={15} />
+        </Link>
       </section>
     </main>
   );

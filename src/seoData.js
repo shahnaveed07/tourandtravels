@@ -39,6 +39,9 @@ export const travelAgencySchema = {
   telephone: '+91-6006343335',
   email: brand.email,
   hasMap: brand.mapUrl,
+  sameAs: [brand.social?.facebook, brand.social?.instagram, brand.social?.youtube].filter(
+    (url) => typeof url === 'string' && url.startsWith('http')
+  ),
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'Bismillah Market',
@@ -79,6 +82,7 @@ export function getIndexableRoutes() {
     '/services',
     '/about',
     '/contact',
+    '/payments',
     ...destinations.map((d) => `/destinations/${d.slug}`),
     ...packages.map((p) => `/packages/${p.slug}`),
     ...guides.map((g) => `/travel-guides/${g.slug}`),
@@ -371,6 +375,35 @@ export function getRouteSEO(pathname = '/') {
         buildBreadcrumbSchema([
           { name: 'Home', url: `${SITE_ORIGIN}/` },
           { name: 'Contact', url: canonical },
+        ]),
+      ],
+    };
+  }
+
+  if (cleanPath === '/payments') {
+    const ogImage = toAbsoluteImageUrl(siteImages.company.storefront);
+    const title = 'Payment Methods & Booking Guidance — Brand Identity Tour & Travel';
+    const description =
+      'View official payment methods for Brand Identity Tour & Travel in Kashmir: UPI transfer, Mobile Banking (NEFT, IMPS, RTGS), Scan & Pay QR, and booking payment verification.';
+    return {
+      title,
+      description,
+      canonical,
+      robots: 'index, follow',
+      ogTitle: title,
+      ogDescription: description,
+      ogUrl: canonical,
+      ogImage,
+      ogType: 'website',
+      twitterCard: 'summary_large_image',
+      twitterTitle: title,
+      twitterDescription: description,
+      twitterImage: ogImage,
+      jsonLd: [
+        travelAgencySchema,
+        buildBreadcrumbSchema([
+          { name: 'Home', url: `${SITE_ORIGIN}/` },
+          { name: 'Payment Methods', url: canonical },
         ]),
       ],
     };

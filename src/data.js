@@ -1,4 +1,7 @@
 import { siteImages } from './imageCatalog.js';
+import { paymentDetails } from './paymentConfig.js';
+
+export { paymentDetails };
 
 export const brand = {
   name: 'Brand Identity',
@@ -11,9 +14,9 @@ export const brand = {
   whatsapp: '916006343335',
   mapUrl: 'https://www.google.com/maps/search/?api=1&query=Bismillah+Market%2C+Sopore%2C+Baramulla%2C+Jammu+%26+Kashmir%2C+India',
   social: {
-    instagram: '', // Set when verified official link is available
-    facebook: '',
-    youtube: ''
+    facebook: 'https://www.facebook.com/brandidentitytourntravel',
+    instagram: 'https://www.instagram.com/brandidentitytourntravel/',
+    youtube: 'https://www.youtube.com/@brandidentitytourntravel'
   }
 };
 
