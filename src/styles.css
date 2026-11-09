@@ -1107,6 +1107,70 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .field-error { color: #b73232; font-size: 11px; font-weight: 500; margin-top: 2px; }
 .field-full { grid-column: 1 / -1; }
 .submit-enquiry { min-height: 48px; margin-top: 8px; font-size: 14px; }
+.enquiry-actions-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+.channel-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 4px;
+  transition: all .2s ease;
+  min-height: 58px;
+}
+.channel-btn span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.channel-btn strong { font-size: 14px; font-weight: 700; }
+.channel-btn small { font-size: 11px; opacity: .82; margin-top: 2px; }
+.channel-whatsapp {
+  background: #1b8e45;
+  color: white;
+  border-color: #1b8e45;
+}
+.channel-whatsapp:hover:not(:disabled) {
+  background: #147236;
+  border-color: #147236;
+}
+.channel-whatsapp:disabled, .channel-email:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+.channel-email {
+  border: 1.5px solid var(--forest);
+  color: var(--forest);
+}
+.channel-email:hover:not(:disabled) {
+  background: var(--forest);
+  color: white;
+}
+.channel-summary-card {
+  background: #edf1ea;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 14px 20px;
+  margin: 16px auto 24px;
+  max-width: 440px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.channel-summary-card small { font-size: 10px; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+.channel-summary-card strong { font-size: 16px; color: var(--forest); font-family: monospace; }
+.channel-summary-card span { font-size: 12px; color: var(--ink); }
+
+.whatsapp-icon-wrap { background: #e2f5e8; color: #1b8e45; }
+.email-icon-wrap { background: #e5ece8; color: var(--forest); }
+
 .form-mode-note {
   margin-top: 16px;
   padding: 10px 14px;
@@ -1216,6 +1280,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .filter-bar { grid-template-columns: 1fr; }
   .enquiry-modal { padding: 30px 20px; }
   .enquiry-form { grid-template-columns: 1fr; }
+  .enquiry-actions-duo { grid-template-columns: 1fr; }
   .footer-main { grid-template-columns: 1fr; gap: 30px; }
 }
 

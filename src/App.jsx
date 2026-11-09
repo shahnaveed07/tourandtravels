@@ -136,16 +136,18 @@ export default function App() {
       </Routes>
       <Footer onEnquire={() => openEnquiry()} />
 
-      <a
-        className="floating-whatsapp"
-        href={`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(`Hello ${brand.name}! I would like to enquire about traveling to Kashmir.`)}`}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Chat on WhatsApp"
-      >
-        <MessageCircle size={21} />
-        <span>Chat with us</span>
-      </a>
+      {brand.whatsapp && (
+        <a
+          className="floating-whatsapp"
+          href={`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(`Hello ${brand.name}! I would like to enquire about traveling to Kashmir.`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on WhatsApp"
+        >
+          <MessageCircle size={21} />
+          <span>Chat with us</span>
+        </a>
+      )}
 
       {showScrollTop && (
         <button

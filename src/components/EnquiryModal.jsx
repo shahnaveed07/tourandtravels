@@ -1,11 +1,11 @@
 import { useEffect, useState, useId } from 'react';
-import { X, CheckCircle2, ArrowRight, MessageCircle, AlertCircle, Loader2, Send } from 'lucide-react';
+import { X, MessageCircle, Mail, ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react';
 import { brand } from '../data.js';
 
 const initialForm = {
   name: '',
-  email: '',
   phone: '',
+  email: '',
   city: '',
   travellers: '2',
   date: '',
@@ -21,11 +21,12 @@ export default function EnquiryModal({
 }) {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState('idle'); // 'idle' | 'success' | 'dispatch_ready' | 'error'
-  const [errorMessage, setErrorMessage] = useState('');
+  const [submittedChannel, setSubmittedChannel] = useState(''); // '' | 'whatsapp' | 'email'
 
   const modalTitleId = useId();
+
+  const hasWhatsApp = Boolean(brand.whatsapp && brand.whatsapp.trim().length >= 7);
+  const hasEmail = Boolean(brand.email && brand.email.includes('@'));
 
   useEffect(() => {
     if (open) {
@@ -35,9 +36,7 @@ export default function EnquiryModal({
         date: initialDate || ''
       });
       setErrors({});
-      setIsSubmitting(false);
-      setSubmitStatus('idle');
-      setErrorMessage('');
+      setSubmittedChannel('');
       document.body.classList.add('modal-open');
     } else {
       document.body.classList.remove('modal-open');
@@ -59,23 +58,23 @@ export default function EnquiryModal({
   const validate = () => {
     const errs = {};
     if (!form.name.trim()) {
-      errs.name = 'Full name is required.';
+      errs.name = 'Please provide your name.';
     } else if (form.name.trim().length < 2) {
-      errs.name = 'Please provide a valid name (at least 2 characters).';
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!form.email.trim()) {
-      errs.email = 'Email address is required.';
-    } else if (!emailRegex.test(form.email.trim())) {
-      errs.email = 'Please provide a valid email address.';
+      errs.name = 'Name must be at least 2 characters.';
     }
 
     const cleanPhone = form.phone.replace(/[\s\-()]/g, '');
     if (!form.phone.trim()) {
-      errs.phone = 'Phone number is required.';
+      errs.phone = 'Phone number is required so our team can reach you.';
     } else if (cleanPhone.length < 8 || !/^\+?[0-9]{8,15}$/.test(cleanPhone)) {
-      errs.phone = 'Please provide a valid telephone number (8–15 digits).';
+      errs.phone = 'Please provide a valid phone number (8–15 digits).';
+    }
+
+    if (form.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.email.trim())) {
+        errs.email = 'Please provide a valid email address.';
+      }
     }
 
     if (form.date) {
@@ -99,62 +98,62 @@ export default function EnquiryModal({
     }
   };
 
-  const endpoint = import.meta.env.VITE_ENQUIRY_ENDPOINT;
-
   const buildWhatsAppMessage = () => {
-    return `Hello ${brand.name} ${brand.descriptor}!\n` +
-      `I would like to enquire about a trip to Kashmir:\n\n` +
+    return `Hello ${brand.name} ${brand.descriptor}!\n\n` +
+      `I would like to enquire about traveling to Kashmir:\n\n` +
       `• Name: ${form.name.trim()}\n` +
-      `• Email: ${form.email.trim()}\n` +
       `• Phone: ${form.phone.trim()}\n` +
-      `• Travelling From: ${form.city.trim() || 'Not specified'}\n` +
-      `• Travellers: ${form.travellers}\n` +
-      `• Preferred Arrival: ${form.date || 'Flexible'}\n` +
-      `• Package of Interest: ${form.package || 'Custom Itinerary'}\n` +
-      `• Notes: ${form.message.trim() || 'None'}`;
+      (form.email.trim() ? `• Email: ${form.email.trim()}\n` : '') +
+      `• Selected Package: ${form.package || 'Custom Route'}\n` +
+      `• Travel Date: ${form.date || 'Flexible / To be discussed'}\n` +
+      `• Number of Travellers: ${form.travellers}\n` +
+      (form.city.trim() ? `• Departing From: ${form.city.trim()}\n` : '') +
+      (form.message.trim() ? `• Notes & Requirements: ${form.message.trim()}\n` : '') +
+      `\nPlease let me know availability and proposal details.`;
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const buildEmailSubject = () => {
+    const pkg = form.package ? ` — ${form.package}` : '';
+    return `Travel Enquiry${pkg} — Brand Identity Tour & Travel`;
+  };
+
+  const buildEmailBody = () => {
+    return `Dear Brand Identity Tour & Travel Team,\n\n` +
+      `I would like to enquire about planning a trip to Kashmir with the following details:\n\n` +
+      `Customer Name: ${form.name.trim()}\n` +
+      `Phone Number: ${form.phone.trim()}\n` +
+      `Email: ${form.email.trim() || 'Not specified'}\n` +
+      `Selected Package / Route: ${form.package || 'Custom Route'}\n` +
+      `Preferred Travel Date: ${form.date || 'Flexible'}\n` +
+      `Number of Travellers: ${form.travellers}\n` +
+      `Departure City: ${form.city.trim() || 'Not specified'}\n\n` +
+      `Message & Special Requirements:\n` +
+      `${form.message.trim() || 'None'}\n\n` +
+      `Warm regards,\n` +
+      `${form.name.trim()}`;
+  };
+
+  const handleSendWhatsApp = (e) => {
+    e.preventDefault();
     if (!validate()) return;
+    if (!hasWhatsApp) return;
 
-    // If an external enquiry endpoint is configured via VITE_ENQUIRY_ENDPOINT
-    if (endpoint) {
-      setIsSubmitting(true);
-      setErrorMessage('');
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...form,
-            submittedAt: new Date().toISOString()
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`Server returned status ${response.status}`);
-        }
-
-        setSubmitStatus('success');
-      } catch (err) {
-        setSubmitStatus('error');
-        setErrorMessage(
-          err.message || 'Unable to connect to the enquiry endpoint. Please try WhatsApp or email.'
-        );
-      } finally {
-        setIsSubmitting(false);
-      }
-    } else {
-      // Direct instant dispatch via WhatsApp chat
-      setSubmitStatus('dispatch_ready');
-    }
-  };
-
-  const handleWhatsAppDirect = () => {
     const text = buildWhatsAppMessage();
     const url = `https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+    setSubmittedChannel('whatsapp');
+  };
+
+  const handleSendEmail = (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    if (!hasEmail) return;
+
+    const subject = encodeURIComponent(buildEmailSubject());
+    const body = encodeURIComponent(buildEmailBody());
+    const mailtoUrl = `mailto:${brand.email}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoUrl;
+    setSubmittedChannel('email');
   };
 
   const todayStr = new Date().toISOString().split('T')[0];
@@ -176,76 +175,86 @@ export default function EnquiryModal({
           <X size={19} />
         </button>
 
-        {submitStatus === 'success' && (
-          <div className="success-state">
-            <span className="success-icon">
-              <CheckCircle2 size={36} />
-            </span>
-            <span className="eyebrow">ENQUIRY DELIVERED</span>
-            <h2>Thank you, {form.name.trim()}!</h2>
-            <p>
-              Your enquiry has been successfully delivered to our travel planning team. We will review your dates and travel requirements and respond by email within 24 hours.
-            </p>
-            <div className="success-actions">
-              <button className="button button-dark" onClick={onClose}>
-                Back to exploring <ArrowRight size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {submitStatus === 'dispatch_ready' && (
+        {submittedChannel === 'whatsapp' && (
           <div className="dispatch-notice-state">
-            <span className="dispatch-icon">
-              <MessageCircle size={36} />
+            <span className="dispatch-icon whatsapp-icon-wrap">
+              <MessageCircle size={34} />
             </span>
-            <span className="eyebrow">READY TO SEND</span>
-            <h2>Send your enquiry on WhatsApp.</h2>
+            <span className="eyebrow">CONTINUE ON WHATSAPP</span>
+            <h2>Complete your message in WhatsApp.</h2>
             <p className="dispatch-explain">
-              Connect directly with our travel planning desk in Sopore. All your itinerary preferences, guest counts, and dates are prepared and ready to send.
+              WhatsApp has been opened with your pre-filled travel details. Tap <strong>Send</strong> in WhatsApp to dispatch your enquiry directly to our Kashmir travel desk in Sopore.
             </p>
-            <p className="dispatch-recommendation">
-              Click below to start a live conversation with our Kashmir team:
-            </p>
+            <div className="channel-summary-card">
+              <small>RECIPIENT WHATSAPP</small>
+              <strong>+{brand.whatsapp}</strong>
+              <span>({brand.name} Travel Desk)</span>
+            </div>
             <div className="dispatch-actions">
-              <button className="button button-dark whatsapp-btn" onClick={handleWhatsAppDirect}>
-                <MessageCircle size={17} /> Send via WhatsApp now
+              <button
+                className="button button-dark whatsapp-btn"
+                onClick={() => {
+                  const text = buildWhatsAppMessage();
+                  window.open(`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+                }}
+              >
+                <MessageCircle size={17} /> Re-open WhatsApp
               </button>
-              <button className="button button-outline" onClick={() => setSubmitStatus('idle')}>
-                Edit enquiry details
+              <button className="button button-outline" onClick={() => setSubmittedChannel('')}>
+                <RotateCcw size={15} /> Edit details
+              </button>
+              <button className="button button-outline" onClick={onClose}>
+                Done
               </button>
             </div>
           </div>
         )}
 
-        {submitStatus === 'error' && (
-          <div className="error-state">
-            <span className="error-icon">
-              <AlertCircle size={36} />
+        {submittedChannel === 'email' && (
+          <div className="dispatch-notice-state">
+            <span className="dispatch-icon email-icon-wrap">
+              <Mail size={34} />
             </span>
-            <span className="eyebrow">SUBMISSION ERROR</span>
-            <h2>Could not send enquiry.</h2>
-            <p>{errorMessage}</p>
-            <div className="modal-state-actions">
-              <button className="button button-dark" onClick={handleWhatsAppDirect}>
-                <MessageCircle size={17} /> Send via WhatsApp instead
+            <span className="eyebrow">CONTINUE IN EMAIL</span>
+            <h2>Send from your email app.</h2>
+            <p className="dispatch-explain">
+              Your default email application has opened with a pre-filled enquiry addressed to <strong>{brand.email}</strong>. Please press <strong>Send</strong> in your mail client to transmit your enquiry.
+            </p>
+            <div className="channel-summary-card">
+              <small>RECIPIENT EMAIL</small>
+              <strong>{brand.email}</strong>
+              <span>(Brand Identity Tour & Travel)</span>
+            </div>
+            <div className="dispatch-actions">
+              <button
+                className="button button-dark"
+                onClick={() => {
+                  const subject = encodeURIComponent(buildEmailSubject());
+                  const body = encodeURIComponent(buildEmailBody());
+                  window.location.href = `mailto:${brand.email}?subject=${subject}&body=${body}`;
+                }}
+              >
+                <Mail size={17} /> Re-open Email App
               </button>
-              <button className="button button-outline" onClick={() => setSubmitStatus('idle')}>
-                Try again
+              <button className="button button-outline" onClick={() => setSubmittedChannel('')}>
+                <RotateCcw size={15} /> Edit details
+              </button>
+              <button className="button button-outline" onClick={onClose}>
+                Done
               </button>
             </div>
           </div>
         )}
 
-        {submitStatus === 'idle' && (
+        {!submittedChannel && (
           <>
-            <span className="eyebrow">LET'S PLAN SOMETHING BEAUTIFUL</span>
-            <h2 id={modalTitleId}>Tell us about your trip.</h2>
+            <span className="eyebrow">DIRECT COMMUNICATION · NO INTERMEDIARIES</span>
+            <h2 id={modalTitleId}>Plan your Kashmir trip.</h2>
             <p className="modal-intro">
-              Share a few details about your journey. Our team will tailor a day-wise itinerary around your pace and preferences.
+              Fill in your details below and choose whether to connect directly via <strong>WhatsApp</strong> or <strong>Email</strong>.
             </p>
 
-            <form className="enquiry-form" onSubmit={handleSubmit} noValidate>
+            <form className="enquiry-form" noValidate onSubmit={(e) => e.preventDefault()}>
               <label>
                 Your name <span className="field-req">*</span>
                 <input
@@ -260,21 +269,7 @@ export default function EnquiryModal({
               </label>
 
               <label>
-                Email address <span className="field-req">*</span>
-                <input
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={update}
-                  placeholder="you@example.com"
-                  required
-                  aria-invalid={!!errors.email}
-                />
-                {errors.email && <span className="field-error">{errors.email}</span>}
-              </label>
-
-              <label>
-                Phone number <span className="field-req">*</span>
+                Phone / WhatsApp number <span className="field-req">*</span>
                 <input
                   name="phone"
                   type="tel"
@@ -288,6 +283,19 @@ export default function EnquiryModal({
               </label>
 
               <label>
+                Email address
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={update}
+                  placeholder="you@example.com (optional)"
+                  aria-invalid={!!errors.email}
+                />
+                {errors.email && <span className="field-error">{errors.email}</span>}
+              </label>
+
+              <label>
                 Travelling from
                 <input
                   name="city"
@@ -298,7 +306,7 @@ export default function EnquiryModal({
               </label>
 
               <label>
-                Travellers
+                Number of travellers
                 <select name="travellers" value={form.travellers} onChange={update}>
                   <option value="1">1 traveller (Solo)</option>
                   <option value="2">2 travellers (Couple / Pair)</option>
@@ -332,51 +340,52 @@ export default function EnquiryModal({
               </label>
 
               <label className="field-full">
-                Additional preferences or requirements
+                Message or special requirements
                 <textarea
                   name="message"
                   rows={3}
                   value={form.message}
                   onChange={update}
-                  placeholder="Tell us about stay preferences, dietary needs, places you want to include, or pace…"
+                  placeholder="Hotel category preference, places you want to visit, travel pace, or special requests…"
                 />
               </label>
 
-              <button
-                className="button button-dark field-full submit-enquiry"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" /> Sending enquiry…
-                  </>
-                ) : (
-                  <>
-                    Send enquiry <ArrowRight size={16} />
-                  </>
-                )}
-              </button>
+              {/* Two Direct Communication Channels */}
+              <div className="enquiry-actions-duo field-full">
+                <button
+                  type="button"
+                  className="button button-dark channel-btn channel-whatsapp"
+                  onClick={handleSendWhatsApp}
+                  disabled={!hasWhatsApp}
+                  aria-label="Send enquiry via WhatsApp"
+                >
+                  <MessageCircle size={18} />
+                  <span>
+                    <strong>Send via WhatsApp</strong>
+                    <small>{hasWhatsApp ? `Opens chat with +${brand.whatsapp}` : 'WhatsApp number pending configuration'}</small>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  className="button button-outline channel-btn channel-email"
+                  onClick={handleSendEmail}
+                  disabled={!hasEmail}
+                  aria-label="Send enquiry via Email"
+                >
+                  <Mail size={18} />
+                  <span>
+                    <strong>Send via Email</strong>
+                    <small>{hasEmail ? `Opens mail to ${brand.email}` : 'Email pending configuration'}</small>
+                  </span>
+                </button>
+              </div>
             </form>
 
             <div className="form-mode-note">
               <span>
-                Our travel team in Sopore will review your preferences and get in touch within 24 hours.
+                <strong>Direct communication:</strong> Selecting either option prepares your enquiry and opens WhatsApp or your email client. You can review and confirm before dispatching.
               </span>
-            </div>
-
-            <div className="modal-direct-actions">
-              <span>Prefer instant assistance?</span>
-              <button
-                type="button"
-                className="direct-wa-link"
-                onClick={handleWhatsAppDirect}
-              >
-                <MessageCircle size={15} /> Chat on WhatsApp
-              </button>
-              <a href={`mailto:${brand.email}`} className="direct-mail-link">
-                Email us
-              </a>
             </div>
           </>
         )}

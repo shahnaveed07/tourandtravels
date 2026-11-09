@@ -92,6 +92,32 @@ export default function Contact({ onEnquire }) {
               <button className="button button-dark" onClick={() => onEnquire('General Enquiry')}>
                 Open enquiry form <ArrowUpRight size={16} />
               </button>
+              {brand.whatsapp ? (
+                <a
+                  href={`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(`Hello ${brand.name}! I would like to enquire about traveling to Kashmir.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="button button-outline whatsapp-contact-btn"
+                >
+                  <MessageCircle size={16} /> Chat on WhatsApp
+                </a>
+              ) : (
+                <button disabled className="button button-outline">
+                  WhatsApp Pending
+                </button>
+              )}
+              {brand.email ? (
+                <a
+                  href={`mailto:${brand.email}?subject=${encodeURIComponent('Travel Enquiry — Brand Identity Tour & Travel')}&body=${encodeURIComponent(`Hello ${brand.name} team,\n\nI would like to enquire about planning a trip to Kashmir.\n\nWarm regards,`)}`}
+                  className="button button-outline"
+                >
+                  <Mail size={16} /> Send Email
+                </a>
+              ) : (
+                <button disabled className="button button-outline">
+                  Email Pending
+                </button>
+              )}
             </div>
           </div>
 

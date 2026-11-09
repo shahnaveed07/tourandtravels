@@ -6,9 +6,10 @@ test('Brand data has required fields', () => {
   assert.equal(brand.name, 'Brand Identity');
   assert.equal(brand.descriptor, 'Tour & Travel');
   assert.ok(brand.phone);
-  assert.ok(brand.email);
-  assert.ok(brand.whatsapp);
+  assert.ok(brand.email && brand.email.includes('@'), 'Brand email must be valid format');
+  assert.ok(brand.whatsapp && /^\d{10,15}$/.test(brand.whatsapp), 'Brand whatsapp must be valid digits without symbols');
   assert.ok(brand.address);
+  assert.ok(brand.mapUrl);
 });
 
 test('Destinations have valid slugs and required content', () => {
