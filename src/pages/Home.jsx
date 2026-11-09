@@ -5,10 +5,12 @@ import SectionTitle from '../components/SectionTitle.jsx';
 import PackageCard from '../components/PackageCard.jsx';
 import { destinations, packages, services, guides, faqs } from '../data.js';
 import { siteImages } from '../imageCatalog.js';
+import usePageSEO from '../hooks/usePageSEO.js';
 
 const serviceIcons = { route: Compass, hotel: Hotel, waves: Waves, car: CarFront, users: Users, headphones: Headphones };
 
 export default function Home({ onEnquire }) {
+  usePageSEO('/');
   const navigate = useNavigate();
   const [place, setPlace] = useState('');
   const [duration, setDuration] = useState('');
@@ -98,7 +100,7 @@ export default function Home({ onEnquire }) {
 
       <section className="section section-about-band"><div className="container about-band-grid"><div className="about-band-image"><img src={siteImages.company.office} alt="Brand Identity Tour & Travel office interior in Sopore" loading="lazy"/><span>ROOTED IN PLACE</span></div><div className="about-band-copy"><span className="eyebrow">BASED IN KASHMIR. HERE FOR YOUR JOURNEY.</span><h2>You bring the plans.<br/><i>We bring the local.</i></h2><p>Brand Identity Tour & Travel is built around personal planning, thoughtful coordination and the belief that the journey should feel as good as the destination.</p><p>From the first idea to the final transfer, we make space for the details that matter to you.</p><Link to="/about" className="text-link">A little about us <ArrowUpRight size={15}/></Link></div></div></section>
 
-      <section className="section section-guides"><div className="container"><SectionTitle eyebrow="A LITTLE PLANNING GOES A LONG WAY" title={<>Know before <i>you go.</i></>} text="Useful practical ideas for a more relaxed, better-prepared Kashmir journey." /><div className="guides-grid">{guides.map((guide) => <article className="guide-card" key={guide.slug}><Link className="guide-image" to={`/travel-guides/${guide.slug}`}><img src={guide.image} alt={guide.title} loading="lazy" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = siteImages.hero; }}/><span><ArrowUpRight size={17}/></span></Link><small>{guide.category}</small><h3><Link to={`/travel-guides/${guide.slug}`}>{guide.title}</Link></h3><p>{guide.description}</p></article>)}</div></div></section>
+      <section className="section section-guides"><div className="container"><SectionTitle eyebrow="A LITTLE PLANNING GOES A LONG WAY" title={<>Know before <i>you go.</i></>} text="Useful practical ideas for a more relaxed, better-prepared Kashmir journey." /><div className="guides-grid">{guides.map((guide) => <article className="guide-card" key={guide.slug}><Link className="guide-image" to={`/travel-guides/${guide.slug}`} aria-label={`Read travel guide: ${guide.title}`}><img src={guide.image} alt={guide.title} loading="lazy" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = siteImages.hero; }}/><span><ArrowUpRight size={17}/></span></Link><small>{guide.category}</small><h3><Link to={`/travel-guides/${guide.slug}`}>{guide.title}</Link></h3><p>{guide.description}</p></article>)}</div></div></section>
 
       <section className="section section-why"><div className="container why-layout"><div><span className="eyebrow">WHY TRAVEL WITH US</span><h2>The little details<br/>make the <i>difference.</i></h2><p>Good travel is not just about where you go. It's about how every part of the journey comes together.</p><button onClick={() => onEnquire()} className="button button-light">Let's talk about your trip <ArrowUpRight size={16}/></button></div><div className="why-points">{[['01','A local point of view','Practical destination knowledge and thoughtful route planning.'],['02','One connected plan','Stay, transport and experiences considered together.'],['03','Space to make it yours','Flexible ideas shaped around your pace and preferences.'],['04','Clear conversations','Written details and transparent expectations before booking.']].map(row => <div className="why-point" key={row[0]}><span>{row[0]}</span><div><h3>{row[1]}</h3><p>{row[2]}</p></div><Check size={17}/></div>)}</div></div></section>
 

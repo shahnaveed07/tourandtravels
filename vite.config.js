@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig(({ mode }) => {
-  const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-  const base = process.env.VITE_BASE_PATH || (isGitHubActions ? '/tourandtravels/' : '/');
+export default defineConfig(() => {
+  // Primary production domain is https://www.bittkashmir.in/ at the domain root ('/').
+  // VITE_BASE_PATH remains available as an explicit override if ever needed.
+  const base = process.env.VITE_BASE_PATH || '/';
 
   return {
     base,

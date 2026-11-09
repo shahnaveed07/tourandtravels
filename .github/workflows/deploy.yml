@@ -40,14 +40,13 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Build project for GitHub Pages
+      - name: Build and prerender project
         run: npm run build
-        env:
-          GITHUB_ACTIONS: 'true'
 
-      - name: Add 404.html fallback and .nojekyll for GitHub Pages deep links
+      - name: Verify 404.html, CNAME, and .nojekyll in dist
         run: |
-          cp dist/index.html dist/404.html
+          test -f dist/404.html
+          test -f dist/CNAME
           touch dist/.nojekyll
 
       - name: Upload GitHub Pages artifact

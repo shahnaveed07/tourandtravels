@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://shahnaveed07.github.io/tourandtravels/sitemap.xml
+Sitemap: https://www.bittkashmir.in/sitemap.xml

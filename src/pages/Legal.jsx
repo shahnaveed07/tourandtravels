@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { brand } from '../data.js';
+import usePageSEO from '../hooks/usePageSEO.js';
 
 export default function Legal({ page }) {
   const isPrivacy = page === 'privacy';
-  useEffect(() => {
-    document.title = `${isPrivacy ? 'Privacy Policy' : 'Terms & Conditions'} — Brand Identity Tour & Travel`;
-  }, [isPrivacy]);
+  usePageSEO(isPrivacy ? '/privacy' : '/terms');
 
   return (
     <main className="section legal-page container">

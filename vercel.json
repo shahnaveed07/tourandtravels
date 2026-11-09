@@ -1,0 +1,10 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/((?!images/|assets/|sitemap\\.xml|robots\\.txt|CNAME|googlefea446053fa36602\\.html).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

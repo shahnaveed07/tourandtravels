@@ -1,19 +1,15 @@
-import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Clock3, Compass, MapPin } from 'lucide-react';
 import { guides, destinations, packages } from '../data.js';
 import { siteImages } from '../imageCatalog.js';
 import PackageCard from '../components/PackageCard.jsx';
+import usePageSEO from '../hooks/usePageSEO.js';
 
 export default function TravelGuideDetail({ onEnquire }) {
   const { slug } = useParams();
   const guide = guides.find(g => g.slug === slug);
 
-  useEffect(() => {
-    if (guide) {
-      document.title = `${guide.title} — Brand Identity Tour & Travel`;
-    }
-  }, [guide]);
+  usePageSEO(guide ? `/travel-guides/${guide.slug}` : '/404-not-found');
 
   if (!guide) {
     return (

@@ -4,8 +4,10 @@ import { ArrowUpRight, CalendarDays, MapPin, Search, SlidersHorizontal, X } from
 import SectionTitle from '../components/SectionTitle.jsx';
 import PackageCard from '../components/PackageCard.jsx';
 import { packages, destinations } from '../data.js';
+import usePageSEO from '../hooks/usePageSEO.js';
 
 export default function Packages({ onEnquire }) {
+  usePageSEO('/packages');
   const [params, setParams] = useSearchParams();
 
   // Read initial filter values from URL params
@@ -17,7 +19,6 @@ export default function Packages({ onEnquire }) {
 
   // Keep internal states in sync when user navigates using browser Back/Forward
   useEffect(() => {
-    document.title = 'Tour Packages — Brand Identity Tour & Travel';
     setSearch(params.get('q') || '');
     setDestination(params.get('dest') || '');
     setDuration(params.get('duration') || '');

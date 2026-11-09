@@ -15,6 +15,7 @@ import Legal from './pages/Legal.jsx';
 import { ArrowUp, MessageCircle, AlertTriangle, RefreshCw } from 'lucide-react';
 import { brand } from './data.js';
 import { siteImages } from './imageCatalog.js';
+import usePageSEO from './hooks/usePageSEO.js';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -84,6 +85,7 @@ function ScrollToTop() {
 }
 
 function NotFound() {
+  usePageSEO('/404-not-found');
   return (
     <main className="not-found container">
       <span className="eyebrow">404 · OFF THE MAP</span>

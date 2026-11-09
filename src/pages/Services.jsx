@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, CarFront, Headphones, Hotel, MapPinned, Users, Waves } from 'lucide-react';
 import { siteImages } from '../imageCatalog.js';
+import usePageSEO from '../hooks/usePageSEO.js';
 
 const serviceDetails = [
   { id: 'tours', no: '01', icon: MapPinned, title: 'Custom tour planning', copy: 'A route built around your travel dates, interests, preferred pace and budget. Start with a sample package or begin with a blank itinerary.', bullets: ['Day-wise route design', 'Destination and activity planning', 'Flexible duration and stopovers'] },
@@ -13,14 +13,12 @@ const serviceDetails = [
 ];
 
 export default function Services({ onEnquire }) {
-  useEffect(() => {
-    document.title = 'Travel Services — Brand Identity Tour & Travel';
-  }, []);
+  usePageSEO('/services');
 
   return <main className="inner-page">
     <section className="inner-hero services-hero"><div className="container inner-hero-content"><div className="breadcrumbs"><Link to="/">Home</Link><span>/</span><span>Services</span></div><span className="eyebrow">THE DETAILS, THOUGHTFULLY CONNECTED</span><h1>Travel well.<br/><i>We'll handle the in-between.</i></h1><p>From the first route idea to the last transfer, bring the pieces together with one considered plan.</p></div></section>
     <section className="section service-detail-section"><div className="container"><div className="service-page-intro"><span className="eyebrow">WHAT WE CAN HELP WITH</span><h2>One journey.<br/><i>Every moving part.</i></h2><p>Choose one service or combine a few into a complete travel plan. The final scope and inclusions are always confirmed in writing.</p></div><div className="service-detail-list">{serviceDetails.map(service => { const Icon = service.icon; return <article className="service-detail-row" id={service.id} key={service.id}><div className="service-detail-mark"><span>{service.no}</span><Icon size={25}/></div><div className="service-detail-copy"><h3>{service.title}</h3><p>{service.copy}</p><ul>{service.bullets.map(b => <li key={b}>{b}</li>)}</ul></div><button className="round-arrow" onClick={() => onEnquire(service.title)} aria-label={`Enquire about ${service.title}`}><ArrowUpRight size={20}/></button></article>; })}</div></div></section>
-    <section className="section stays-showcase-section"><div className="container"><div className="section-heading"><div><span className="eyebrow">CURATED STAYS ACROSS KASHMIR</span><h2>Boutique hotels, mountain lodges & <i>lakeside retreats.</i></h2><p>Handpicked accommodation options across Srinagar, Gulmarg, Pahalgam and Sonamarg matched to your travel style.</p></div></div><div className="culture-gallery-grid">{siteImages.stays.slice(0, 6).map(stay => <figure className="culture-gallery-item" key={stay.src}><img src={stay.src} alt={stay.alt} loading="lazy"/><figcaption>{stay.alt}</figcaption></figure>)}</div></div></section>
+    <section className="section stays-showcase-section"><div className="container"><div className="section-heading"><div><span className="eyebrow">CURATED STAYS ACROSS KASHMIR</span><h2>Boutique hotels, mountain lodges & <i>lakeside retreats.</i></h2><p>Handpicked accommodation options across <Link to="/destinations/srinagar" style={{ color: 'inherit', textDecoration: 'underline' }}>Srinagar</Link>, <Link to="/destinations/gulmarg" style={{ color: 'inherit', textDecoration: 'underline' }}>Gulmarg</Link>, <Link to="/destinations/pahalgam" style={{ color: 'inherit', textDecoration: 'underline' }}>Pahalgam</Link> and <Link to="/destinations/sonamarg" style={{ color: 'inherit', textDecoration: 'underline' }}>Sonamarg</Link> matched to your travel style.</p></div><Link to="/packages" className="text-link">Browse tour packages <ArrowUpRight size={15}/></Link></div><div className="culture-gallery-grid">{siteImages.stays.slice(0, 6).map(stay => <figure className="culture-gallery-item" key={stay.src}><img src={stay.src} alt={stay.alt} loading="lazy"/><figcaption>{stay.alt}</figcaption></figure>)}</div></div></section>
     <section className="service-process"><div className="container"><span className="eyebrow">A SIMPLE WAY TO BEGIN</span><h2>From first thought<br/><i>to final details.</i></h2><div className="process-grid"><div><span>01</span><h3>Tell us the idea</h3><p>Share dates, group size, destinations and what a good trip means to you.</p></div><div><span>02</span><h3>Shape the route</h3><p>Review a proposed itinerary with stay, transport and experience options.</p></div><div><span>03</span><h3>Confirm the details</h3><p>Check the written inclusions, availability, payment terms and cancellation policy.</p></div></div></div></section>
     <section className="final-cta"><div className="container final-cta-inner"><div><span className="eyebrow">A GOOD PLAN STARTS WITH A CONVERSATION</span><h2>What are you<br/><i>in the mood for?</i></h2><p>Tell us a little about your journey.</p></div><button className="button button-light" onClick={() => onEnquire()}>Let's plan it <ArrowUpRight size={16}/></button></div></section>
   </main>;

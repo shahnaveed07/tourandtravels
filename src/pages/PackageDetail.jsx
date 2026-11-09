@@ -1,19 +1,15 @@
-import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, Check, Clock3, Info, MapPin, Users, X } from 'lucide-react';
 import { packages, destinations } from '../data.js';
 import { siteImages } from '../imageCatalog.js';
 import PackageCard from '../components/PackageCard.jsx';
+import usePageSEO from '../hooks/usePageSEO.js';
 
 export default function PackageDetail({ onEnquire }) {
   const { slug } = useParams();
   const item = packages.find(p => p.slug === slug);
 
-  useEffect(() => {
-    if (item) {
-      document.title = `${item.title} (${item.duration}) — Brand Identity Tour & Travel`;
-    }
-  }, [item]);
+  usePageSEO(item ? `/packages/${item.slug}` : '/404-not-found');
 
   if (!item) {
     return (
@@ -35,6 +31,10 @@ export default function PackageDetail({ onEnquire }) {
       p.type === item.type
     ))
     .slice(0, 3);
+
+  const matchedDestinations = item.locations
+    .map(locName => destinations.find(d => d.name.toLowerCase() === locName.toLowerCase()))
+    .filter(Boolean);
 
   return (
     <main className="inner-page detail-page">
@@ -61,7 +61,19 @@ export default function PackageDetail({ onEnquire }) {
           <p>{item.summary}</p>
           <div className="detail-meta">
             <span><Clock3 size={15} />{item.nights} / {item.duration}</span>
-            <span><MapPin size={15} />{item.locations.join(' · ')}</span>
+            <span>
+              <MapPin size={15} />
+              {matchedDestinations.length > 0
+                ? matchedDestinations.map((dest, idx) => (
+                    <span key={dest.slug}>
+                      {idx > 0 && ' · '}
+                      <Link to={`/destinations/${dest.slug}`} style={{ color: 'inherit', textDecoration: 'underline' }}>
+                        {dest.name}
+                      </Link>
+                    </span>
+                  ))
+                : item.locations.join(' · ')}
+            </span>
           </div>
         </div>
       </section>

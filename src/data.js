@@ -466,6 +466,6 @@ export const guides = [
       'Respect local cultural customs when visiting religious shrines and old heritage neighborhoods.'
     ],
     relatedDestinations: ['srinagar', 'sonamarg', 'pahalgam'],
-    relatedPackageSlugs: ['alpine-adventure-trail', 'grand-kashmir-gurez']
+    relatedPackageSlugs: ['alpine-adventure-trail', 'grand-kashmir-gurez-odyssey']
   }
 ];

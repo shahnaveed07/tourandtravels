@@ -1,13 +1,11 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Clock3, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { brand } from '../data.js';
 import { siteImages } from '../imageCatalog.js';
+import usePageSEO from '../hooks/usePageSEO.js';
 
 export default function Contact({ onEnquire }) {
-  useEffect(() => {
-    document.title = 'Contact Us — Brand Identity Tour & Travel';
-  }, []);
+  usePageSEO('/contact');
 
   return (
     <main className="inner-page">
@@ -55,7 +53,7 @@ export default function Contact({ onEnquire }) {
               <a
                 href={`https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(`Hello ${brand.name}! I would like to speak with a travel coordinator.`)}`}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Chat on WhatsApp"
               >
                 <span><MessageCircle size={18} /></span>

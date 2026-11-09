@@ -1,14 +1,21 @@
 # Brand Identity Tour & Travel
 
-A production-ready, fully responsive static **React + Vite** website crafted for **Brand Identity Tour & Travel** (Sopore, Baramulla, Jammu & Kashmir), showcasing curated Kashmir journeys, alpine destinations, mountain stays, and personalized valley travel coordination.
+A production-ready, fully responsive static **React + Vite** website crafted for **Brand Identity Tour & Travel** (Bismillah Market, Sopore, Baramulla, Jammu & Kashmir, India — PIN `193201`), showcasing curated Kashmir journeys, alpine destinations, mountain stays, and personalized valley travel coordination.
+
+- **Primary Production URL**: `https://www.bittkashmir.in/`
+- **Canonical Origin**: `https://www.bittkashmir.in`
+- **Repository**: `https://github.com/shahnaveed07/tourandtravels`
 
 ---
 
 ## 1. Architecture Overview
 
-- **Frontend Stack**: React 19 + Vite 8 + React Router 7 (purely static client-side single-page application).
+- **Frontend Stack**: React 19 + Vite 8 + React Router 7 with build-time static route prerendering (`scripts/generate-seo.mjs`).
 - **Direct Communication (No Backend or Database)**: Visitor enquiries are validated in the browser and passed directly to the visitor's chosen **WhatsApp** (`https://wa.me/916006343335`) or **Email** (`mailto:bookings@bittkashmir.in`) application with pre-filled itinerary details. No personal data is stored by the website.
 - **Local Image Catalog**: All brand logos, destination photography, package cards, travel guides, cultural highlights, company office spaces, and stay showcases are served from local WebP assets in `public/images/` via `src/imageCatalog.js`.
+- **Technical SEO & Prerendering**:
+  - Route-specific `<title>`, `<meta name="description">`, single `<link rel="canonical">`, `<meta name="robots">`, Open Graph, Twitter Card, and Schema.org JSON-LD (`TravelAgency`, `WebSite`, `BreadcrumbList`, `TouristDestination`, `BlogPosting`) managed via `src/seoData.js` and `src/hooks/usePageSEO.js`.
+  - Build-time static prerendering writes route-specific `dist/<route>/index.html` files for all 22 indexable URLs (plus `/privacy`, `/terms`, and `dist/404.html`) and generates `public/sitemap.xml` directly from `src/data.js`.
 
 ---
 
@@ -23,13 +30,13 @@ A production-ready, fully responsive static **React + Vite** website crafted for
 # Clean, reproducible dependency installation
 npm ci
 
-# Run test suite
+# Run automated SEO, link, and data integrity test suite
 npm test
 
 # Start local development server (port 3000)
 npm run dev
 
-# Build production bundle
+# Build production bundle + generate sitemap.xml + prerender all routes
 npm run build
 
 # Preview production build locally
@@ -38,43 +45,23 @@ npm run preview
 
 ---
 
-## 3. GitHub Pages Deployment
+## 3. Custom Domain & Hosting Configuration (`https://www.bittkashmir.in/`)
 
-The repository is hosted at:
-`https://github.com/shahnaveed07/tourandtravels`
+The website is configured to run at the domain root (`/`) on **`https://www.bittkashmir.in/`** and supports both **Vercel** (`vercel.json` + static prerendered directories) and **GitHub Pages** (`public/CNAME` + `.github/workflows/deploy.yml` + static prerendered directories + `dist/404.html`).
 
-The production website deploys to:
-`https://shahnaveed07.github.io/tourandtravels/`
-
-### Automated Deployment via GitHub Actions
-A deployment workflow is configured at `.github/workflows/deploy.yml`.
-
-#### Step-by-Step GitHub Setup Instructions:
-1. Open the repository on GitHub: [shahnaveed07/tourandtravels](https://github.com/shahnaveed07/tourandtravels).
-2. Go to **Settings** → **Pages** (under the "Code and automation" section in the left sidebar).
-3. Under **Build and deployment** → **Source**, select **GitHub Actions** (do NOT select "Deploy from a branch").
-4. Push your changes to the `main` branch (or run manually via **Actions** → **Deploy to GitHub Pages** → **Run workflow**).
-5. The workflow will:
-   - Check out the codebase using Node.js 22.
-   - Run `npm ci` for deterministic dependency installation.
-   - Run `npm test` to verify all data integrity, duration consistency, and local image catalog assertions before building.
-   - Execute `npm run build` with `GITHUB_ACTIONS=true` (automatically activating the `/tourandtravels/` base path).
-   - Generate `404.html` and `.nojekyll` in the build output to ensure client-side deep links (e.g. `/tourandtravels/packages` or `/tourandtravels/destinations/gulmarg`) refresh without 404 errors.
-   - Deploy the artifact directly to GitHub Pages.
-
-### Optional Build Base Path Override
+### Build Base Path
 | Variable | Description | Default |
 |---|---|---|
-| `VITE_BASE_PATH` | Optional base path override for Vite. If unset, defaults to `/tourandtravels/` in GitHub Actions and `/` locally. | `auto` |
+| `VITE_BASE_PATH` | Optional base path override for Vite. Defaults to `/` for `https://www.bittkashmir.in/`. | `/` |
 
 ---
 
 ## 4. Key Features
 
-### Route-Aware Base Path & Navigation
-- **Deployment-aware base path**: Configured dynamically in `vite.config.js` and passed to `<BrowserRouter basename={import.meta.env.BASE_URL}>` and `src/imageCatalog.js`.
-- **Deep-link routing**: Fully supported under GitHub Pages with `404.html` and `.nojekyll`.
-- **Scroll-to-top & anchor scrolling**: Smoothly handles page transitions and route anchors (e.g., `/services#stays`, `/services#houseboats`).
+### Route-Aware SEO & Navigation
+- **Root Domain Base Path**: Configured in `vite.config.js` (`base: '/'`) and passed to `<BrowserRouter basename={import.meta.env.BASE_URL}>` and `src/imageCatalog.js`.
+- **Static Prerendering & Deep-Link Routing**: Every public route (`/packages`, `/packages/:slug`, `/destinations/:slug`, `/travel-guides/:slug`, `/services`, `/about`, `/contact`, `/privacy`, `/terms`) has its own prerendered `index.html` in `dist/`, ensuring direct navigation and page refreshes return HTTP 200 with full route-specific HTML and metadata.
+- **Scroll-to-top & anchor scrolling**: Smoothly handles page transitions and route anchors (e.g., `/services#stays`, `/services#houseboats`, `/services#transport`, `/services#experiences`).
 
 ### Tour Packages & Search
 - **5-Part Filter System**:
@@ -83,7 +70,7 @@ A deployment workflow is configured at `.github/workflows/deploy.yml`.
   3. *Duration filter*: Supports 2 Days through 8 Days.
   4. *Travel style filter*: Filter by Family, Honeymoon, Adventure, Classic tour, or Short break.
   5. *Arrival date filter*: Preserves travel dates across navigation and pre-fills the enquiry modal.
-- **Duration consistency**: Curated packages cover every advertised duration (2, 3, 4, 5, 6, 7, and 8 days).
+- **Canonical URL discipline**: Filtered `/packages?...` views retain `https://www.bittkashmir.in/packages` as their canonical URL.
 
 ### Destination Pages & Travel Guides
 - **Strict Relationship Integrity**: Destination pages display only genuinely related packages.
@@ -98,7 +85,7 @@ A deployment workflow is configured at `.github/workflows/deploy.yml`.
 
 ## 5. Centralized Data & Image Catalog
 
-All brand details, packages, destinations, services, FAQs, and guides live in `src/data.js`, paired with local image paths in `src/imageCatalog.js`:
+All brand details, packages, destinations, services, FAQs, and guides live in `src/data.js`, paired with local image paths in `src/imageCatalog.js` and route metadata in `src/seoData.js`:
 
 ```javascript
 // src/data.js

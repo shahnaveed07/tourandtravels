@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Compass, HeartHandshake, Leaf, Sparkles } from 'lucide-react';
 import { siteImages } from '../imageCatalog.js';
+import usePageSEO from '../hooks/usePageSEO.js';
 
 export default function About({ onEnquire }) {
-  useEffect(() => {
-    document.title = 'About Us — Brand Identity Tour & Travel';
-  }, []);
+  usePageSEO('/about');
 
   return (
     <main className="inner-page">
@@ -35,7 +33,11 @@ export default function About({ onEnquire }) {
             <p>Headquartered at Bismillah Market in Sopore (Baramulla, Jammu & Kashmir), Brand Identity Tour & Travel brings together destination discovery, boutique stay planning, reliable transport, and attentive on-trip coordination under one roof.</p>
             <p>Our approach is simple: understand what matters to each traveller, create a practical route and make the moving parts feel connected. Every journey should have enough structure to feel easy and enough freedom to feel personal.</p>
             <p className="about-signature">The Brand Identity team</p>
-            <button className="text-link" onClick={() => onEnquire()}>Start a conversation <ArrowUpRight size={15}/></button>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', alignItems: 'center' }}>
+              <button className="text-link" onClick={() => onEnquire()}>Start a conversation <ArrowUpRight size={15}/></button>
+              <Link to="/packages" className="text-link">Explore Kashmir tour packages <ArrowUpRight size={15}/></Link>
+              <Link to="/services" className="text-link">View our travel services <ArrowUpRight size={15}/></Link>
+            </div>
           </div>
         </div>
 
