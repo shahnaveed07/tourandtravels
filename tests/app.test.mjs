@@ -3,9 +3,6 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom';
 import { brand, destinations, packages, guides, services, faqs, paymentDetails } from '../src/data.js';
 import {
   isUpiConfigured,
@@ -17,8 +14,6 @@ import {
   buildPaymentReferenceWhatsAppUrl,
   buildPaymentReferenceMailtoUrl,
 } from '../src/paymentConfig.js';
-import { getConfiguredSocialItems } from '../src/components/SocialLinks.jsx';
-import Payments from '../src/pages/Payments.jsx';
 import { siteImages } from '../src/imageCatalog.js';
 import {
   SITE_ORIGIN,
@@ -59,13 +54,6 @@ test('Brand data has required fields, verified contact formats, Google Maps link
   assert.equal(brand.social.facebook, 'https://www.facebook.com/brandidentitytourntravel');
   assert.equal(brand.social.instagram, 'https://www.instagram.com/brandidentitytourntravel/');
   assert.equal(brand.social.youtube, 'https://www.youtube.com/@brandidentitytourntravel');
-
-  const socialItems = getConfiguredSocialItems();
-  assert.equal(socialItems.length, 3);
-  assert.deepEqual(
-    socialItems.map((s) => s.key),
-    ['facebook', 'instagram', 'youtube']
-  );
 
   assert.equal(travelAgencySchema.hasMap, brand.mapUrl);
   assert.deepEqual(travelAgencySchema.sameAs, [
@@ -362,78 +350,106 @@ test('14. Build-time prerender HTML injection & dist output verification', async
   }
 });
 
-test('15. Central paymentDetails configuration, UPI intent builder, bank details formatter, and Payments page rendering', () => {
-  // Default paymentDetails must be safely unconfigured with zero fake values
-  assert.equal(paymentDetails.upi.enabled, false);
-  assert.equal(paymentDetails.upi.id, '');
-  assert.equal(paymentDetails.upi.payeeName, '');
+test('15. Official payment QR asset, UPI ID configuration, beneficiary disclosure, and Payments page rendering', async () => {
+  // 1. Official QR image file exists on disk
+  assert.equal(paymentDetails.qr.enabled, true);
+  assert.equal(paymentDetails.qr.image, '/assets/aistudio/IMG-20261109-WA0096_576732db.jpg');
+  const qrDiskPath = path.join(publicDir, paymentDetails.qr.image.replace(/^\//, ''));
+  assert.ok(fs.existsSync(qrDiskPath), `Official QR image must exist on disk at ${qrDiskPath}`);
+  assert.ok(fs.statSync(qrDiskPath).size > 0, 'Official QR image file must not be empty');
+
+  // 2. UPI ID, display name, and actual encoded beneficiary name configuration
+  assert.equal(paymentDetails.displayName, 'Brand Identity Tour & Travel');
+  assert.equal(paymentDetails.currency, 'INR');
+  assert.equal(paymentDetails.upi.enabled, true);
+  assert.equal(paymentDetails.upi.id, 'kashmirilovers1234567890@oksbi');
+  assert.equal(paymentDetails.upi.displayName, 'Brand Identity Tour & Travel');
+  assert.equal(paymentDetails.upi.beneficiaryName, 'Syed Muzaffar');
+  assert.notEqual(
+    paymentDetails.upi.beneficiaryName,
+    paymentDetails.displayName,
+    'Actual encoded beneficiary name must not be overwritten with business display name'
+  );
+
+  assert.equal(isUpiConfigured(paymentDetails.upi), true);
+  assert.equal(isQrConfigured(paymentDetails.qr), true);
+
+  // 3. UPI deep link preserves actual encoded beneficiary name and does not hardcode an amount
+  const upiUrl = buildUpiIntentUrl(paymentDetails.upi);
+  assert.equal(
+    upiUrl,
+    'upi://pay?pa=kashmirilovers1234567890%40oksbi&pn=Syed%20Muzaffar&cu=INR'
+  );
+  assert.ok(!upiUrl.includes('am='), 'UPI intent URL must not prefill a fixed payment amount');
+
+  // 4. Direct NEFT/IMPS/RTGS bank transfer remains disabled until actual business bank details are supplied
   assert.equal(paymentDetails.bank.enabled, false);
   assert.equal(paymentDetails.bank.accountHolder, '');
   assert.equal(paymentDetails.bank.bankName, '');
   assert.equal(paymentDetails.bank.accountNumber, '');
   assert.equal(paymentDetails.bank.ifsc, '');
-  assert.equal(paymentDetails.bank.accountType, '');
-  assert.equal(paymentDetails.bank.branch, '');
-  assert.equal(paymentDetails.qr.enabled, false);
-  assert.equal(paymentDetails.qr.image, '');
-  assert.equal(paymentDetails.qr.alt, 'Brand Identity Tour & Travel official UPI payment QR');
-
-  assert.equal(isUpiConfigured(paymentDetails.upi), false);
   assert.equal(isBankConfigured(paymentDetails.bank), false);
-  assert.equal(isQrConfigured(paymentDetails.qr), false);
-  assert.equal(buildUpiIntentUrl(paymentDetails.upi), '');
   assert.equal(formatBankDetailsText(paymentDetails.bank), '');
 
-  // Test configured payment details and helpers
-  const sampleConfigured = {
-    upi: {
-      enabled: true,
-      id: 'bittkashmir@okaxis',
-      payeeName: 'Brand Identity Tour & Travel',
-    },
-    bank: {
-      enabled: true,
-      accountHolder: 'Brand Identity Tour & Travel',
-      bankName: 'J&K Bank',
-      accountNumber: '0011010100001234',
-      ifsc: 'JAKA0SOPORE',
-      accountType: 'Current Account',
-      branch: 'Sopore Main Branch',
-    },
-    qr: {
-      enabled: true,
-      image: '/images/payment-qr.webp',
-      alt: 'Brand Identity Tour & Travel official UPI payment QR',
-    },
-  };
-
-  assert.equal(isUpiConfigured(sampleConfigured.upi), true);
-  assert.equal(isBankConfigured(sampleConfigured.bank), true);
-  assert.equal(isQrConfigured(sampleConfigured.qr), true);
-
-  const upiUrl = buildUpiIntentUrl(sampleConfigured.upi);
-  assert.equal(
-    upiUrl,
-    'upi://pay?pa=bittkashmir%40okaxis&pn=Brand%20Identity%20Tour%20%26%20Travel&cu=INR'
+  // 5. Render /payments route via Vite SSR and verify all required elements
+  const { createServer } = await import('vite');
+  const vite = await createServer({
+    root: rootDir,
+    logLevel: 'error',
+    server: { middlewareMode: true },
+    appType: 'custom',
+  });
+  let paymentsHtml = '';
+  try {
+    const { renderRoute } = await vite.ssrLoadModule('/src/entry-server.jsx');
+    const { getConfiguredSocialItems } = await vite.ssrLoadModule('/src/components/SocialLinks.jsx');
+    const socialItems = getConfiguredSocialItems();
+    assert.equal(socialItems.length, 3);
+    assert.deepEqual(
+      socialItems.map((s) => s.key),
+      ['facebook', 'instagram', 'youtube']
+    );
+    paymentsHtml = renderRoute('/payments');
+  } finally {
+    await vite.close();
+  }
+  assert.ok(paymentsHtml.includes('Brand Identity Tour &amp; Travel'));
+  assert.ok(paymentsHtml.includes('kashmirilovers1234567890@oksbi'));
+  assert.ok(paymentsHtml.includes('Syed Muzaffar'));
+  assert.ok(paymentsHtml.includes('/assets/aistudio/IMG-20261109-WA0096_576732db.jpg'));
+  assert.ok(
+    paymentsHtml.includes(
+      'When scanning this QR, your UPI application may display the registered beneficiary name Syed Muzaffar. Please verify the beneficiary details before confirming payment.'
+    ),
+    'Payments page must display exact transparent beneficiary disclosure note'
   );
-  assert.ok(!upiUrl.includes('am='), 'UPI intent URL must not hardcode a payment amount');
+  assert.ok(
+    paymentsHtml.includes(
+      'Please make payment only after receiving your confirmed itinerary and payment instructions. Verify the beneficiary name and UPI details before confirming the transfer.'
+    ),
+    'Payments page must display exact customer payment safety notice'
+  );
+  assert.ok(paymentsHtml.includes('Copy UPI ID'));
+  assert.ok(paymentsHtml.includes('Open UPI App'));
+  assert.ok(paymentsHtml.includes('View Larger QR'));
+  assert.ok(paymentsHtml.includes('Download QR'));
+  assert.ok(paymentsHtml.includes('Google Pay'));
+  assert.ok(paymentsHtml.includes('PhonePe'));
+  assert.ok(paymentsHtml.includes('Paytm'));
+  assert.ok(paymentsHtml.includes('BHIM'));
+  assert.ok(
+    !paymentsHtml.includes('data-testid="bank-configured"'),
+    'Unconfigured direct bank transfer section must remain hidden'
+  );
 
-  const bankText = formatBankDetailsText(sampleConfigured.bank);
-  assert.ok(bankText.includes('Account Holder Name: Brand Identity Tour & Travel'));
-  assert.ok(bankText.includes('Bank Name: J&K Bank'));
-  assert.ok(bankText.includes('Account Number: 0011010100001234'));
-  assert.ok(bankText.includes('IFSC Code: JAKA0SOPORE'));
-  assert.ok(bankText.includes('Account Type: Current Account'));
-  assert.ok(bankText.includes('Branch: Sopore Main Branch'));
-
-  // Test post-transfer reference message builders
+  // 6. Test post-transfer reference message builders
   const sampleForm = {
     bookingRef: 'BITT-2026-104',
     utr: '412345678901',
     paymentDate: '2026-05-15',
     amount: '18,500',
     payerName: 'Aamir Khan',
-    method: 'UPI Transfer',
+    method: 'UPI QR Scan & Pay',
   };
   const refMsg = buildPaymentReferenceMessage(brand, sampleForm);
   assert.ok(refMsg.includes('BITT-2026-104'));
@@ -446,32 +462,11 @@ test('15. Central paymentDetails configuration, UPI intent builder, bank details
   const mailUrl = buildPaymentReferenceMailtoUrl(brand, sampleForm);
   assert.ok(mailUrl.startsWith('mailto:bookings@bittkashmir.in?subject='));
 
-  // Render default unconfigured Payments page
-  const unconfiguredHtml = renderToString(
-    React.createElement(StaticRouter, { location: '/payments' }, React.createElement(Payments, { config: paymentDetails }))
-  );
-  assert.ok(
-    unconfiguredHtml.includes(
-      'Please make payments only after receiving your confirmed itinerary and payment instructions from Brand Identity Tour &amp; Travel. Verify the beneficiary name and payment details before completing a transfer.'
-    ),
-    'Payments page must display exact customer safety notice'
-  );
-  assert.ok(unconfiguredHtml.includes('data-testid="upi-unconfigured"'));
-  assert.ok(unconfiguredHtml.includes('Request UPI details on WhatsApp'));
-
-  // Render configured Payments page to verify UPI, Bank, and QR rendering
-  const configuredHtml = renderToString(
-    React.createElement(StaticRouter, { location: '/payments' }, React.createElement(Payments, { config: sampleConfigured }))
-  );
-  assert.ok(configuredHtml.includes('bittkashmir@okaxis'));
-  assert.ok(configuredHtml.includes('Copy UPI ID'));
-  assert.ok(configuredHtml.includes('Open UPI App'));
-  assert.ok(configuredHtml.includes('0011010100001234'));
-  assert.ok(configuredHtml.includes('JAKA0SOPORE'));
-  assert.ok(configuredHtml.includes('Copy All Bank Details'));
-  assert.ok(configuredHtml.includes('Scan using any UPI application'));
-  assert.ok(configuredHtml.includes('View Larger QR'));
-  assert.ok(configuredHtml.includes('Download QR'));
+  // 7. Verify Footer and App route include /payments
+  const footerContent = fs.readFileSync(path.join(srcDir, 'components', 'Footer.jsx'), 'utf8');
+  assert.ok(footerContent.includes('to="/payments"'), 'Footer must include navigation link to /payments');
+  const appContent = fs.readFileSync(path.join(srcDir, 'App.jsx'), 'utf8');
+  assert.ok(appContent.includes('path="/payments"'), 'App.jsx must define route path="/payments"');
 });
 
 test('Duration and package itinerary consistency', () => {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowUpRight,
   Building2,
   Check,
   Copy,
@@ -55,7 +54,7 @@ async function copyTextToClipboard(text) {
   }
 }
 
-export default function Payments({ onEnquire, config = defaultPaymentDetails }) {
+export default function Payments({ config = defaultPaymentDetails }) {
   usePageSEO('/payments');
 
   const [copiedKey, setCopiedKey] = useState('');
@@ -67,13 +66,25 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
     utr: '',
     paymentDate: '',
     amount: '',
-    method: 'UPI Transfer',
+    method: 'UPI QR Scan & Pay',
   });
   const [refErrors, setRefErrors] = useState({});
 
+  const displayName = config?.displayName || config?.upi?.displayName || 'Brand Identity Tour & Travel';
+  const currency = config?.currency || config?.upi?.currency || 'INR';
+  const beneficiaryName =
+    config?.upi?.beneficiaryName || config?.upi?.payeeName || config?.qr?.beneficiaryName || 'Syed Muzaffar';
+  const beneficiaryDisclosure =
+    config?.beneficiaryDisclosure ||
+    'When scanning this QR, your UPI application may display the registered beneficiary name Syed Muzaffar. Please verify the beneficiary details before confirming payment.';
+  const safetyNotice =
+    config?.safetyNotice ||
+    'Please make payment only after receiving your confirmed itinerary and payment instructions. Verify the beneficiary name and UPI details before confirming the transfer.';
+
   const upiReady = isUpiConfigured(config?.upi);
-  const bankReady = isBankConfigured(config?.bank);
   const qrReady = isQrConfigured(config?.qr);
+  const bankReady = isBankConfigured(config?.bank);
+  const mobileBankingReady = config?.mobileBanking?.enabled !== false && (upiReady || qrReady);
   const upiIntentUrl = upiReady ? buildUpiIntentUrl(config.upi) : '';
 
   useEffect(() => {
@@ -133,16 +144,6 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
     window.location.href = mailtoRefUrl;
   };
 
-  const requestPaymentDetailsWhatsApp = `https://wa.me/${brand.whatsapp}?text=${encodeURIComponent(
-    `Hello ${brand.name} ${brand.descriptor}! Please share your official payment instructions for my confirmed Kashmir itinerary.`
-  )}`;
-
-  const requestPaymentDetailsMailto = `mailto:${brand.email}?subject=${encodeURIComponent(
-    `Request for Official Payment Instructions — ${brand.name} ${brand.descriptor}`
-  )}&body=${encodeURIComponent(
-    `Hello ${brand.name} team,\n\nPlease share your official bank transfer / UPI payment details for my confirmed itinerary.\n\nWarm regards,`
-  )}`;
-
   const bankRows = bankReady
     ? [
         { key: 'accountHolder', label: 'Account Holder Name', value: config.bank.accountHolder },
@@ -165,14 +166,14 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
             <span>/</span>
             <span>Payment methods</span>
           </div>
-          <span className="eyebrow">TRANSPARENT BOOKING &amp; PAYMENT GUIDANCE</span>
+          <span className="eyebrow">{displayName.toUpperCase()} · OFFICIAL PAYMENT GUIDANCE</span>
           <h1>
             Simple, verified ways
             <br />
             <i>to complete your booking.</i>
           </h1>
           <p>
-            Review our supported payment methods for confirmed Kashmir itineraries: UPI, Mobile Banking (NEFT / IMPS / RTGS), and Scan &amp; Pay QR.
+            Official UPI Scan &amp; Pay QR, UPI ID, and UPI-enabled mobile banking instructions for confirmed Kashmir itineraries with {displayName}.
           </p>
         </div>
       </section>
@@ -186,35 +187,95 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
             </div>
             <div className="payment-safety-copy">
               <span className="eyebrow">CUSTOMER PAYMENT SAFETY NOTICE</span>
-              <p className="payment-safety-statement">
-                Please make payments only after receiving your confirmed itinerary and payment instructions from Brand Identity Tour &amp; Travel. Verify the beneficiary name and payment details before completing a transfer.
+              <p className="payment-safety-statement" data-testid="payment-safety-notice">
+                {safetyNotice}
               </p>
               <small>
-                This website is an informational travel portal and does not process automatic online checkout or store banking data. Never share your UPI PIN, OTP, card PIN, or net-banking password with anyone.
+                All payments are made in {currency} according to your final confirmed quotation. This website does not process automated online checkout or claim instant payment verification—every transfer is manually verified by {displayName}.
               </small>
             </div>
           </div>
 
           <div className="payment-methods-grid">
-            {/* METHOD A: UPI PAYMENT */}
-            <article className="payment-method-card" id="upi-payment" aria-labelledby="heading-upi">
-              <div className="payment-method-header">
-                <span className="payment-method-index">01 · UPI TRANSFER</span>
-                <span className="payment-method-icon">
-                  <Smartphone size={22} />
-                </span>
-              </div>
-              <h2 id="heading-upi">UPI Payment</h2>
-              <p className="payment-method-desc">
-                Pay directly from any UPI-enabled mobile application in Indian Rupees (INR) according to the amount confirmed on your written quotation.
-              </p>
+            {/* 1. SCAN & PAY — OFFICIAL QR CODE */}
+            {qrReady && (
+              <article className="payment-method-card" id="qr-payment" aria-labelledby="heading-qr">
+                <div className="payment-method-header">
+                  <span className="payment-method-index">01 · SCAN &amp; PAY</span>
+                  <span className="payment-method-icon">
+                    <QrCode size={22} />
+                  </span>
+                </div>
+                <h2 id="heading-qr">Scan &amp; Pay Official QR</h2>
+                <p className="payment-method-desc">
+                  <strong>Scan using any UPI application.</strong> Works with Google Pay, PhonePe, Paytm, BHIM, and UPI-enabled mobile banking apps.
+                </p>
 
-              {upiReady ? (
+                <div className="payment-configured-body" data-testid="qr-configured">
+                  <div className="qr-display-frame">
+                    <span className="qr-brand-tag">{displayName}</span>
+                    <img
+                      src={config.qr.image}
+                      alt={config.qr.alt || 'Brand Identity Tour & Travel official UPI payment QR code'}
+                      className="qr-code-image"
+                      data-testid="qr-image"
+                    />
+                    <span className="qr-scan-caption">Scan using any UPI application</span>
+                  </div>
+
+                  <div className="beneficiary-disclosure-box" role="note" data-testid="beneficiary-disclosure">
+                    <Info size={16} />
+                    <p>{beneficiaryDisclosure}</p>
+                  </div>
+
+                  <div className="payment-card-actions">
+                    <button
+                      type="button"
+                      className="button button-dark"
+                      data-testid="open-qr-modal"
+                      onClick={() => setQrModalOpen(true)}
+                    >
+                      <Maximize2 size={15} /> View Larger QR
+                    </button>
+                    <a
+                      href={config.qr.image}
+                      download="Brand-Identity-Tour-Travel-UPI-QR.jpg"
+                      className="button button-outline"
+                      data-testid="download-qr"
+                    >
+                      <Download size={15} /> Download QR
+                    </a>
+                  </div>
+                </div>
+              </article>
+            )}
+
+            {/* 2. UPI ID PAYMENT */}
+            {upiReady && (
+              <article className="payment-method-card" id="upi-payment" aria-labelledby="heading-upi">
+                <div className="payment-method-header">
+                  <span className="payment-method-index">02 · UPI ID / VPA</span>
+                  <span className="payment-method-icon">
+                    <Smartphone size={22} />
+                  </span>
+                </div>
+                <h2 id="heading-upi">UPI ID Payment</h2>
+                <p className="payment-method-desc">
+                  Copy our official UPI ID or launch your UPI app directly. No fixed amount is prefilled—enter the exact amount from your confirmed quotation.
+                </p>
+
                 <div className="payment-configured-body" data-testid="upi-configured">
                   <div className="payment-detail-box">
                     <div className="payment-detail-row">
                       <div>
-                        <small>OFFICIAL UPI ID / VPA</small>
+                        <small>WEBSITE DISPLAY NAME</small>
+                        <strong data-testid="payment-display-name">{displayName}</strong>
+                      </div>
+                    </div>
+
+                    <div className="payment-detail-row">
+                      <div>
+                        <small>OFFICIAL UPI ID</small>
                         <strong className="payment-mono" data-testid="upi-vpa-value">
                           {config.upi.id}
                         </strong>
@@ -233,8 +294,15 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
 
                     <div className="payment-detail-row">
                       <div>
-                        <small>VERIFIED PAYEE NAME</small>
-                        <strong data-testid="upi-payee-value">{config.upi.payeeName}</strong>
+                        <small>REGISTERED UPI BENEFICIARY (IN QR)</small>
+                        <strong data-testid="upi-beneficiary-value">{beneficiaryName}</strong>
+                      </div>
+                    </div>
+
+                    <div className="payment-detail-row">
+                      <div>
+                        <small>CURRENCY &amp; AMOUNT</small>
+                        <strong>{currency} · Per confirmed quotation</strong>
                       </div>
                     </div>
                   </div>
@@ -244,7 +312,7 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
                       href={upiIntentUrl}
                       className="button button-dark"
                       data-testid="open-upi-app"
-                      aria-label={`Open UPI app to pay ${config.upi.payeeName}`}
+                      aria-label={`Open UPI app to pay ${displayName}`}
                     >
                       Open UPI App <ExternalLink size={15} />
                     </a>
@@ -261,46 +329,104 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
                   <div className="payment-fallback-note">
                     <Info size={15} />
                     <span>
-                      <strong>Browser fallback:</strong> If your browser or desktop device does not launch a UPI app automatically, click <strong>Copy UPI ID</strong> above, open your preferred UPI application (Google Pay, PhonePe, Paytm, BHIM, or your bank app), and enter the confirmed quotation amount manually.
+                      <strong>How to pay by UPI ID:</strong> On desktop or if your browser does not open a UPI app automatically, click <strong>Copy UPI ID</strong>, open Google Pay, PhonePe, Paytm, BHIM, or your bank app, paste <strong className="payment-mono">{config.upi.id}</strong>, verify the registered beneficiary name (<strong>{beneficiaryName}</strong>), and enter your confirmed quotation amount in {currency}.
                     </span>
                   </div>
                 </div>
-              ) : (
-                <div className="payment-unconfigured-state" data-testid="upi-unconfigured">
-                  <p>
-                    To prevent unverified transfers before availability is confirmed, our official business UPI ID (VPA) and beneficiary name are shared directly on your written booking quotation.
-                  </p>
-                  <div className="payment-request-links">
-                    <a
-                      href={requestPaymentDetailsWhatsApp}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-link"
+              </article>
+            )}
+
+            {/* 3. MOBILE BANKING VIA UPI */}
+            {mobileBankingReady && (
+              <article className="payment-method-card" id="mobile-banking" aria-labelledby="heading-mobile-banking">
+                <div className="payment-method-header">
+                  <span className="payment-method-index">03 · MOBILE BANKING</span>
+                  <span className="payment-method-icon">
+                    <Building2 size={22} />
+                  </span>
+                </div>
+                <h2 id="heading-mobile-banking">UPI-Enabled Mobile Banking</h2>
+                <p className="payment-method-desc">
+                  Use your existing bank mobile application (such as SBI YONO, J&amp;K Bank mPay, HDFC, ICICI, Axis, or any UPI-enabled bank app) to scan the official QR or pay to our UPI ID.
+                </p>
+
+                <div className="payment-configured-body" data-testid="mobile-banking-configured">
+                  <div className="payment-detail-box">
+                    <div className="payment-detail-row">
+                      <div>
+                        <small>STEP 1 · OPEN YOUR BANK APP</small>
+                        <strong>Select &ldquo;Scan &amp; Pay&rdquo; or &ldquo;Send Money to UPI ID / VPA&rdquo;</strong>
+                      </div>
+                    </div>
+                    <div className="payment-detail-row">
+                      <div>
+                        <small>STEP 2 · SCAN QR OR ENTER UPI ID</small>
+                        <strong className="payment-mono">{config.upi.id}</strong>
+                      </div>
+                    </div>
+                    <div className="payment-detail-row">
+                      <div>
+                        <small>STEP 3 · VERIFY BENEFICIARY &amp; PAY</small>
+                        <strong>Confirm beneficiary &ldquo;{beneficiaryName}&rdquo; and enter quoted {currency} amount</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="supported-apps-block">
+                    <small className="supported-apps-label">COMPATIBLE UPI &amp; MOBILE BANKING APPS</small>
+                    <div className="supported-apps-tags">
+                      {(config.mobileBanking?.supportedApps || []).map((appName) => (
+                        <span className="supported-app-chip" key={appName}>
+                          {appName}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="payment-card-actions">
+                    <button
+                      type="button"
+                      className="button button-outline"
+                      onClick={() => handleCopy('mobile-upi-id', config.upi.id)}
                     >
-                      Request UPI details on WhatsApp <ArrowUpRight size={14} />
-                    </a>
-                    <a href={requestPaymentDetailsMailto} className="text-link">
-                      Request via Email <ArrowUpRight size={14} />
-                    </a>
+                      {copiedKey === 'mobile-upi-id' ? <Check size={15} /> : <Copy size={15} />}
+                      {copiedKey === 'mobile-upi-id' ? 'UPI ID Copied' : 'Copy UPI ID for Bank App'}
+                    </button>
+                    {qrReady && (
+                      <button
+                        type="button"
+                        className="button button-outline"
+                        onClick={() => setQrModalOpen(true)}
+                      >
+                        <QrCode size={15} /> Open QR to Scan
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="payment-fallback-note">
+                    <Info size={15} />
+                    <span>
+                      <strong>Note on direct bank transfers:</strong> If you require formal NEFT / IMPS / RTGS bank account details for a corporate or high-value booking, please request them directly from our Sopore travel desk alongside your confirmed invoice.
+                    </span>
                   </div>
                 </div>
-              )}
-            </article>
+              </article>
+            )}
 
-            {/* METHOD B: MOBILE BANKING / BANK TRANSFER */}
-            <article className="payment-method-card" id="bank-transfer" aria-labelledby="heading-bank">
-              <div className="payment-method-header">
-                <span className="payment-method-index">02 · NEFT / IMPS / RTGS</span>
-                <span className="payment-method-icon">
-                  <Building2 size={22} />
-                </span>
-              </div>
-              <h2 id="heading-bank">Mobile Banking &amp; Bank Transfer</h2>
-              <p className="payment-method-desc">
-                Transfer via IMPS, NEFT, or RTGS using your bank&apos;s mobile banking app or internet banking portal.
-              </p>
+            {/* OPTIONAL 4. DIRECT BANK ACCOUNT TRANSFER (HIDDEN UNLESS CONFIGURED) */}
+            {bankReady && (
+              <article className="payment-method-card" id="bank-transfer" aria-labelledby="heading-bank">
+                <div className="payment-method-header">
+                  <span className="payment-method-index">04 · NEFT / IMPS / RTGS</span>
+                  <span className="payment-method-icon">
+                    <Building2 size={22} />
+                  </span>
+                </div>
+                <h2 id="heading-bank">Direct Bank Transfer</h2>
+                <p className="payment-method-desc">
+                  Transfer via IMPS, NEFT, or RTGS using your bank&apos;s mobile banking app or internet banking portal.
+                </p>
 
-              {bankReady ? (
                 <div className="payment-configured-body" data-testid="bank-configured">
                   <div className="payment-detail-box bank-details-list">
                     {bankRows.map((row) => (
@@ -339,112 +465,12 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
                       {copiedKey === 'bank-all' ? 'All Bank Details Copied' : 'Copy All Bank Details'}
                     </button>
                   </div>
-
-                  <div className="payment-fallback-note">
-                    <Info size={15} />
-                    <span>
-                      <strong>Transfer tip:</strong> Add the beneficiary account in your mobile banking app, verify the IFSC code and account holder name, and retain your UTR / reference number after completing the transfer.
-                    </span>
-                  </div>
                 </div>
-              ) : (
-                <div className="payment-unconfigured-state" data-testid="bank-unconfigured">
-                  <p>
-                    Official bank account credentials (Account Holder Name, Bank Name, Account Number, IFSC Code, Account Type, and Branch) for NEFT, IMPS, and RTGS transfers are provided on your written itinerary invoice once dates and stays are confirmed.
-                  </p>
-                  <div className="payment-request-links">
-                    <a
-                      href={requestPaymentDetailsWhatsApp}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-link"
-                    >
-                      Request bank details on WhatsApp <ArrowUpRight size={14} />
-                    </a>
-                    <a href={requestPaymentDetailsMailto} className="text-link">
-                      Request via Email <ArrowUpRight size={14} />
-                    </a>
-                  </div>
-                </div>
-              )}
-            </article>
-
-            {/* METHOD C: QR CODE — SCAN & PAY */}
-            <article className="payment-method-card" id="qr-payment" aria-labelledby="heading-qr">
-              <div className="payment-method-header">
-                <span className="payment-method-index">03 · SCAN &amp; PAY</span>
-                <span className="payment-method-icon">
-                  <QrCode size={22} />
-                </span>
-              </div>
-              <h2 id="heading-qr">QR Code — Scan &amp; Pay</h2>
-              <p className="payment-method-desc">
-                <strong>Scan using any UPI application.</strong> Compatible with Google Pay, PhonePe, Paytm, BHIM, and standard bank UPI apps.
-              </p>
-
-              {qrReady ? (
-                <div className="payment-configured-body" data-testid="qr-configured">
-                  <div className="qr-display-frame">
-                    <img
-                      src={config.qr.image}
-                      alt={config.qr.alt || 'Brand Identity Tour & Travel official UPI payment QR'}
-                      className="qr-code-image"
-                      data-testid="qr-image"
-                    />
-                    <span className="qr-scan-caption">Scan using any UPI application</span>
-                  </div>
-
-                  <div className="payment-card-actions">
-                    <button
-                      type="button"
-                      className="button button-dark"
-                      data-testid="open-qr-modal"
-                      onClick={() => setQrModalOpen(true)}
-                    >
-                      <Maximize2 size={15} /> View Larger QR
-                    </button>
-                    <a
-                      href={config.qr.image}
-                      download="Brand-Identity-Tour-Travel-UPI-QR"
-                      className="button button-outline"
-                      data-testid="download-qr"
-                    >
-                      <Download size={15} /> Download QR
-                    </a>
-                  </div>
-                </div>
-              ) : (
-                <div className="payment-unconfigured-state" data-testid="qr-unconfigured">
-                  <div className="qr-awaiting-badge">
-                    <QrCode size={28} />
-                    <span>Scan using any UPI application</span>
-                  </div>
-                  <p>
-                    Our official merchant UPI QR code is shared directly with your written booking proposal so you can scan and pay the agreed deposit using Google Pay, PhonePe, Paytm, BHIM, or any compatible UPI app.
-                  </p>
-                  <div className="payment-request-links">
-                    <a
-                      href={requestPaymentDetailsWhatsApp}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-link"
-                    >
-                      Request official QR on WhatsApp <ArrowUpRight size={14} />
-                    </a>
-                    <button
-                      type="button"
-                      className="text-link"
-                      onClick={() => onEnquire && onEnquire('Payment & Booking Enquiry')}
-                    >
-                      Enquire about an itinerary <ArrowUpRight size={14} />
-                    </button>
-                  </div>
-                </div>
-              )}
-            </article>
+              </article>
+            )}
           </div>
 
-          {/* PHASE 5: SHARE PAYMENT REFERENCE / UTR AFTER TRANSFER */}
+          {/* SHARE PAYMENT REFERENCE / UTR AFTER TRANSFER */}
           <section
             className="payment-reference-section"
             id="share-payment-reference"
@@ -454,25 +480,25 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
               <div className="payment-reference-intro">
                 <span className="eyebrow">AFTER COMPLETING A TRANSFER</span>
                 <h2 id="heading-payment-ref">
-                  Share your payment
+                  Share your transaction
                   <br />
-                  <i>reference for verification.</i>
+                  <i>reference / UTR.</i>
                 </h2>
                 <p>
-                  Once you have completed a UPI or bank transfer against your confirmed quotation, share your transaction reference / UTR with our travel desk so our team can manually verify and issue your written payment receipt.
+                  After completing your UPI or mobile banking transfer against your confirmed quotation, share your 12-digit UPI / bank transaction reference (UTR) via WhatsApp or Email so our team at {displayName} can manually verify the transfer.
                 </p>
                 <ul className="payment-verification-steps">
                   <li>
                     <Check size={15} />
-                    <span>All transfers are manually verified by Brand Identity Tour &amp; Travel.</span>
+                    <span>All payments are manually verified by {displayName}—this website never claims automatic payment confirmation.</span>
                   </li>
                   <li>
                     <Check size={15} />
-                    <span>Submitting a reference opens WhatsApp or your Email app with pre-filled details.</span>
+                    <span>Sharing your reference opens WhatsApp or your Email app with your transaction details pre-filled.</span>
                   </li>
                   <li>
                     <Check size={15} />
-                    <span>We never ask for your UPI PIN, bank password, card PIN, or OTP.</span>
+                    <span>Never share your UPI PIN, OTP, card PIN, or net-banking password with anyone.</span>
                   </li>
                 </ul>
               </div>
@@ -485,7 +511,7 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
                       name="payerName"
                       value={refForm.payerName}
                       onChange={updateRefField}
-                      placeholder="Name on booking / bank account"
+                      placeholder="Name on booking / UPI app"
                     />
                   </label>
 
@@ -507,7 +533,7 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
                       name="utr"
                       value={refForm.utr}
                       onChange={updateRefField}
-                      placeholder="12-digit UTR or bank reference ID"
+                      placeholder="12-digit UPI reference or UTR ID"
                       required
                       aria-invalid={!!refErrors.utr}
                     />
@@ -549,13 +575,11 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
                   </label>
 
                   <label>
-                    <span>Transfer mode used</span>
+                    <span>Payment mode used</span>
                     <select name="method" value={refForm.method} onChange={updateRefField}>
-                      <option value="UPI Transfer">UPI Transfer</option>
-                      <option value="IMPS Bank Transfer">IMPS Bank Transfer</option>
-                      <option value="NEFT Bank Transfer">NEFT Bank Transfer</option>
-                      <option value="RTGS Bank Transfer">RTGS Bank Transfer</option>
                       <option value="UPI QR Scan & Pay">UPI QR Scan &amp; Pay</option>
+                      <option value="UPI ID Transfer">UPI ID Transfer ({config?.upi?.id})</option>
+                      <option value="UPI-Enabled Mobile Banking App">UPI-Enabled Mobile Banking App</option>
                     </select>
                   </label>
 
@@ -617,19 +641,26 @@ export default function Payments({ onEnquire, config = defaultPaymentDetails }) 
             >
               <X size={19} />
             </button>
-            <span className="eyebrow">BRAND IDENTITY TOUR &amp; TRAVEL</span>
+            <span className="eyebrow">{displayName.toUpperCase()}</span>
             <h2>Scan using any UPI application</h2>
+            <p className="qr-modal-sub">
+              UPI ID: <strong className="payment-mono">{config.upi?.id}</strong>
+            </p>
             <div className="qr-modal-frame">
               <img
                 src={config.qr.image}
-                alt={config.qr.alt || 'Brand Identity Tour & Travel official UPI payment QR'}
+                alt={config.qr.alt || 'Brand Identity Tour & Travel official UPI payment QR code'}
                 className="qr-modal-image"
               />
+            </div>
+            <div className="beneficiary-disclosure-box qr-modal-disclosure">
+              <Info size={16} />
+              <p>{beneficiaryDisclosure}</p>
             </div>
             <div className="dispatch-actions">
               <a
                 href={config.qr.image}
-                download="Brand-Identity-Tour-Travel-UPI-QR"
+                download="Brand-Identity-Tour-Travel-UPI-QR.jpg"
                 className="button button-dark"
               >
                 <Download size={15} /> Download QR Image

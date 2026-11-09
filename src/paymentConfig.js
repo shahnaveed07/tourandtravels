@@ -1,8 +1,33 @@
 export const paymentDetails = {
+  displayName: 'Brand Identity Tour & Travel',
+  currency: 'INR',
+  beneficiaryDisclosure:
+    'When scanning this QR, your UPI application may display the registered beneficiary name Syed Muzaffar. Please verify the beneficiary details before confirming payment.',
+  safetyNotice:
+    'Please make payment only after receiving your confirmed itinerary and payment instructions. Verify the beneficiary name and UPI details before confirming the transfer.',
   upi: {
-    enabled: false,
-    id: '',
-    payeeName: '',
+    enabled: true,
+    id: 'kashmirilovers1234567890@oksbi',
+    displayName: 'Brand Identity Tour & Travel',
+    beneficiaryName: 'Syed Muzaffar',
+    currency: 'INR',
+  },
+  qr: {
+    enabled: true,
+    image: '/assets/aistudio/IMG-20261109-WA0096_576732db.jpg',
+    alt: 'Brand Identity Tour & Travel official UPI payment QR code',
+    displayName: 'Brand Identity Tour & Travel',
+    beneficiaryName: 'Syed Muzaffar',
+  },
+  mobileBanking: {
+    enabled: true,
+    supportedApps: [
+      'Google Pay',
+      'PhonePe',
+      'Paytm',
+      'BHIM',
+      'UPI-enabled mobile banking apps',
+    ],
   },
   bank: {
     enabled: false,
@@ -13,11 +38,6 @@ export const paymentDetails = {
     accountType: '',
     branch: '',
   },
-  qr: {
-    enabled: false,
-    image: '',
-    alt: 'Brand Identity Tour & Travel official UPI payment QR',
-  },
 };
 
 export function isUpiConfigured(upi = paymentDetails.upi) {
@@ -26,8 +46,8 @@ export function isUpiConfigured(upi = paymentDetails.upi) {
       upi.enabled === true &&
       typeof upi.id === 'string' &&
       upi.id.trim().length > 0 &&
-      typeof upi.payeeName === 'string' &&
-      upi.payeeName.trim().length > 0
+      typeof (upi.beneficiaryName || upi.payeeName) === 'string' &&
+      (upi.beneficiaryName || upi.payeeName).trim().length > 0
   );
 }
 
@@ -58,10 +78,12 @@ export function isQrConfigured(qr = paymentDetails.qr) {
 }
 
 export function buildUpiIntentUrl(upi = paymentDetails.upi) {
-  if (!upi || !upi.id || !upi.payeeName) return '';
+  const beneficiary = upi?.beneficiaryName || upi?.payeeName || '';
+  if (!upi || !upi.id || !beneficiary) return '';
   const pa = encodeURIComponent(upi.id.trim());
-  const pn = encodeURIComponent(upi.payeeName.trim());
-  return `upi://pay?pa=${pa}&pn=${pn}&cu=INR`;
+  const pn = encodeURIComponent(beneficiary.trim());
+  const cu = encodeURIComponent((upi.currency || 'INR').trim());
+  return `upi://pay?pa=${pa}&pn=${pn}&cu=${cu}`;
 }
 
 export function formatBankDetailsText(bank = paymentDetails.bank) {
@@ -85,17 +107,17 @@ export function buildPaymentReferenceMessage(brand, form) {
   const paymentDate = form.paymentDate?.trim() || '';
   const amount = form.amount?.trim() || '';
   const payerName = form.payerName?.trim() || '';
-  const method = form.method?.trim() || 'UPI / Bank Transfer';
+  const method = form.method?.trim() || 'UPI / QR Scan & Pay';
 
   return (
     `Hello ${brand.name} ${brand.descriptor}!\n\n` +
-    `I have completed a payment transfer and would like to share the payment reference for manual verification:\n\n` +
+    `I have completed a payment transfer and would like to share the transaction reference / UTR for manual verification:\n\n` +
     (payerName ? `• Payer Name: ${payerName}\n` : '') +
     `• Booking Reference: ${bookingRef}\n` +
     `• Transaction Reference / UTR: ${utr}\n` +
     `• Payment Date: ${paymentDate}\n` +
-    `• Amount Paid: ₹${amount}\n` +
-    `• Payment Method: ${method}\n\n` +
+    `• Amount Paid: ₹${amount} (INR)\n` +
+    `• Payment Mode: ${method}\n\n` +
     `Please verify and confirm receipt at your convenience.`
   );
 }
