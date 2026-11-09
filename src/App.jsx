@@ -12,6 +12,7 @@ import About from './pages/About.jsx';
 import Services from './pages/Services.jsx';
 import Contact from './pages/Contact.jsx';
 import Payments from './pages/Payments.jsx';
+import Bookings from './pages/Bookings.jsx';
 import Legal from './pages/Legal.jsx';
 import { ArrowUp, MessageCircle, AlertTriangle, RefreshCw } from 'lucide-react';
 import { brand } from './data.js';
@@ -141,6 +142,7 @@ export default function App() {
         <Route path="/travel-guides/:slug" element={<TravelGuideDetail onEnquire={openEnquiry} />} />
         <Route path="/about" element={<About onEnquire={openEnquiry} />} />
         <Route path="/services" element={<Services onEnquire={openEnquiry} />} />
+        <Route path="/bookings" element={<Bookings onEnquire={openEnquiry} />} />
         <Route path="/contact" element={<Contact onEnquire={openEnquiry} />} />
         <Route path="/payments" element={<Payments onEnquire={openEnquiry} />} />
         <Route path="/privacy" element={<Legal page="privacy" />} />

@@ -1958,10 +1958,262 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   border-radius: 2px;
 }
 
+/* --- Travel & Activity Bookings Hub (/bookings) & Services Teaser --- */
+.booking-hub-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.booking-hub-card {
+  display: grid;
+  grid-template-columns: 0.38fr 0.62fr;
+  background: #fffefa;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px -28px rgba(15, 29, 25, 0.14);
+}
+.booking-hub-media {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  background: var(--forest);
+}
+.booking-hub-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 54%;
+  transform: scale(1.36);
+  display: block;
+}
+.booking-provider-pill {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  right: 18px;
+  background: rgba(15, 29, 25, 0.88);
+  backdrop-filter: blur(8px);
+  color: #f6f2ea;
+  border: 1px solid rgba(196, 132, 87, 0.45);
+  padding: 8px 12px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: calc(100% - 36px);
+  z-index: 2;
+}
+.booking-hub-body {
+  padding: 36px 38px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.booking-hub-body h2 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.12;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0;
+}
+.booking-hub-desc {
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--muted);
+  margin: 0;
+}
+.booking-steps-box {
+  background: var(--ivory-2);
+  border: 1px solid var(--line);
+  padding: 20px 22px;
+  border-radius: 2px;
+}
+.booking-steps-label {
+  display: block;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--forest);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.booking-steps-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 20px;
+}
+.booking-steps-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.booking-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: #f6f2ea;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.gondola-phases-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.gondola-phase-card {
+  background: var(--ivory-2);
+  border: 1px solid var(--line);
+  padding: 18px 20px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.gondola-phase-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--copper-2);
+}
+.gondola-phase-card strong {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  display: block;
+  line-height: 1.2;
+}
+.gondola-phase-card p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+.heli-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.heli-option-box {
+  background: var(--ivory-2);
+  border: 1px solid var(--line);
+  padding: 22px 24px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.heli-option-box h3 {
+  font-family: var(--serif);
+  font-size: 23px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.heli-option-box p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0;
+}
+.heli-safety-warning {
+  background: rgba(164, 98, 55, 0.1);
+  border-left: 3px solid var(--copper-2);
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.heli-safety-warning svg {
+  color: var(--copper-2);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.heli-safety-warning p {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+}
+.booking-hub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.services-booking-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 28px;
+}
+.services-booking-mini-card {
+  background: #fffefa;
+  border: 1px solid var(--line);
+  padding: 26px 24px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.services-booking-mini-card h3 {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.services-booking-mini-card p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0 0 6px;
+  flex: 1;
+}
+.services-booking-mini-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
 @media (max-width: 1024px) {
   .payment-methods-grid { grid-template-columns: 1fr; }
   .payment-reference-grid { grid-template-columns: 1fr; gap: 32px; }
   .social-profile-cards { grid-template-columns: 1fr; }
+  .booking-hub-card { grid-template-columns: 1fr; }
+  .booking-hub-media { min-height: 260px; max-height: 320px; }
+  .heli-options-grid { grid-template-columns: 1fr; }
+  .services-booking-cards { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
@@ -1970,6 +2222,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .payment-reference-section { padding: 30px 20px; }
   .payment-reference-form { padding: 20px 16px; }
   .contact-bottom { flex-wrap: wrap; gap: 14px; }
+  .booking-hub-body { padding: 24px 20px; }
+  .booking-steps-list { grid-template-columns: 1fr; }
+  .gondola-phases-grid { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1979,3 +2234,4 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     animation-duration: .01ms !important;
   }
 }
+

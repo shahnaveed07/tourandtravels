@@ -80,6 +80,7 @@ export function getIndexableRoutes() {
     '/',
     '/packages',
     '/services',
+    '/bookings',
     '/about',
     '/contact',
     '/payments',
@@ -375,6 +376,35 @@ export function getRouteSEO(pathname = '/') {
         buildBreadcrumbSchema([
           { name: 'Home', url: `${SITE_ORIGIN}/` },
           { name: 'Contact', url: canonical },
+        ]),
+      ],
+    };
+  }
+
+  if (cleanPath === '/bookings') {
+    const ogImage = toAbsoluteImageUrl(siteImages.destinations.gulmarg);
+    const title = 'Travel & Activity Bookings | Brand Identity Tour & Travel';
+    const description =
+      'Find official booking portals for Vande Bharat Express train tickets (IRCTC), Gulmarg Gondola cable car tickets (JKCCC), and eligible Amarnath Yatra helicopter services in Kashmir.';
+    return {
+      title,
+      description,
+      canonical,
+      robots: 'index, follow',
+      ogTitle: title,
+      ogDescription: description,
+      ogUrl: canonical,
+      ogImage,
+      ogType: 'website',
+      twitterCard: 'summary_large_image',
+      twitterTitle: title,
+      twitterDescription: description,
+      twitterImage: ogImage,
+      jsonLd: [
+        travelAgencySchema,
+        buildBreadcrumbSchema([
+          { name: 'Home', url: `${SITE_ORIGIN}/` },
+          { name: 'Bookings', url: canonical },
         ]),
       ],
     };

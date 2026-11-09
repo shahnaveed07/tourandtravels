@@ -29,6 +29,7 @@ export default function Footer({ onEnquire }) {
           <h4>Explore</h4>
           <Link to="/packages">Tour packages</Link>
           <Link to="/services">Travel services</Link>
+          <Link to="/bookings">Bookings</Link>
           <Link to="/travel-guides/getting-here-arrival-planning">Arrival guide</Link>
           <Link to="/about">Our story</Link>
           <Link to="/payments">Payment Methods</Link>
@@ -59,7 +60,7 @@ export default function Footer({ onEnquire }) {
             target="_blank"
             rel="noopener noreferrer"
             className="footer-address"
-            aria-label={`View ${brand.address} on Google Maps`}
+            aria-label="Get Directions to Brand Identity Tour & Travel on Google Maps"
           >
             <MapPin size={15} />
             <span>{brand.address}</span>
@@ -69,9 +70,9 @@ export default function Footer({ onEnquire }) {
             target="_blank"
             rel="noopener noreferrer"
             className="text-link footer-map-link"
-            aria-label="View office location and get directions on Google Maps"
+            aria-label="View Brand Identity Tour & Travel on Google Maps"
           >
-            View on Google Maps <ArrowUpRight size={14} />
+            View Brand Identity Tour &amp; Travel on Google Maps <ArrowUpRight size={14} />
           </a>
           <button className="text-link footer-enquire" onClick={() => onEnquire('General Enquiry')}>
             Start planning with us <ArrowUpRight size={15} />

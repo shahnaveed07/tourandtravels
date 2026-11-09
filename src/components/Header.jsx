@@ -144,6 +144,9 @@ export default function Header({ onEnquire }) {
             <NavLink to="/services" className={navClass} onClick={closeMobile}>
               Services
             </NavLink>
+            <NavLink to="/bookings" className={navClass} onClick={closeMobile}>
+              Bookings
+            </NavLink>
             <NavLink to="/about" className={navClass} onClick={closeMobile}>
               About
             </NavLink>

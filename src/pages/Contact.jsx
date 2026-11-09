@@ -87,7 +87,7 @@ export default function Contact({ onEnquire }) {
                 href={brand.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`View ${brand.address} on Google Maps`}
+                aria-label="View Brand Identity Tour & Travel on Google Maps"
               >
                 <span>
                   <MapPin size={18} />
@@ -162,9 +162,9 @@ export default function Contact({ onEnquire }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="button button-outline"
-                aria-label="View office on Google Maps and get directions"
+                aria-label="View Brand Identity Tour & Travel on Google Maps"
               >
-                <Navigation size={15} /> View on Google Maps
+                <Navigation size={15} /> View Brand Identity Tour &amp; Travel on Google Maps
               </a>
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function Contact({ onEnquire }) {
                   rel="noopener noreferrer"
                   className="text-link contact-map-inline"
                 >
-                  Get Directions on Google Maps <ArrowUpRight size={14} />
+                  Get Directions <ArrowUpRight size={14} />
                 </a>
               </div>
             </div>
@@ -213,6 +213,9 @@ export default function Contact({ onEnquire }) {
         </Link>
         <Link to="/packages">
           Browse all tour packages <ArrowUpRight size={15} />
+        </Link>
+        <Link to="/bookings">
+          Bookings <ArrowUpRight size={15} />
         </Link>
         <Link to="/payments">
           Payment Methods <ArrowUpRight size={15} />

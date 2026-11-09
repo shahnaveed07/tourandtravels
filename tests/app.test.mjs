@@ -16,6 +16,11 @@ import {
 } from '../src/paymentConfig.js';
 import { siteImages } from '../src/imageCatalog.js';
 import {
+  bookingServices,
+  buildTrainHelpWhatsAppUrl,
+  buildHelicopterEnquiryWhatsAppUrl,
+} from '../src/bookingServices.js';
+import {
   SITE_ORIGIN,
   getIndexableRoutes,
   getAllPrerenderRoutes,
@@ -50,7 +55,11 @@ test('Brand data has required fields, verified contact formats, Google Maps link
   assert.equal(brand.whatsapp, '916006343335');
   assert.equal(brand.pinCode, '193201');
   assert.ok(brand.address.includes('Bismillah Market, Sopore, Baramulla'));
-  assert.ok(brand.mapUrl.startsWith('https://www.google.com/maps/search/?api=1&query='));
+  assert.equal(
+    brand.mapUrl,
+    'https://www.google.com/maps/search/?api=1&query=Brand%20Identity%20Tour%20%26%20Travel%2C%20Bismillah%20Market%2C%20Sopore%2C%20Baramulla%2C%20Jammu%20%26%20Kashmir%2C%20India'
+  );
+  assert.equal(brand.googleBusinessShareUrl, '');
   assert.equal(brand.social.facebook, 'https://www.facebook.com/brandidentitytourntravel');
   assert.equal(brand.social.instagram, 'https://www.instagram.com/brandidentitytourntravel/');
   assert.equal(brand.social.youtube, 'https://www.youtube.com/@brandidentitytourntravel');
@@ -174,7 +183,7 @@ test('8. Every image path in src/data.js and src/imageCatalog.js exists on disk 
   }
 });
 
-test('9–10. public/sitemap.xml and public/robots.txt contain all 23 canonical https://www.bittkashmir.in URLs (including /payments)', () => {
+test('9–10. public/sitemap.xml and public/robots.txt contain all 24 canonical https://www.bittkashmir.in URLs (including /payments and /bookings)', () => {
   const robotsTxt = fs.readFileSync(path.join(publicDir, 'robots.txt'), 'utf8');
   assert.ok(robotsTxt.includes('User-agent: *'), 'robots.txt must include User-agent: *');
   assert.ok(robotsTxt.includes('Allow: /'), 'robots.txt must include Allow: /');
@@ -189,9 +198,10 @@ test('9–10. public/sitemap.xml and public/robots.txt contain all 23 canonical 
   const locMatches = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   const expectedUrls = getIndexableRoutes().map((r) => toCanonicalUrl(r));
 
-  assert.equal(expectedUrls.length, 23, 'Expected 23 indexable routes (1 home + 5 static + 6 dest + 8 pkg + 3 guides)');
-  assert.equal(locMatches.length, 23, `Expected 23 <loc> entries in sitemap.xml, found ${locMatches.length}`);
+  assert.equal(expectedUrls.length, 24, 'Expected 24 indexable routes (1 home + 6 static + 6 dest + 8 pkg + 3 guides)');
+  assert.equal(locMatches.length, 24, `Expected 24 <loc> entries in sitemap.xml, found ${locMatches.length}`);
   assert.ok(locMatches.includes('https://www.bittkashmir.in/payments'), 'sitemap.xml must include https://www.bittkashmir.in/payments');
+  assert.ok(locMatches.includes('https://www.bittkashmir.in/bookings'), 'sitemap.xml must include https://www.bittkashmir.in/bookings');
 
   for (const expectedUrl of expectedUrls) {
     assert.ok(
@@ -483,3 +493,87 @@ test('Duration and package itinerary consistency', () => {
     assert.equal(pkg.itinerary.length, expectedDays);
   }
 });
+
+test('16. Centralized bookingServices configuration, official portal URLs, WhatsApp helpers, and /bookings SSR rendering', async () => {
+  // 1. Official booking portal URLs
+  assert.equal(bookingServices.vandeBharat.primaryUrl, 'https://www.irctc.co.in/nget/train-search');
+  assert.equal(bookingServices.vandeBharat.primaryLabel, 'Book Train Tickets on IRCTC');
+  assert.equal(bookingServices.vandeBharat.secondaryLabel, 'Need Help with Train Booking?');
+  assert.equal(bookingServices.vandeBharat.steps.length, 6);
+
+  assert.equal(bookingServices.gulmargGondola.primaryUrl, 'https://etickets.jammukashmircablecar.com/');
+  assert.equal(bookingServices.gulmargGondola.alternateUrl, 'https://eticket.webfront.in/');
+  assert.equal(bookingServices.gulmargGondola.primaryLabel, 'Book Gulmarg Gondola Tickets');
+  assert.equal(bookingServices.gulmargGondola.alternateLabel, 'Open Alternate Booking Portal');
+  assert.equal(bookingServices.gulmargGondola.phases.length, 2);
+  assert.equal(bookingServices.gulmargGondola.phases[0].route, 'Gulmarg to Kongdori');
+  assert.equal(bookingServices.gulmargGondola.phases[1].route, 'Kongdori to Apharwat');
+  assert.equal(
+    bookingServices.gulmargGondola.notice,
+    'Ticket availability, operating schedules and weather-related restrictions are controlled by the official corporation. Check the official portal before travel.'
+  );
+
+  assert.equal(bookingServices.helicopter.amarnath.infoUrl, 'https://jksasb.nic.in/Heli-Services.html');
+  assert.equal(bookingServices.helicopter.amarnath.onlineServicesUrl, 'https://jksasb.nic.in/onlineservices/');
+  assert.equal(bookingServices.helicopter.amarnath.primaryLabel, 'Official Amarnath Helicopter Booking');
+  assert.equal(
+    bookingServices.helicopter.amarnath.safetyWarning,
+    'Amarnath Yatra helicopter tickets must be booked through the official Shri Amarnathji Shrine Board portal. Do not pay unofficial agents claiming to issue Shrine Board helicopter tickets.'
+  );
+  assert.equal(
+    bookingServices.helicopter.charter.whatsappPrefill,
+    'Hello Brand Identity Tour & Travel. I would like to enquire about helicopter/chopper services. My preferred route, travel date and passenger count are:'
+  );
+
+  // 2. WhatsApp helper URLs
+  const trainWaUrl = buildTrainHelpWhatsAppUrl();
+  assert.ok(trainWaUrl.startsWith('https://wa.me/916006343335?text='));
+  const heliWaUrl = buildHelicopterEnquiryWhatsAppUrl();
+  assert.ok(heliWaUrl.startsWith('https://wa.me/916006343335?text='));
+  assert.ok(
+    decodeURIComponent(heliWaUrl.split('text=')[1]).includes(
+      'Hello Brand Identity Tour & Travel. I would like to enquire about helicopter/chopper services. My preferred route, travel date and passenger count are:'
+    )
+  );
+
+  // 3. SEO for /bookings
+  const bookingsSeo = getRouteSEO('/bookings');
+  assert.equal(bookingsSeo.title, 'Travel & Activity Bookings | Brand Identity Tour & Travel');
+  assert.equal(bookingsSeo.canonical, 'https://www.bittkashmir.in/bookings');
+
+  // 4. SSR render of /bookings and /services
+  const { createServer } = await import('vite');
+  const vite = await createServer({
+    root: rootDir,
+    logLevel: 'error',
+    server: { middlewareMode: true },
+    appType: 'custom',
+  });
+  let bookingsHtml = '';
+  let servicesHtml = '';
+  try {
+    const { renderRoute } = await vite.ssrLoadModule('/src/entry-server.jsx');
+    bookingsHtml = renderRoute('/bookings');
+    servicesHtml = renderRoute('/services');
+  } finally {
+    await vite.close();
+  }
+
+  assert.ok(bookingsHtml.includes('https://www.irctc.co.in/nget/train-search'));
+  assert.ok(bookingsHtml.includes('Book Train Tickets on IRCTC'));
+  assert.ok(bookingsHtml.includes('Need Help with Train Booking?'));
+  assert.ok(bookingsHtml.includes('https://etickets.jammukashmircablecar.com/'));
+  assert.ok(bookingsHtml.includes('https://eticket.webfront.in/'));
+  assert.ok(bookingsHtml.includes('Gulmarg to Kongdori'));
+  assert.ok(bookingsHtml.includes('Kongdori to Apharwat'));
+  assert.ok(bookingsHtml.includes('https://jksasb.nic.in/onlineservices/'));
+  assert.ok(bookingsHtml.includes('https://jksasb.nic.in/Heli-Services.html'));
+  assert.ok(bookingsHtml.includes('Official Amarnath Helicopter Booking'));
+  assert.ok(
+    bookingsHtml.includes(
+      'Amarnath Yatra helicopter tickets must be booked through the official Shri Amarnathji Shrine Board portal. Do not pay unofficial agents claiming to issue Shrine Board helicopter tickets.'
+    )
+  );
+  assert.ok(servicesHtml.includes('/bookings'), 'Services page must link to /bookings');
+});
+

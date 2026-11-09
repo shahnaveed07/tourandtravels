@@ -42,11 +42,20 @@ export default function About({ onEnquire }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-link"
-                aria-label="View our Sopore office on Google Maps"
+                aria-label="View Brand Identity Tour & Travel on Google Maps"
               >
-                <MapPin size={14} /> View on Google Maps <ArrowUpRight size={15}/>
+                <MapPin size={14} /> View Brand Identity Tour &amp; Travel on Google Maps <ArrowUpRight size={15}/>
               </a>
-              <Link to="/packages" className="text-link">Explore Kashmir tour packages <ArrowUpRight size={15}/></Link>
+              <a
+                href={brand.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-link"
+                aria-label="Get Directions to Brand Identity Tour & Travel"
+              >
+                Get Directions <ArrowUpRight size={15}/>
+              </a>
+              <Link to="/bookings" className="text-link">Bookings <ArrowUpRight size={15}/></Link>
               <Link to="/payments" className="text-link">Payment Methods <ArrowUpRight size={15}/></Link>
             </div>
             <div className="about-social-strip">

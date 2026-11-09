@@ -12,7 +12,9 @@ export const brand = {
   pinCode: '193201',
   hours: 'Monday – Saturday, 10:00 – 18:00 IST',
   whatsapp: '916006343335',
-  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Bismillah+Market%2C+Sopore%2C+Baramulla%2C+Jammu+%26+Kashmir%2C+India',
+  // Set googleBusinessShareUrl if the owner provides a direct Google Business Profile share link or verified Place ID URL
+  googleBusinessShareUrl: '',
+  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Brand%20Identity%20Tour%20%26%20Travel%2C%20Bismillah%20Market%2C%20Sopore%2C%20Baramulla%2C%20Jammu%20%26%20Kashmir%2C%20India',
   social: {
     facebook: 'https://www.facebook.com/brandidentitytourntravel',
     instagram: 'https://www.instagram.com/brandidentitytourntravel/',
