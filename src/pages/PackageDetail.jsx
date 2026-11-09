@@ -106,7 +106,7 @@ export default function PackageDetail({ onEnquire }) {
               <div className="inclusions-block">
                 <div className="inc-header">
                   <Check size={18} className="text-forest" />
-                  <h4>Sample Inclusions</h4>
+                  <h4>What's Included</h4>
                 </div>
                 <ul>
                   {(item.inclusions || []).map((inc, i) => (
@@ -121,7 +121,7 @@ export default function PackageDetail({ onEnquire }) {
               <div className="exclusions-block">
                 <div className="inc-header">
                   <X size={18} className="text-muted" />
-                  <h4>Sample Exclusions</h4>
+                  <h4>What's Excluded</h4>
                 </div>
                 <ul>
                   {(item.exclusions || []).map((exc, i) => (
@@ -141,7 +141,7 @@ export default function PackageDetail({ onEnquire }) {
                 <strong>Important Travel & Booking Information</strong>
               </div>
               <p>
-                {item.notes || 'All rates, vehicle choices, and stay categories shown are illustrative sample figures for planning. A written itinerary quotation with verified supplier availability, specific hotel names, vehicle type, seasonal permit guidelines, and cancellation terms will be provided upon enquiry.'}
+                {item.notes || 'A written itinerary quotation with verified supplier availability, specific hotel names, vehicle type, seasonal permit guidelines, and cancellation terms will be provided upon enquiry.'}
               </p>
             </div>
           </div>
@@ -149,7 +149,7 @@ export default function PackageDetail({ onEnquire }) {
           <aside className="detail-sidebar">
             <div className="booking-card">
               <span className="eyebrow">YOUR JOURNEY, YOUR WAY</span>
-              <small>Sample price from</small>
+              <small>Starting price from</small>
               <strong className="booking-price">{item.price}<em> / person</em></strong>
               <div className="booking-fact">
                 <Clock3 size={16} />

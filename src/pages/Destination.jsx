@@ -125,7 +125,7 @@ export default function Destination({ onEnquire }) {
                 ))}
               </ul>
               <small className="destination-disclaimer-note">
-                Sample local travel advice. Real-time road status, snow passes and timing should be verified prior to travel.
+                Practical travel guidance. Real-time road status, snow passes and timing should be verified prior to departure.
               </small>
             </div>
           </div>

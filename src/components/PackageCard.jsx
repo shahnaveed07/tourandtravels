@@ -21,7 +21,7 @@ export default function PackageCard({ item, onEnquire, compact = false }) {
         <h3><Link to={`/packages/${item.slug}`}>{item.title}</Link></h3>
         <p className="package-locations"><MapPin size={14}/>{item.locations.join(' · ')}</p>
         {!compact && <p className="package-summary">{item.summary}</p>}
-        <div className="package-card-bottom"><div><small>Sample price from</small><strong>{item.price}<em> / person</em></strong></div><div className="package-actions"><Link className="text-link" to={`/packages/${item.slug}`}>View trip <ArrowUpRight size={14}/></Link><button className="icon-enquire" onClick={() => onEnquire(item.title)} aria-label={`Enquire about ${item.title}`}><ArrowUpRight size={17}/></button></div></div>
+        <div className="package-card-bottom"><div><small>Starting from</small><strong>{item.price}<em> / person</em></strong></div><div className="package-actions"><Link className="text-link" to={`/packages/${item.slug}`}>View trip <ArrowUpRight size={14}/></Link><button className="icon-enquire" onClick={() => onEnquire(item.title)} aria-label={`Enquire about ${item.title}`}><ArrowUpRight size={17}/></button></div></div>
       </div>
     </article>
   );

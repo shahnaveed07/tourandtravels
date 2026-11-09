@@ -22,7 +22,7 @@ export default function EnquiryModal({
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState('idle'); // 'idle' | 'success' | 'demo_ready' | 'error'
+  const [submitStatus, setSubmitStatus] = useState('idle'); // 'idle' | 'success' | 'dispatch_ready' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
 
   const modalTitleId = useId();
@@ -146,8 +146,8 @@ export default function EnquiryModal({
         setIsSubmitting(false);
       }
     } else {
-      // In demo mode when no backend endpoint has been configured
-      setSubmitStatus('demo_ready');
+      // Direct instant dispatch via WhatsApp chat
+      setSubmitStatus('dispatch_ready');
     }
   };
 
@@ -194,20 +194,20 @@ export default function EnquiryModal({
           </div>
         )}
 
-        {submitStatus === 'demo_ready' && (
-          <div className="demo-notice-state">
-            <span className="demo-icon">
+        {submitStatus === 'dispatch_ready' && (
+          <div className="dispatch-notice-state">
+            <span className="dispatch-icon">
               <MessageCircle size={36} />
             </span>
-            <span className="eyebrow">INSTANT ENQUIRY DISPATCH</span>
-            <h2>Send your enquiry directly on WhatsApp.</h2>
-            <p className="demo-explain">
-              Connect immediately with our travel planning desk in Sopore. All your itinerary preferences, guest counts, and dates are packaged and ready to send.
+            <span className="eyebrow">READY TO SEND</span>
+            <h2>Send your enquiry on WhatsApp.</h2>
+            <p className="dispatch-explain">
+              Connect directly with our travel planning desk in Sopore. All your itinerary preferences, guest counts, and dates are prepared and ready to send.
             </p>
-            <p className="demo-recommendation">
+            <p className="dispatch-recommendation">
               Click below to start a live conversation with our Kashmir team:
             </p>
-            <div className="demo-actions">
+            <div className="dispatch-actions">
               <button className="button button-dark whatsapp-btn" onClick={handleWhatsAppDirect}>
                 <MessageCircle size={17} /> Send via WhatsApp now
               </button>
@@ -226,7 +226,7 @@ export default function EnquiryModal({
             <span className="eyebrow">SUBMISSION ERROR</span>
             <h2>Could not send enquiry.</h2>
             <p>{errorMessage}</p>
-            <div className="demo-actions">
+            <div className="modal-state-actions">
               <button className="button button-dark" onClick={handleWhatsAppDirect}>
                 <MessageCircle size={17} /> Send via WhatsApp instead
               </button>
@@ -360,13 +360,9 @@ export default function EnquiryModal({
             </form>
 
             <div className="form-mode-note">
-              {endpoint ? (
-                <span>Connected to secure enquiry endpoint.</span>
-              ) : (
-                <span>
-                  <strong>Demo Mode:</strong> Live backend submission is optional. You can also connect via WhatsApp below.
-                </span>
-              )}
+              <span>
+                Our travel team in Sopore will review your preferences and get in touch within 24 hours.
+              </span>
             </div>
 
             <div className="modal-direct-actions">
