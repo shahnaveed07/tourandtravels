@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Clock3, MapPin } from 'lucide-react';
+import { siteImages } from '../imageCatalog.js';
 
 export default function PackageCard({ item, onEnquire, compact = false }) {
   return (
@@ -10,7 +11,8 @@ export default function PackageCard({ item, onEnquire, compact = false }) {
           alt={`${item.title} tour scenery`}
           loading="lazy"
           onError={(e) => {
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85';
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = siteImages.hero;
           }}
         />
         {item.tag && <span className="image-tag">{item.tag}</span>}

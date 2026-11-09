@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Clock3, Compass, MapPin } from 'lucide-react';
 import { guides, destinations, packages } from '../data.js';
+import { siteImages } from '../imageCatalog.js';
 import PackageCard from '../components/PackageCard.jsx';
 
 export default function TravelGuideDetail({ onEnquire }) {
@@ -37,7 +38,8 @@ export default function TravelGuideDetail({ onEnquire }) {
           src={guide.image}
           alt={guide.title}
           onError={(e) => {
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85';
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = siteImages.hero;
           }}
         />
         <div className="detail-hero-shade" />

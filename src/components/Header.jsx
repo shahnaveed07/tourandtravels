@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, ArrowUpRight, Phone } from 'lucide-react';
 import { brand, destinations, packages } from '../data.js';
+import { siteImages } from '../imageCatalog.js';
 
 const navClass = ({ isActive }) => `nav-link${isActive ? ' active' : ''}`;
 
@@ -63,12 +64,14 @@ export default function Header({ onEnquire }) {
             to="/"
             className="brand-mark"
             onClick={closeMobile}
-            aria-label="Brand Identity Tour and Travel home"
+            aria-label="Brand Identity Tour & Travel home"
           >
-            <span className="brand-symbol">BI</span>
-            <span className="brand-wordmark">
-              <strong>{brand.name}</strong>
-              <small>{brand.descriptor}</small>
+            <span className="brand-logo-frame">
+              <img
+                src={siteImages.logo.horizontal}
+                alt="Brand Identity Tour & Travel"
+                className="brand-logo-img"
+              />
             </span>
           </Link>
 

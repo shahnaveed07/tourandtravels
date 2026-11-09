@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, MapPin, Mail, Phone } from 'lucide-react';
 import { brand, destinations } from '../data.js';
+import { siteImages } from '../imageCatalog.js';
 
 function InstagramIcon({ size = 17 }) {
   return (
@@ -39,19 +40,20 @@ export default function Footer({ onEnquire }) {
     <footer className="site-footer">
       <div className="container footer-main">
         <div className="footer-brand-col">
-          <Link to="/" className="brand-mark footer-brand" aria-label="Brand Identity home">
-            <span className="brand-symbol">BI</span>
-            <span className="brand-wordmark">
-              <strong>{brand.name}</strong>
-              <small>{brand.descriptor}</small>
+          <Link to="/" className="brand-mark footer-brand" aria-label="Brand Identity Tour & Travel home">
+            <span className="brand-logo-frame footer-logo-frame">
+              <img
+                src={siteImages.logo.horizontal}
+                alt="Brand Identity Tour & Travel"
+                className="brand-logo-img"
+              />
             </span>
           </Link>
           <p>
             Thoughtfully planned Kashmir journeys, meaningful mountain moments, and the freedom to experience the valley at your own pace.
           </p>
 
-          {/* Social links: only rendered as interactive links when legitimate URLs exist; otherwise displayed as verified coming soon badge or hidden */}
-          {hasAnySocial ? (
+          {hasAnySocial && (
             <div className="social-links" aria-label="Social media links">
               {hasInstagram && (
                 <a href={brand.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Visit our Instagram">
@@ -68,10 +70,6 @@ export default function Footer({ onEnquire }) {
                   <YoutubeIcon size={17} />
                 </a>
               )}
-            </div>
-          ) : (
-            <div className="social-placeholder-note">
-              <small>Official social channels launching soon.</small>
             </div>
           )}
         </div>

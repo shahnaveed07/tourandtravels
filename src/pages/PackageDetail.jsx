@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, Check, Clock3, Info, MapPin, Users, X } from 'lucide-react';
 import { packages, destinations } from '../data.js';
+import { siteImages } from '../imageCatalog.js';
 import PackageCard from '../components/PackageCard.jsx';
 
 export default function PackageDetail({ onEnquire }) {
@@ -42,7 +43,8 @@ export default function PackageDetail({ onEnquire }) {
           src={item.image}
           alt={`${item.title} scenery`}
           onError={(e) => {
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85';
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = siteImages.hero;
           }}
         />
         <div className="detail-hero-shade" />

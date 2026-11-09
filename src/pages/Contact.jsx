@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Clock3, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { brand } from '../data.js';
+import { siteImages } from '../imageCatalog.js';
 
 export default function Contact({ onEnquire }) {
   useEffect(() => {
@@ -123,10 +124,11 @@ export default function Contact({ onEnquire }) {
 
           <div className="contact-visual">
             <img
-              src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=85"
-              alt="Quiet mountain lake landscape in Kashmir"
+              src={siteImages.company.storefront}
+              alt="Brand Identity Tour & Travel storefront at Bismillah Market, Sopore"
               onError={(e) => {
-                e.currentTarget.src = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85';
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = siteImages.hero;
               }}
             />
             <div className="contact-visual-note">

@@ -14,6 +14,7 @@ import Contact from './pages/Contact.jsx';
 import Legal from './pages/Legal.jsx';
 import { ArrowUp, MessageCircle, AlertTriangle, RefreshCw } from 'lucide-react';
 import { brand } from './data.js';
+import { siteImages } from './imageCatalog.js';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -98,6 +99,14 @@ export default function App() {
   const [enquiryPackage, setEnquiryPackage] = useState('');
   const [enquiryDate, setEnquiryDate] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const iconLink = document.querySelector("link[rel='icon']");
+    if (iconLink) {
+      iconLink.href = siteImages.logo.emblem;
+      iconLink.type = 'image/webp';
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {

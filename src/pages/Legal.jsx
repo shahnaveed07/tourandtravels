@@ -21,14 +21,19 @@ export default function Legal({ page }) {
 
       {isPrivacy ? (
         <>
-          <h2>Information you share</h2>
+          <h2>Information you enter on this website</h2>
           <p>
-            When you enquire about a tour, we collect relevant details such as your name, email address, phone number, departure city, tentative travel dates, and trip preferences to prepare a tailored itinerary quotation.
+            When you use our trip enquiry form, you may enter details such as your name, phone number, email address, departure city, tentative travel dates, number of travellers, and itinerary preferences. This static website does not store, log, or transmit your enquiry details to any website database or backend server.
           </p>
 
-          <h2>How your information is used</h2>
+          <h2>Direct handoff to WhatsApp or Email</h2>
           <p>
-            Your information is used strictly to communicate with you regarding your travel plans, coordinate hotel or transport bookings, and provide on-trip assistance. We do not sell, rent, or distribute your personal details to third parties for commercial marketing.
+            When you choose to send your enquiry via WhatsApp or Email, the details you entered are formatted locally in your browser and passed directly to your chosen WhatsApp or email application so you can review and send the message yourself to our travel desk ({brand.phone} or {brand.email}).
+          </p>
+
+          <h2>How your information is used once sent</h2>
+          <p>
+            If you choose to dispatch your message via WhatsApp or email, our travel coordinators use the information you share strictly to respond to your enquiry, prepare a tailored itinerary quotation, coordinate hotel or transport arrangements, and provide on-trip assistance. We do not sell, rent, or distribute your personal details to third parties for commercial marketing.
           </p>
 
           <h2>Contact us regarding your data</h2>

@@ -1,10 +1,18 @@
 # Brand Identity Tour & Travel
 
-A production-ready, fully responsive React + Vite website crafted for **Brand Identity Tour & Travel**, showcasing curated Kashmir journeys, alpine destinations, mountain stays, and personalized valley travel coordination.
+A production-ready, fully responsive static **React + Vite** website crafted for **Brand Identity Tour & Travel** (Sopore, Baramulla, Jammu & Kashmir), showcasing curated Kashmir journeys, alpine destinations, mountain stays, and personalized valley travel coordination.
 
 ---
 
-## 1. Quick Start & Local Development
+## 1. Architecture Overview
+
+- **Frontend Stack**: React 19 + Vite 8 + React Router 7 (purely static client-side single-page application).
+- **Direct Communication (No Backend or Database)**: Visitor enquiries are validated in the browser and passed directly to the visitor's chosen **WhatsApp** (`https://wa.me/916006343335`) or **Email** (`mailto:bookings@bittkashmir.in`) application with pre-filled itinerary details. No personal data is stored by the website.
+- **Local Image Catalog**: All brand logos, destination photography, package cards, travel guides, cultural highlights, company office spaces, and stay showcases are served from local WebP assets in `public/images/` via `src/imageCatalog.js`.
+
+---
+
+## 2. Quick Start & Local Development
 
 ### Requirements
 - Node.js 20.19+ or 22.12+ (Node.js 22 recommended)
@@ -30,7 +38,7 @@ npm run preview
 
 ---
 
-## 2. GitHub Pages Deployment
+## 3. GitHub Pages Deployment
 
 The repository is hosted at:
 `https://github.com/shahnaveed07/tourandtravels`
@@ -49,27 +57,22 @@ A deployment workflow is configured at `.github/workflows/deploy.yml`.
 5. The workflow will:
    - Check out the codebase using Node.js 22.
    - Run `npm ci` for deterministic dependency installation.
+   - Run `npm test` to verify all data integrity, duration consistency, and local image catalog assertions before building.
    - Execute `npm run build` with `GITHUB_ACTIONS=true` (automatically activating the `/tourandtravels/` base path).
    - Generate `404.html` and `.nojekyll` in the build output to ensure client-side deep links (e.g. `/tourandtravels/packages` or `/tourandtravels/destinations/gulmarg`) refresh without 404 errors.
    - Deploy the artifact directly to GitHub Pages.
 
----
-
-## 3. Configuration & Environment Variables
-
-Create a `.env` file (or set variables in your hosting environment):
-
+### Optional Build Base Path Override
 | Variable | Description | Default |
 |---|---|---|
-| `VITE_ENQUIRY_ENDPOINT` | External POST endpoint for processing enquiries (e.g., webhook or API). If unset, the app operates in **Demo Mode**, offering a direct WhatsApp enquiry flow prefilled with the user's choices. | *(Empty / Demo mode)* |
-| `VITE_BASE_PATH` | Base path override for Vite. If unset, defaults to `/tourandtravels/` in GitHub Actions and `/` locally. | `auto` |
+| `VITE_BASE_PATH` | Optional base path override for Vite. If unset, defaults to `/tourandtravels/` in GitHub Actions and `/` locally. | `auto` |
 
 ---
 
-## 4. Key Architectural Features & Audit Resolutions
+## 4. Key Features
 
 ### Route-Aware Base Path & Navigation
-- **Deployment-aware base path**: Configured dynamically in `vite.config.js` and passed to `<BrowserRouter basename={import.meta.env.BASE_URL}>`.
+- **Deployment-aware base path**: Configured dynamically in `vite.config.js` and passed to `<BrowserRouter basename={import.meta.env.BASE_URL}>` and `src/imageCatalog.js`.
 - **Deep-link routing**: Fully supported under GitHub Pages with `404.html` and `.nojekyll`.
 - **Scroll-to-top & anchor scrolling**: Smoothly handles page transitions and route anchors (e.g., `/services#stays`, `/services#houseboats`).
 
@@ -80,54 +83,39 @@ Create a `.env` file (or set variables in your hosting environment):
   3. *Duration filter*: Supports 2 Days through 8 Days.
   4. *Travel style filter*: Filter by Family, Honeymoon, Adventure, Classic tour, or Short break.
   5. *Arrival date filter*: Preserves travel dates across navigation and pre-fills the enquiry modal.
-- **Duration consistency**: Legitimate packages exist for every advertised duration (2, 3, 4, 5, 6, 7, and 8 days).
+- **Duration consistency**: Curated packages cover every advertised duration (2, 3, 4, 5, 6, 7, and 8 days).
 
-### Destination Pages
-- **Strict Relationship Integrity**: Displays *only genuinely related packages*.
-- **Offbeat Destination Fallback**: When no pre-packaged tour exists for an offbeat region (e.g. Doodhpathri), displays an exclusive bespoke custom itinerary enquiry CTA. Unrelated packages are never shown as fallbacks.
-- **Rich Content**: Overview, best season, suggested duration, highlights, practical travel guidance, and neighboring valley links.
+### Destination Pages & Travel Guides
+- **Strict Relationship Integrity**: Destination pages display only genuinely related packages.
+- **Offbeat Destination Custom Route CTA**: When no fixed-departure tour exists for an offbeat region (such as Doodhpathri), displays a bespoke custom itinerary enquiry call-to-action.
+- **Travel Guides (`/travel-guides/:slug`)**: Dedicated editorial guide articles with structured advice, packing tips, airport arrival protocol, duration planning, related destinations, and matching itineraries.
 
-### Travel Guides (`/travel-guides/:slug`)
-- Dedicated editorial guide articles with structured advice, packing tips, airport arrival protocol, duration planning, related destinations, and matching itineraries.
-
-### Honest Enquiry System
-- **Strict Validation**: Validates full name, email format, phone numbers (8–15 digits), positive traveller counts, and future arrival dates.
-- **No False Confirmation**: Clearly informs the user when no backend endpoint is configured and provides a 1-click **WhatsApp Messenger** action prefilled with the user's travel specifications.
-- **Configurable Backend**: Easily connects to any REST endpoint via `VITE_ENQUIRY_ENDPOINT`.
-
-### SEO & Performance
-- Page-specific `<title>` tags and meta descriptions dynamically updated per route.
-- OpenGraph and Twitter Cards metadata for rich social sharing.
-- Schema.org `TravelAgency` JSON-LD structured data.
-- Search-engine friendly `robots.txt` and `sitemap.xml`.
-- Image `onError` fallback handlers to prevent broken visual states.
+### Direct WhatsApp & Email Enquiry Flow
+- **Client-Side Validation**: Validates full name, email format, phone numbers (8–15 digits), traveller counts, and future arrival dates.
+- **Direct Dispatch**: Prepares a structured travel summary and opens the visitor's chosen WhatsApp chat (`+91 6006343335`) or default email client (`bookings@bittkashmir.in`) without storing personal data on the website.
 
 ---
 
-## 5. Centralized Data Source
+## 5. Centralized Data & Image Catalog
 
-All brand information, packages, sample prices, destinations, services, FAQs, and guides are organized in `src/data.js`:
+All brand details, packages, destinations, services, FAQs, and guides live in `src/data.js`, paired with local image paths in `src/imageCatalog.js`:
 
 ```javascript
 // src/data.js
 export const brand = {
   name: 'Brand Identity',
   descriptor: 'Tour & Travel',
-  phone: '+91 98765 43210',
-  email: 'hello@brandidentitytravel.com',
-  address: 'Main Market, Srinagar, Jammu & Kashmir 190001',
+  phone: '+91 6006343335',
+  email: 'bookings@bittkashmir.in',
+  address: 'Bismillah Market, Sopore, Baramulla, Jammu & Kashmir, India',
+  pinCode: '193201',
   hours: 'Monday – Saturday, 10:00 – 18:00 IST',
-  whatsapp: '919876543210',
+  whatsapp: '916006343335',
+  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Bismillah+Market%2C+Sopore%2C+Baramulla%2C+Jammu+%26+Kashmir%2C+India',
   social: {
-    instagram: '', // Add verified official profile URL
+    instagram: '',
     facebook: '',
     youtube: ''
   }
 };
 ```
-
----
-
-## 6. License & Disclaimer
-
-*Demo Notice:* Brand Identity Tour & Travel is a showcase website template. Sample package prices, telephone numbers, emails, addresses, and sample itineraries are illustrative and must be verified or replaced with operating credentials prior to public commercial launch.

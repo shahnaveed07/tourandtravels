@@ -1,6 +1,7 @@
 // Local image catalog for Brand Identity Tour & Travel.
-// Vite's BASE_URL keeps these paths working on local development and GitHub Pages.
-const asset = (filename) => `${import.meta.env.BASE_URL}images/${filename}`;
+// Vite's BASE_URL keeps these paths working on local development, GitHub Pages, and Node.js tests.
+const BASE_URL = import.meta.env?.BASE_URL ?? '/';
+const asset = (filename) => `${BASE_URL}images/${filename}`;
 
 export const siteImages = {
   logo: {
