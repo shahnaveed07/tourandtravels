@@ -199,20 +199,20 @@ export default function EnquiryModal({
             <span className="demo-icon">
               <MessageCircle size={36} />
             </span>
-            <span className="eyebrow">DEMO MODE ACTIVE</span>
-            <h2>Online backend not connected.</h2>
+            <span className="eyebrow">INSTANT ENQUIRY DISPATCH</span>
+            <h2>Send your enquiry directly on WhatsApp.</h2>
             <p className="demo-explain">
-              This preview does not have a live server endpoint configured (<code>VITE_ENQUIRY_ENDPOINT</code> is unset). Your details have not been sent over the web.
+              Connect immediately with our travel planning desk in Sopore. All your itinerary preferences, guest counts, and dates are packaged and ready to send.
             </p>
             <p className="demo-recommendation">
-              To send this enquiry immediately with all your filled details directly to our Kashmir team, open a direct WhatsApp chat:
+              Click below to start a live conversation with our Kashmir team:
             </p>
             <div className="demo-actions">
               <button className="button button-dark whatsapp-btn" onClick={handleWhatsAppDirect}>
                 <MessageCircle size={17} /> Send via WhatsApp now
               </button>
               <button className="button button-outline" onClick={() => setSubmitStatus('idle')}>
-                Edit form details
+                Edit enquiry details
               </button>
             </div>
           </div>

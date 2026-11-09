@@ -70,7 +70,7 @@ export default function PackageDetail({ onEnquire }) {
             <span className="eyebrow">THE JOURNEY</span>
             <h2>A little more of <i>what's waiting.</i></h2>
             <p className="detail-lead">
-              A sample route designed to help you imagine the days ahead. The final plan can be adjusted to your travel dates, group size, and personal preferences.
+              A carefully designed route created to help you imagine the days ahead. The final plan can be personalized to your travel dates, group size, and specific preferences.
             </p>
 
             {/* Day-wise Itinerary */}

@@ -104,10 +104,16 @@ export default function Footer({ onEnquire }) {
             <Mail size={15} />
             <span>{brand.email}</span>
           </a>
-          <span className="footer-address">
+          <a
+            href={brand.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-address"
+            aria-label={`View ${brand.address} on Google Maps`}
+          >
             <MapPin size={15} />
             <span>{brand.address}</span>
-          </span>
+          </a>
           <button className="text-link footer-enquire" onClick={() => onEnquire('General Enquiry')}>
             Start planning with us <ArrowUpRight size={15} />
           </button>

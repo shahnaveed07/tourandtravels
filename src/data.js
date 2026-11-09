@@ -3,24 +3,25 @@ export const brand = {
   descriptor: 'Tour & Travel',
   phone: '+91 6006343335',
   email: 'bookings@bittkashmir.in',
-  address: 'Bismillah Market, Sopore, Jammu & Kashmir 193201',
+  address: 'Bismillah Market, Sopore, Baramulla, Jammu & Kashmir, India',
+  pinCode: '193201',
   hours: 'Monday – Saturday, 10:00 – 18:00 IST',
   whatsapp: '916006343335',
+  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Bismillah+Market%2C+Sopore%2C+Baramulla%2C+Jammu+%26+Kashmir%2C+India',
   social: {
     instagram: '', // Set when verified official link is available
     facebook: '',
     youtube: ''
-  },
-  disclaimer: 'Demo website for Brand Identity Tour & Travel. Rates, contact information and itineraries are illustrative sample data.'
+  }
 };
 
 export const destinations = [
   {
-    slug: 'Sopore',
-    name: 'Sopore',
+    slug: 'srinagar',
+    name: 'Srinagar',
     eyebrow: 'Lake days & garden walks',
     description: 'A graceful mix of still waters, old-world Mughal gardens, floating vegetable markets and warm Kashmiri hospitality.',
-    overview: 'The summer capital of Jammu & Kashmir rests along the banks of the Jhelum river and the tranquil waters of Dal and Nigeen lakes. Renowned for its historic wooden architecture, traditional wooden houseboats, and centuries-old terraced gardens built by Mughal emperors, Sopore provides an ideal, relaxing base for any valley journey.',
+    overview: 'The summer capital of Jammu & Kashmir rests along the banks of the Jhelum river and the tranquil waters of Dal and Nigeen lakes. Renowned for its historic wooden architecture, traditional wooden houseboats, and centuries-old terraced gardens built by Mughal emperors, Srinagar provides an ideal, relaxing base for any valley journey.',
     image: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=85',
     bestSeason: 'April to October (Gardens & Lakes) · December to February (Snow & Chill)',
     suggestedDuration: '2 to 3 Days',
@@ -28,7 +29,7 @@ export const destinations = [
     travelTips: [
       'Pre-negotiate Shikara rates at designated government-registered ghats.',
       'Rise early (around 5:30 AM) to experience the historic floating vegetable market.',
-      'Keep your photo ID and flight tickets accessible for Sopore Airport security.'
+      'Keep your photo ID and flight tickets accessible for Srinagar Airport security.'
     ],
     nearbySlugs: ['gulmarg', 'pahalgam', 'doodhpathri']
   },
@@ -47,7 +48,7 @@ export const destinations = [
       'In winter, vehicle chains are mandatory from Tangmarg upwards; coordinate private 4x4 transfers.',
       'Dress in layers—high altitude weather changes swiftly.'
     ],
-    nearbySlugs: ['Sopore']
+    nearbySlugs: ['srinagar']
   },
   {
     slug: 'pahalgam',
@@ -64,24 +65,24 @@ export const destinations = [
       'Enjoy freshly prepared Kashmiri trout at certified riverside eateries.',
       'Wear sturdy walking or hiking shoes for the muddy trails around Baisaran meadow.'
     ],
-    nearbySlugs: ['Sopore', 'doodhpathri']
+    nearbySlugs: ['srinagar', 'doodhpathri']
   },
   {
     slug: 'sonamarg',
     name: 'Sonamarg',
     eyebrow: 'Follow the mountain roads',
     description: 'A dramatic highland landscape of sweeping meadows, turquoise glacial streams and gateway passes toward Ladakh.',
-    overview: 'Translating to “Meadow of Gold”, Sonamarg lies along the Sindh River flanked by jagged glaciers and soaring Himalayan peaks. Situated along the historic Sopore-Leh highway, Sonamarg is the entry point to high-altitude Himalayan passes and the famed Great Lakes trek.',
+    overview: 'Translating to “Meadow of Gold”, Sonamarg lies along the Sindh River flanked by jagged glaciers and soaring Himalayan peaks. Situated along the historic Srinagar-Leh highway, Sonamarg is the entry point to high-altitude Himalayan passes and the famed Great Lakes trek.',
     image: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1200&q=85',
     bestSeason: 'May to October (Passes open, alpine flowers & clear glacier vistas)',
     suggestedDuration: '1 to 2 Days',
     highlights: ['Thajiwas Glacier trek or pony excursion', 'Sindh River white-water rafting (seasonal)', 'Scenic mountain drive through the Z-Morh tunnel', 'Zero Point & Zoji La Pass exploration'],
     travelTips: [
       'Carry warm jackets even in peak summer due to glacial winds blowing off Thajiwas.',
-      'Check morning road conditions before driving up from Sopore.',
+      'Check morning road conditions before driving up from Srinagar.',
       'Support local sledge operators with agreed rates before embarking toward the snowline.'
     ],
-    nearbySlugs: ['Sopore', 'gulmarg']
+    nearbySlugs: ['srinagar', 'gulmarg']
   },
   {
     slug: 'gurez-valley',
@@ -98,24 +99,24 @@ export const destinations = [
       'Mobile connectivity is primarily limited to BSNL and select Airtel postpaid services.',
       'Opt for authentic homestays to taste organic local buckwheat flatbreads and fresh butter tea.'
     ],
-    nearbySlugs: ['Sopore', 'sonamarg']
+    nearbySlugs: ['srinagar', 'sonamarg']
   },
   {
     slug: 'doodhpathri',
     name: 'Doodhpathri',
     eyebrow: 'A meadow made for wandering',
     description: 'A tranquil highland bowl of milky mountain streams, rolling velvet grasslands and quiet pine-fringed hillsides.',
-    overview: 'Known as the “Valley of Milk” because of the frothy waters cascading over stones along the Shaliganga river, Doodhpathri is one of Kashmir’s least commercialised meadows. Located just 42 kilometres from Sopore in the Budgam district, it offers wide, uncrowded pastures where nomadic Gujjar shepherds graze their flocks.',
+    overview: 'Known as the “Valley of Milk” because of the frothy waters cascading over stones along the Shaliganga river, Doodhpathri is one of Kashmir’s least commercialised meadows. Located just 42 kilometres from Srinagar in the Budgam district, it offers wide, uncrowded pastures where nomadic Gujjar shepherds graze their flocks.',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=85',
     bestSeason: 'May to October (Lush green carpet) · December to March (Quiet winter snow blanket)',
-    suggestedDuration: '1 Day (Day excursion from Sopore)',
+    suggestedDuration: '1 Day (Day excursion from Srinagar)',
     highlights: ['Picnicking along the frothy Shaliganga stream', 'Horseback ride or gentle walk to Dikbal meadow', 'Untouched pine forest viewpoints & fresh spring water', 'Fresh shepherd dairy and traditional tea stalls'],
     travelTips: [
-      'Ideal as a peaceful day trip from Sopore away from tourist crowds.',
+      'Ideal as a peaceful day trip from Srinagar away from tourist crowds.',
       'Pack light picnic provisions, though simple fresh snacks and tea are available locally.',
       'Leave no trace behind—help protect the fragile meadow ecosystem.'
     ],
-    nearbySlugs: ['Sopore', 'pahalgam']
+    nearbySlugs: ['srinagar', 'pahalgam']
   }
 ];
 
@@ -123,13 +124,13 @@ export const sampleInclusions = [
   'Accommodation in selected hotel categories or luxury lake houseboats on double sharing',
   'Daily breakfast and dinner (MAP meal plan) prepared with hygienic standards',
   'Exclusive private vehicle (Sedan or SUV based on group size) for all transfers and sightseeing',
-  'Pick-up and drop-off assistance at Sopore International Airport',
+  'Pick-up and drop-off assistance at Srinagar International Airport',
   'One 1-hour sunset Shikara ride across the lotus gardens of Dal Lake',
   'Driver night charges, toll taxes, fuel costs and vehicle parking permits'
 ];
 
 export const sampleExclusions = [
-  'Airfare or railway tickets to/from Sopore',
+  'Airfare or railway tickets to/from Srinagar',
   'Gulmarg Gondola cable car tickets (must be booked via the official J&K tourism portal)',
   'Local union cab charges in Pahalgam (Aru/Betaab/Chandanwari) and Sonamarg (Zero Point)',
   'Pony/horse riding charges, ski equipment hire, and sledging rentals',
@@ -139,12 +140,12 @@ export const sampleExclusions = [
 
 export const packages = [
   {
-    id: 'Sopore-express',
-    slug: 'Sopore-express-getaway',
-    title: 'Sopore Express Getaway',
+    id: 'srinagar-express',
+    slug: 'srinagar-express-getaway',
+    title: 'Srinagar Express Getaway',
     duration: '2 Days',
     nights: '1 Night',
-    locations: ['Sopore'],
+    locations: ['Srinagar'],
     price: '₹4,499',
     tag: 'Quick Pause',
     type: 'Short break',
@@ -155,17 +156,17 @@ export const packages = [
     exclusions: sampleExclusions,
     notes: 'Ideal for weekend travellers or business transit guests looking for a refreshing taste of Kashmir.',
     itinerary: [
-      ['Day 1', 'Arrive in Sopore & Lake Check-in', 'Private airport pickup, transfer to your designated houseboat on Dal Lake, and a tranquil 1-hour Shikara ride around floating gardens at dusk.'],
-      ['Day 2', 'Mughal Gardens & Departure', 'Morning breakfast, visit Nishat Bagh and Shalimar Bagh along the lake boulevard, and drop-off at Sopore International Airport as per flight schedule.']
+      ['Day 1', 'Arrive in Srinagar & Lake Check-in', 'Private airport pickup, transfer to your designated houseboat on Dal Lake, and a tranquil 1-hour Shikara ride around floating gardens at dusk.'],
+      ['Day 2', 'Mughal Gardens & Departure', 'Morning breakfast, visit Nishat Bagh and Shalimar Bagh along the lake boulevard, and drop-off at Srinagar International Airport as per flight schedule.']
     ]
   },
   {
-    id: 'Sopore-weekend',
-    slug: 'Sopore-scenic-weekend',
-    title: 'Sopore Scenic Weekend',
+    id: 'srinagar-weekend',
+    slug: 'srinagar-scenic-weekend',
+    title: 'Srinagar Scenic Weekend',
     duration: '3 Days',
     nights: '2 Nights',
-    locations: ['Sopore'],
+    locations: ['Srinagar'],
     price: '₹6,499',
     tag: 'Short break',
     type: 'Short break',
@@ -176,7 +177,7 @@ export const packages = [
     exclusions: sampleExclusions,
     notes: 'Perfect for first-time visitors seeking an easy, unhurried city retreat without long mountain drives.',
     itinerary: [
-      ['Day 1', 'Welcome to Sopore & Houseboat Check-in', 'Meet your driver at Sopore airport, transfer to a traditional cedarwood houseboat on Dal Lake, and enjoy an evening Shikara cruise.'],
+      ['Day 1', 'Welcome to Srinagar & Houseboat Check-in', 'Meet your driver at Srinagar airport, transfer to a traditional cedarwood houseboat on Dal Lake, and enjoy an evening Shikara cruise.'],
       ['Day 2', 'Gardens, Viewpoints & Local Bazaars', 'Explore Nishat Bagh, Shalimar Bagh, and Shankaracharya hilltop temple for panoramic valley vistas. Afternoon visit to heritage craft lanes.'],
       ['Day 3', 'Old City Stroll & Departure', 'Breakfast by the lake, optional quick stop for dry fruits and saffron, followed by airport transfer for your departure.']
     ]
@@ -187,7 +188,7 @@ export const packages = [
     title: 'Kashmir Valley Escape',
     duration: '4 Days',
     nights: '3 Nights',
-    locations: ['Sopore', 'Gulmarg'],
+    locations: ['Srinagar', 'Gulmarg'],
     price: '₹8,999',
     tag: 'Bestseller',
     type: 'Couples & families',
@@ -198,10 +199,10 @@ export const packages = [
     exclusions: sampleExclusions,
     notes: 'Gondola tickets should be pre-booked online through the official portal to secure Phase 2 access.',
     itinerary: [
-      ['Day 1', 'Arrive in Sopore & Dal Lake', 'Airport pickup, check-in to your lakeside hotel or houseboat, followed by a sunset Shikara ride across the tranquil waters.'],
-      ['Day 2', 'Sopore Gardens & Viewpoints', 'Visit Nishat Bagh, Shalimar Bagh and the Botanical Gardens. Evening free for leisurely walks along Boulevard Road.'],
-      ['Day 3', 'Gulmarg Alpine Excursion', 'Full-day excursion to Gulmarg (54 km). Experience the Gondola cable car up toward Apharwat Peak before returning to Sopore for dinner.'],
-      ['Day 4', 'Souvenir Shopping & Departure', 'Breakfast, checkout and transfer to Sopore Airport with fond memories of the valley.']
+      ['Day 1', 'Arrive in Srinagar & Dal Lake', 'Airport pickup, check-in to your lakeside hotel or houseboat, followed by a sunset Shikara ride across the tranquil waters.'],
+      ['Day 2', 'Srinagar Gardens & Viewpoints', 'Visit Nishat Bagh, Shalimar Bagh and the Botanical Gardens. Evening free for leisurely walks along Boulevard Road.'],
+      ['Day 3', 'Gulmarg Alpine Excursion', 'Full-day excursion to Gulmarg (54 km). Experience the Gondola cable car up toward Apharwat Peak before returning to Srinagar for dinner.'],
+      ['Day 4', 'Souvenir Shopping & Departure', 'Breakfast, checkout and transfer to Srinagar Airport with fond memories of the valley.']
     ]
   },
   {
@@ -210,7 +211,7 @@ export const packages = [
     title: 'Family Valley Retreat',
     duration: '5 Days',
     nights: '4 Nights',
-    locations: ['Sopore', 'Gulmarg', 'Pahalgam'],
+    locations: ['Srinagar', 'Gulmarg', 'Pahalgam'],
     price: '₹12,499',
     tag: 'Family favourite',
     type: 'Family',
@@ -221,11 +222,11 @@ export const packages = [
     exclusions: sampleExclusions,
     notes: 'Children and seniors enjoy the gentle riverside trails and comfortable private sedan transfers.',
     itinerary: [
-      ['Day 1', 'Welcome to Sopore', 'Warm airport welcome, transfer to hotel, and an easy evening Shikara ride on Dal Lake.'],
-      ['Day 2', 'Sopore to Gulmarg', 'Scenic drive to Gulmarg. Check into your mountain resort and spend the day taking in the alpine meadows and pine views.'],
+      ['Day 1', 'Welcome to Srinagar', 'Warm airport welcome, transfer to hotel, and an easy evening Shikara ride on Dal Lake.'],
+      ['Day 2', 'Srinagar to Gulmarg', 'Scenic drive to Gulmarg. Check into your mountain resort and spend the day taking in the alpine meadows and pine views.'],
       ['Day 3', 'Gulmarg to Pahalgam', 'Morning scenic road journey through saffron fields of Pampore to the valley of shepherds, Pahalgam. Settle in by the Lidder River.'],
-      ['Day 4', 'Pahalgam Valley Discovery', 'Visit Betaab Valley or Aru Valley, enjoy gentle walking trails, and return to Sopore in the late afternoon for a houseboat stay.'],
-      ['Day 5', 'Kashmir Farewell', 'Breakfast overlooking the water, checkout and transfer to Sopore Airport for your onward flight.']
+      ['Day 4', 'Pahalgam Valley Discovery', 'Visit Betaab Valley or Aru Valley, enjoy gentle walking trails, and return to Srinagar in the late afternoon for a houseboat stay.'],
+      ['Day 5', 'Kashmir Farewell', 'Breakfast overlooking the water, checkout and transfer to Srinagar Airport for your onward flight.']
     ]
   },
   {
@@ -234,7 +235,7 @@ export const packages = [
     title: 'Romantic Kashmir Journey',
     duration: '6 Days',
     nights: '5 Nights',
-    locations: ['Sopore', 'Gulmarg', 'Pahalgam'],
+    locations: ['Srinagar', 'Gulmarg', 'Pahalgam'],
     price: '₹17,999',
     tag: 'For Two',
     type: 'Honeymoon',
@@ -245,12 +246,12 @@ export const packages = [
     exclusions: sampleExclusions,
     notes: 'Special couple arrangements such as room decoration and flower bouquets can be customized upon request.',
     itinerary: [
-      ['Day 1', 'Arrive Together in Sopore', 'Private arrival transfer to your premium houseboat on Dal Lake. Enjoy a serene private sunset Shikara ride with Kashmiri Kahwa.'],
-      ['Day 2', 'Sopore to Pahalgam', 'Drive along the Lidder River corridor through apple orchards to Pahalgam. Evening stroll along the whispering riverbanks.'],
+      ['Day 1', 'Arrive Together in Srinagar', 'Private arrival transfer to your premium houseboat on Dal Lake. Enjoy a serene private sunset Shikara ride with Kashmiri Kahwa.'],
+      ['Day 2', 'Srinagar to Pahalgam', 'Drive along the Lidder River corridor through apple orchards to Pahalgam. Evening stroll along the whispering riverbanks.'],
       ['Day 3', 'Pahalgam Valleys at Your Pace', 'Day reserved for exploring Betaab Valley, Aru Valley or taking a peaceful pony trek up to Baisaran meadow.'],
       ['Day 4', 'Pahalgam to Gulmarg', 'Picturesque mountain drive to Gulmarg. Check into your boutique mountain stay and enjoy cozy fireplace views.'],
-      ['Day 5', 'Gulmarg Gondola & Return to Sopore', 'Take the morning Gondola to Phase 1 or 2 for snow vistas, then drive back to Sopore for an evening exploring local boutiques.'],
-      ['Day 6', 'Departure with Cherished Memories', 'Enjoy a leisurely breakfast together before your private transfer to Sopore International Airport.']
+      ['Day 5', 'Gulmarg Gondola & Return to Srinagar', 'Take the morning Gondola to Phase 1 or 2 for snow vistas, then drive back to Srinagar for an evening exploring local boutiques.'],
+      ['Day 6', 'Departure with Cherished Memories', 'Enjoy a leisurely breakfast together before your private transfer to Srinagar International Airport.']
     ]
   },
   {
@@ -259,7 +260,7 @@ export const packages = [
     title: 'Alpine Adventure Trail',
     duration: '6 Days',
     nights: '5 Nights',
-    locations: ['Sopore', 'Gulmarg', 'Sonamarg'],
+    locations: ['Srinagar', 'Gulmarg', 'Sonamarg'],
     price: '₹19,499',
     tag: 'Adventure',
     type: 'Adventure',
@@ -270,12 +271,12 @@ export const packages = [
     exclusions: sampleExclusions,
     notes: 'Sturdy trekking footwear, thermal innerwear and UV sunglasses are recommended for glacial treks.',
     itinerary: [
-      ['Day 1', 'Sopore Arrival & Route Briefing', 'Arrive in Sopore, gear check with your travel coordinator, and gentle evening walk by the lake.'],
-      ['Day 2', 'Sopore to Sonamarg & Glaciers', 'Drive through the Sindh Valley to Sonamarg. Embark on a scenic guided trek toward the foot of Thajiwas Glacier.'],
+      ['Day 1', 'Srinagar Arrival & Route Briefing', 'Arrive in Srinagar, gear check with your travel coordinator, and gentle evening walk by the lake.'],
+      ['Day 2', 'Srinagar to Sonamarg & Glaciers', 'Drive through the Sindh Valley to Sonamarg. Embark on a scenic guided trek toward the foot of Thajiwas Glacier.'],
       ['Day 3', 'Sonamarg Alpine Exploration', 'Morning exploration of surrounding trails or optional seasonal river rafting along Sindh River. Overnight in Sonamarg.'],
       ['Day 4', 'Sonamarg to Gulmarg', 'Scenic cross-valley highway drive to Gulmarg. Afternoon acclimatization walk through pine forests.'],
       ['Day 5', 'Gulmarg Apharwat Heights', 'Ride the Gondola to Phase 2 (3,980m) for thrilling panoramic views of Nanga Parbat and surrounding Himalayan crests.'],
-      ['Day 6', 'Descent to Sopore & Departure', 'Morning descent from Gulmarg back to Sopore Airport for your onward journey.']
+      ['Day 6', 'Descent to Srinagar & Departure', 'Morning descent from Gulmarg back to Srinagar Airport for your onward journey.']
     ]
   },
   {
@@ -284,24 +285,24 @@ export const packages = [
     title: 'Grand Kashmir Discovery',
     duration: '7 Days',
     nights: '6 Nights',
-    locations: ['Sopore', 'Sonamarg', 'Gulmarg', 'Pahalgam'],
+    locations: ['Srinagar', 'Sonamarg', 'Gulmarg', 'Pahalgam'],
     price: '₹21,999',
     tag: 'Most Complete',
     type: 'Classic tour',
     image: destinations[3].image,
     summary: 'A complete, classic journey connecting Kashmir’s four signature destinations, from quiet lakeside mornings to dramatic glacial passes.',
-    highlights: ['All four iconic destinations: Sopore, Sonamarg, Gulmarg, Pahalgam', 'Balanced driving times with multi-night stay quality', 'Traditional Shikara ride & houseboat experience', 'Complete valley sightseeing with local insight'],
+    highlights: ['All four iconic destinations: Srinagar, Sonamarg, Gulmarg, Pahalgam', 'Balanced driving times with multi-night stay quality', 'Traditional Shikara ride & houseboat experience', 'Complete valley sightseeing with local insight'],
     inclusions: sampleInclusions,
     exclusions: sampleExclusions,
     notes: 'The most comprehensive introduction to Kashmir, balancing varied landscapes, heritage, and mountain leisure.',
     itinerary: [
-      ['Day 1', 'Arrival in Sopore', 'Pickup and check-in to your hotel. Evening sunset Shikara ride across Dal Lake.'],
-      ['Day 2', 'Sonamarg Day Excursion', 'Full day excursion to the Meadow of Gold along Sindh River. Explore Thajiwas Glacier and return to Sopore.'],
-      ['Day 3', 'Sopore to Gulmarg', 'Scenic drive to Gulmarg. Check into your mountain resort and spend the afternoon taking in the alpine meadows.'],
+      ['Day 1', 'Arrival in Srinagar', 'Pickup and check-in to your hotel. Evening sunset Shikara ride across Dal Lake.'],
+      ['Day 2', 'Sonamarg Day Excursion', 'Full day excursion to the Meadow of Gold along Sindh River. Explore Thajiwas Glacier and return to Srinagar.'],
+      ['Day 3', 'Srinagar to Gulmarg', 'Scenic drive to Gulmarg. Check into your mountain resort and spend the afternoon taking in the alpine meadows.'],
       ['Day 4', 'Gulmarg Gondola & Transfer to Pahalgam', 'Morning Gondola cable car ride, followed by an afternoon scenic drive south to the Lidder Valley in Pahalgam.'],
       ['Day 5', 'Pahalgam Valleys', 'Spend an unhurried day exploring Betaab Valley, Aru Valley or the gentle trails of Chandanwari.'],
-      ['Day 6', 'Pahalgam to Sopore Houseboat', 'Return to Sopore in the afternoon and check into a luxury lake houseboat. Evening walk through traditional craft lanes.'],
-      ['Day 7', 'Departure from Sopore', 'Enjoy lakeside breakfast, checkout, and transfer to Sopore Airport for your onward journey.']
+      ['Day 6', 'Pahalgam to Srinagar Houseboat', 'Return to Srinagar in the afternoon and check into a luxury lake houseboat. Evening walk through traditional craft lanes.'],
+      ['Day 7', 'Departure from Srinagar', 'Enjoy lakeside breakfast, checkout, and transfer to Srinagar Airport for your onward journey.']
     ]
   },
   {
@@ -310,25 +311,25 @@ export const packages = [
     title: 'Grand Kashmir & Gurez Odyssey',
     duration: '8 Days',
     nights: '7 Nights',
-    locations: ['Sopore', 'Gulmarg', 'Pahalgam', 'Sonamarg', 'Gurez Valley'],
+    locations: ['Srinagar', 'Gulmarg', 'Pahalgam', 'Sonamarg', 'Gurez Valley'],
     price: '₹26,999',
     tag: 'Flagship Journey',
     type: 'Classic tour',
     image: destinations[4].image,
     summary: 'The ultimate 8-day expedition spanning iconic alpine meadows, serene lake houseboats, and the untouched borderland tranquility of Gurez Valley.',
-    highlights: ['Remote Gurez Valley & Habba Khatoon peak experience', 'Crossing scenic Razdan Pass (3,300m)', 'Classic circuit: Sopore, Gulmarg, Pahalgam & Sonamarg', 'Authentic Shin-Dard culture and organic village cuisine'],
+    highlights: ['Remote Gurez Valley & Habba Khatoon peak experience', 'Crossing scenic Razdan Pass (3,300m)', 'Classic circuit: Srinagar, Gulmarg, Pahalgam & Sonamarg', 'Authentic Shin-Dard culture and organic village cuisine'],
     inclusions: sampleInclusions,
     exclusions: sampleExclusions,
     notes: 'Requires carrying government photo IDs for security checkposts en route to Gurez Valley.',
     itinerary: [
-      ['Day 1', 'Arrival in Sopore', 'Airport welcome, transfer to hotel, and gentle evening Shikara ride on Dal Lake.'],
-      ['Day 2', 'Sopore to Gulmarg Meadows', 'Drive to Gulmarg, Gondola cable car adventure, and evening alpine leisure.'],
+      ['Day 1', 'Arrival in Srinagar', 'Airport welcome, transfer to hotel, and gentle evening Shikara ride on Dal Lake.'],
+      ['Day 2', 'Srinagar to Gulmarg Meadows', 'Drive to Gulmarg, Gondola cable car adventure, and evening alpine leisure.'],
       ['Day 3', 'Gulmarg to Pahalgam Valley', 'Scenic transfer south along saffron fields to the pine-scented Lidder River in Pahalgam.'],
-      ['Day 4', 'Pahalgam Valley Discovery', 'Visit Betaab Valley, Aru Valley, and enjoy riverside dining before returning to Sopore.'],
-      ['Day 5', 'Sopore over Razdan Pass to Gurez Valley', 'Early morning departure through Bandipora, ascending over dramatic Razdan Pass into the secluded paradise of Dawar, Gurez.'],
+      ['Day 4', 'Pahalgam Valley Discovery', 'Visit Betaab Valley, Aru Valley, and enjoy riverside dining before returning to Srinagar.'],
+      ['Day 5', 'Srinagar over Razdan Pass to Gurez Valley', 'Early morning departure through Bandipora, ascending over dramatic Razdan Pass into the secluded paradise of Dawar, Gurez.'],
       ['Day 6', 'Gurez Valley & Habba Khatoon', 'Explore pristine villages along the turquoise Kishanganga River and watch the golden hour glow on Habba Khatoon peak.'],
-      ['Day 7', 'Gurez to Sopore Houseboat Stay', 'Scenic drive back to Sopore. Check in to a traditional cedarwood houseboat on Dal Lake for your celebratory farewell dinner.'],
-      ['Day 8', 'Kashmir Farewell & Departure', 'Relaxed breakfast on the deck, souvenir stop, and timely transfer to Sopore Airport.']
+      ['Day 7', 'Gurez to Srinagar Houseboat Stay', 'Scenic drive back to Srinagar. Check in to a traditional cedarwood houseboat on Dal Lake for your celebratory farewell dinner.'],
+      ['Day 8', 'Kashmir Farewell & Departure', 'Relaxed breakfast on the deck, souvenir stop, and timely transfer to Srinagar Airport.']
     ]
   }
 ];
@@ -343,11 +344,11 @@ export const services = [
 ];
 
 export const faqs = [
-  { question: 'Can I customise a tour package?', answer: 'Yes. Every sample itinerary is a starting point. Travel dates, number of guests, stay category and sightseeing preferences can be adjusted in a final proposal.' },
-  { question: 'Are hotel stays and transport included?', answer: 'The exact inclusions depend on the selected package. The final written quotation lists the named stay, room category, vehicle type, meals, taxes and any optional activities.' },
-  { question: 'How do I confirm a booking?', answer: 'Send an enquiry with your travel dates and group details. A booking should only be considered confirmed after availability, inclusions, payment schedule and cancellation terms are issued in writing.' },
-  { question: 'Can you arrange airport pickup?', answer: 'Airport pickup can be added to any proposed itinerary. Share your arrival time and flight details so the transfer can be planned accurately.' },
-  { question: 'Are the displayed prices final?', answer: 'No. All prices on this demo website are sample illustrative figures for layout and testing. Replace them with approved live rates before publishing.' }
+  { question: 'Can I customise a tour package?', answer: 'Yes. Every itinerary can be tailored to your requirements. Travel dates, number of guests, stay categories, vehicle choices and sightseeing preferences can all be personalized in your proposal.' },
+  { question: 'Are hotel stays and transport included?', answer: 'The exact inclusions depend on the selected package. Your written quotation will clearly list the named hotel or houseboat, room category, vehicle type, meals, taxes and any scheduled activities.' },
+  { question: 'How do I confirm a booking?', answer: 'Send an enquiry with your tentative travel dates and group details. A booking is confirmed once availability, final pricing, inclusions, payment schedule and cancellation terms are agreed upon in writing.' },
+  { question: 'Can you arrange airport pickup and drop-off?', answer: 'Yes, private airport transfers at Srinagar International Airport (SXR) or railway transfers from Jammu/Udhampur can be included in any itinerary.' },
+  { question: 'Where is your head office located?', answer: 'Our head office is located at Bismillah Market, Sopore, Baramulla, Jammu & Kashmir, India (PIN 193201). You can also reach our travel coordinators via WhatsApp or direct phone call.' }
 ];
 
 export const guides = [
@@ -358,11 +359,11 @@ export const guides = [
     description: 'A practical checklist for arrival planning, airport transfers, security guidelines and settling into your first day.',
     image: destinations[0].image,
     readTime: '5 min read',
-    intro: 'Arriving in Sopore is one of India’s most scenic approaches—on clear days, snow-draped Himalayan crests rise on either side of the descending aircraft. With a little prior preparation around airport protocols and transfer coordination, your first 24 hours can be completely seamless.',
+    intro: 'Arriving in Srinagar is one of India’s most scenic approaches—on clear days, snow-draped Himalayan crests rise on either side of the descending aircraft. With a little prior preparation around airport protocols and transfer coordination, your first 24 hours can be completely seamless.',
     sections: [
       {
-        heading: 'Sopore International Airport Essentials',
-        content: 'Sheikh ul-Alam International Airport (SXR) is a high-security defense airport. Due to standard aviation regulations, security screening procedures here take slightly longer than in civilian domestic terminals. Keep government-issued photo identification and digital or printed boarding passes readily accessible.',
+        heading: 'Srinagar International Airport Essentials',
+        content: 'Sheikh ul-Alam International Airport (SXR) in Srinagar is a high-security defense airport. Due to standard aviation regulations, security screening procedures here take slightly longer than in civilian domestic terminals. Keep government-issued photo identification and digital or printed boarding passes readily accessible.',
         points: [
           'Pre-arrange airport pickup before landing to avoid negotiating with unverified operators at arrival curbs.',
           'Postpaid mobile networks (Jio, Airtel, BSNL) work seamlessly; most prepaid SIMs from outside J&K do not operate in the valley due to telecom regulations.',
@@ -371,7 +372,7 @@ export const guides = [
       },
       {
         heading: 'The First Evening: Keep It Gentle',
-        content: 'Whether your journey begins at a heritage houseboat on Dal Lake or a boutique hotel in Sopore, keep your first afternoon light. The altitude in Sopore is roughly 1,585 metres (5,200 ft), which is mild, but traveling and winding transfers call for relaxed pacing.',
+        content: 'Whether your journey begins at a heritage houseboat on Dal Lake or a boutique hotel in Srinagar, keep your first afternoon light. The altitude in Srinagar is roughly 1,585 metres (5,200 ft), which is mild, but traveling and winding transfers call for relaxed pacing.',
         points: [
           'Step onto a Shikara around 5:00 PM for the golden hour over Dal or Nigeen lake.',
           'Sip warm saffron Kahwa infused with crushed almonds and cardamom to soothe travel fatigue.',
@@ -381,10 +382,10 @@ export const guides = [
     ],
     practicalAdvice: [
       'Carry some cash in small denominations for local vendors, Shikara tips and tea stalls.',
-      'Check in with your travel coordinator as soon as your flight lands in Sopore.'
+      'Check in with your travel coordinator as soon as your flight lands in Srinagar.'
     ],
-    relatedDestinations: ['Sopore', 'gulmarg'],
-    relatedPackageSlugs: ['Sopore-scenic-weekend', 'kashmir-valley-escape']
+    relatedDestinations: ['srinagar', 'gulmarg'],
+    relatedPackageSlugs: ['srinagar-scenic-weekend', 'kashmir-valley-escape']
   },
   {
     slug: 'choosing-trip-length-duration',
@@ -393,20 +394,20 @@ export const guides = [
     description: 'Balance drive times, scenic stops and slower days when building your route across Kashmir’s valleys.',
     image: destinations[2].image,
     readTime: '6 min read',
-    intro: 'Kashmir is not a destination to rush. While distances on a map may look short (Sopore to Gulmarg is just 54 km, and Pahalgam is 90 km), mountain roads, scenic viewpoints, and village crossings mean a 50 km drive often takes 2 to 2.5 hours. Choosing the right duration ensures you spend your holiday enjoying the scenery rather than watching it through a windshield.',
+    intro: 'Kashmir is not a destination to rush. While distances on a map may look short (Srinagar to Gulmarg is 54 km, and Pahalgam is 90 km), mountain roads, scenic viewpoints, and village crossings mean a 50 km drive often takes 2 to 2.5 hours. Choosing the right duration ensures you spend your holiday enjoying the scenery rather than watching it through a windshield.',
     sections: [
       {
         heading: '3 to 4 Days: The Focused Getaway',
-        content: 'If you have a long weekend or 3 to 4 days, avoid the temptation to visit every valley. Instead, base yourself in Sopore and select one high-altitude excursion—either Gulmarg or Sonamarg.',
+        content: 'If you have a long weekend or 3 to 4 days, avoid the temptation to visit every valley. Instead, base yourself in Srinagar and select one high-altitude excursion—either Gulmarg or Sonamarg.',
         points: [
-          'Spend 2 nights in Sopore (including 1 night on a houseboat).',
+          'Spend 2 nights in Srinagar (including 1 night on a houseboat).',
           'Dedicate one full day to Gulmarg for alpine meadow walks and Gondola cable car views.',
           'Leave mornings free for Mughal garden strolls and authentic local Wazwan or cafe visits.'
         ]
       },
       {
         heading: '5 to 6 Days: The Classic Circuit',
-        content: 'A 5 to 6-day itinerary is the golden standard for families and couples. It comfortably covers Sopore, Gulmarg, and Pahalgam without excessive daily packing and unpacking.',
+        content: 'A 5 to 6-day itinerary is the golden standard for families and couples. It comfortably covers Srinagar, Gulmarg, and Pahalgam without excessive daily packing and unpacking.',
         points: [
           'Stay 1 or 2 nights in Pahalgam along the Lidder River to experience true pine-scented mornings.',
           'Enjoy a full day in Gulmarg with plenty of buffer time for Gondola time-slots.',
@@ -427,7 +428,7 @@ export const guides = [
       'Never schedule a high-altitude mountain trip on your flight departure morning.',
       'Allow at least 2 consecutive nights at mountain destinations like Pahalgam for true relaxation.'
     ],
-    relatedDestinations: ['Sopore', 'pahalgam', 'gulmarg', 'sonamarg'],
+    relatedDestinations: ['srinagar', 'pahalgam', 'gulmarg', 'sonamarg'],
     relatedPackageSlugs: ['family-valley-retreat', 'romantic-kashmir-journey', 'grand-kashmir-discovery']
   },
   {
@@ -441,7 +442,7 @@ export const guides = [
     sections: [
       {
         heading: 'Packing for Variable Mountain Weather',
-        content: 'Kashmir’s mountain weather shifts rapidly. Even in peak June or July when Sopore reaches comfortable temperatures of 28°C to 30°C, high-altitude spots like Gulmarg Phase 2 or Sonamarg glaciers can dip to 8°C with sudden chilly winds.',
+        content: 'Kashmir’s mountain weather shifts rapidly. Even in peak June or July when Srinagar reaches comfortable temperatures of 28°C to 30°C, high-altitude spots like Gulmarg Phase 2 or Sonamarg glaciers can dip to 8°C with sudden chilly winds.',
         points: [
           'Pack versatile layers: breathable cottons for daytime valley sightseeing and light woollens or fleece jackets for evenings.',
           'If traveling between November and March, thermal innerwear, heavy jackets, gloves, and waterproof footwear are essential.',
@@ -452,7 +453,7 @@ export const guides = [
         heading: 'Understanding Local Transport Regulations',
         content: 'To protect local livelihoods, tourism associations in places like Pahalgam and Sonamarg operate destination-specific union taxi and pony networks.',
         points: [
-          'Outside tourist taxis (including Sopore cabs) are permitted to drop guests at hotels, but designated interior sightseeing (e.g., Aru, Betaab, Chandanwari in Pahalgam, or Zero Point in Sonamarg) requires hiring locally registered union vehicles.',
+          'Outside tourist taxis are permitted to drop guests at hotels, but designated interior sightseeing (e.g., Aru, Betaab, Chandanwari in Pahalgam, or Zero Point in Sonamarg) requires hiring locally registered union vehicles.',
           'Reputable travel planners clearly mention these local union guidelines in advance so there are no unexpected surprises on-site.',
           'Pony rates are displayed on official tourism boards at major junctions—always check the board before negotiating.'
         ]
@@ -462,7 +463,7 @@ export const guides = [
       'Always carry copies of your valid government ID cards (Aadhaar, Passport, or Voter ID).',
       'Respect local cultural customs when visiting religious shrines and old heritage neighborhoods.'
     ],
-    relatedDestinations: ['Sopore', 'sonamarg', 'pahalgam'],
+    relatedDestinations: ['srinagar', 'sonamarg', 'pahalgam'],
     relatedPackageSlugs: ['alpine-adventure-trail', 'grand-kashmir-gurez']
   }
 ];

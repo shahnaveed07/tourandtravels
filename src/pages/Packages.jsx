@@ -136,7 +136,7 @@ export default function Packages({ onEnquire }) {
             <SectionTitle
               eyebrow="CURATED FOR YOUR KIND OF TRAVEL"
               title="Journeys worth looking forward to."
-              text="Explore our sample itineraries. Every route can be tailored around your travel dates, group size, and preferred pace."
+              text="Explore our curated itineraries. Every route can be tailored around your travel dates, group size, and preferred pace."
             />
             <div className="listing-count">
               <strong>{filtered.length.toString().padStart(2, '0')}</strong>

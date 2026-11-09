@@ -65,13 +65,19 @@ export default function Contact({ onEnquire }) {
                 <ArrowUpRight size={16} />
               </a>
 
-              <div>
+              <a
+                href={brand.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${brand.address} on Google Maps`}
+              >
                 <span><MapPin size={18} /></span>
                 <div>
                   <small>OUR OFFICE LOCATION</small>
                   <strong>{brand.address}</strong>
                 </div>
-              </div>
+                <ArrowUpRight size={16} />
+              </a>
 
               <div>
                 <span><Clock3 size={18} /></span>
@@ -108,7 +114,7 @@ export default function Contact({ onEnquire }) {
       <section className="contact-bottom container">
         <span>Have a specific destination in mind?</span>
         <Link to="/destinations/srinagar">Explore Srinagar <ArrowUpRight size={15} /></Link>
-        <Link to="/packages">Browse all sample packages <ArrowUpRight size={15} /></Link>
+        <Link to="/packages">Browse all tour packages <ArrowUpRight size={15} /></Link>
       </section>
     </main>
   );
