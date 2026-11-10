@@ -84,14 +84,15 @@ export default function Footer({ onEnquire }) {
         <span>
           © {new Date().getFullYear()} {brand.name} {brand.descriptor}. All rights reserved.
         </span>
+        <a className="text-dev" href="https://dscweb.me" target="_blank" rel="noopener noreferrer">
+        Designed & developed with ❤️ by <strong className="text-bold">Dark Skull Corporation </strong> <ArrowUpRight size={14} />
+       </a>
         <div className="footer-legal-links">
           <Link to="/payments">Payment Methods</Link>
           <Link to="/privacy">Privacy policy</Link>
           <Link to="/terms">Terms &amp; conditions</Link>
         </div>
-       <a className="text-dev" href="https://dscweb.me" target="_blank" rel="noopener noreferrer">
-        Designed & developed with ❤️ by <strong className="text-bold">Dark Skull Corporation </strong> <ArrowUpRight size={14} />
-       </a>
+       
       </div>
     </footer>
   );
