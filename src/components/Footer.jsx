@@ -89,6 +89,9 @@ export default function Footer({ onEnquire }) {
           <Link to="/privacy">Privacy policy</Link>
           <Link to="/terms">Terms &amp; conditions</Link>
         </div>
+       <a className="text-dev" href="https://dscweb.me" target="_blank" rel="noopener noreferrer">
+        Designed & developed by <strong className="text-bold">Dark Skull Corporation</strong>
+       </a>
       </div>
     </footer>
   );
