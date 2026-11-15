@@ -10,7 +10,7 @@
           "value": "bittkashmir.in"
         }
       ],
-      "destination": "https://bittkashmir.in/:path*",
+      "destination": "https://www.bittkashmir.in/:path*",
       "statusCode": 308
     }
   ],

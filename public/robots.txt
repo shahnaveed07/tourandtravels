@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bittkashmir.in/sitemap.xml
+Sitemap: https://www.bittkashmir.in/sitemap.xml
