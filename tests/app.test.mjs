@@ -578,17 +578,31 @@ test('16. Centralized bookingServices configuration, official portal URLs, Whats
 });
 
 test('17. Master SEO verification: schema fidelity, canonical/redirect config, CI config, verification file, and dist HTML checks', () => {
-  // 1. Verify vercel.json apex -> www redirect and SPA fallback exclusions
+  // 1. Verify vercel.json apex -> www redirects (explicit root / + wildcard /(.*)) and SPA fallback exclusions
   const vercelConfig = JSON.parse(fs.readFileSync(path.join(rootDir, 'vercel.json'), 'utf8'));
   assert.equal(vercelConfig.cleanUrls, true);
   assert.equal(vercelConfig.trailingSlash, false);
-  assert.ok(Array.isArray(vercelConfig.redirects) && vercelConfig.redirects.length >= 1);
-  const apexRedirect = vercelConfig.redirects.find(
-    (r) => Array.isArray(r.has) && r.has.some((h) => h.type === 'host' && h.value === 'bittkashmir.in')
+  assert.ok(Array.isArray(vercelConfig.redirects) && vercelConfig.redirects.length >= 2);
+
+  const rootApexRedirect = vercelConfig.redirects.find(
+    (r) =>
+      r.source === '/' &&
+      Array.isArray(r.has) &&
+      r.has.some((h) => h.type === 'host' && h.value === 'bittkashmir.in')
   );
-  assert.ok(apexRedirect, 'vercel.json must redirect apex bittkashmir.in to https://www.bittkashmir.in');
-  assert.equal(apexRedirect.destination, 'https://www.bittkashmir.in/:path*');
-  assert.ok(apexRedirect.statusCode === 308 || apexRedirect.permanent === true, 'vercel.json apex redirect must be permanent (308)');
+  assert.ok(rootApexRedirect, 'vercel.json must explicitly redirect apex root (/) on bittkashmir.in to https://www.bittkashmir.in/');
+  assert.equal(rootApexRedirect.destination, 'https://www.bittkashmir.in/');
+  assert.ok(rootApexRedirect.statusCode === 308 || rootApexRedirect.permanent === true, 'Root apex redirect must be permanent (308)');
+
+  const pathApexRedirect = vercelConfig.redirects.find(
+    (r) =>
+      r.source === '/(.*)' &&
+      Array.isArray(r.has) &&
+      r.has.some((h) => h.type === 'host' && h.value === 'bittkashmir.in')
+  );
+  assert.ok(pathApexRedirect, 'vercel.json must redirect all subpaths (/(.*)) on bittkashmir.in to https://www.bittkashmir.in/$1');
+  assert.equal(pathApexRedirect.destination, 'https://www.bittkashmir.in/$1');
+  assert.ok(pathApexRedirect.statusCode === 308 || pathApexRedirect.permanent === true, 'Wildcard apex redirect must be permanent (308)');
 
   // 2. Verify CNAME and untouched Google Search Console verification file
   const cname = fs.readFileSync(path.join(publicDir, 'CNAME'), 'utf8').trim();
@@ -659,5 +673,91 @@ test('17. Master SEO verification: schema fidelity, canonical/redirect config, C
     }
   }
 });
+
+test('18. Canonical domain enforcement: zero non-www bittkashmir.in URLs in SEO tags/sitemap/JSON-LD and verified redirect matcher for root + subpaths', () => {
+  const vercelConfig = JSON.parse(fs.readFileSync(path.join(rootDir, 'vercel.json'), 'utf8'));
+
+  // Simulate Vercel redirect evaluation in declaration order
+  function simulateVercelRedirect(host, pathWithQuery) {
+    const [pathname, search = ''] = pathWithQuery.split('?');
+    for (const rule of vercelConfig.redirects) {
+      const hostMatches =
+        !rule.has || rule.has.every((cond) => cond.type === 'host' && cond.value === host);
+      if (!hostMatches) continue;
+
+      if (rule.source === '/' && pathname === '/') {
+        const dest = search ? `${rule.destination}?${search}` : rule.destination;
+        return { statusCode: rule.statusCode, location: dest };
+      }
+
+      if (rule.source === '/(.*)') {
+        const match = pathname.match(/^\/(.*)$/);
+        if (match) {
+          const baseDest = rule.destination.replace('$1', match[1]);
+          const dest = search ? `${baseDest}?${search}` : baseDest;
+          return { statusCode: rule.statusCode, location: dest };
+        }
+      }
+    }
+    return null;
+  }
+
+  // Apex root and subpaths MUST redirect permanently (308) to https://www.bittkashmir.in preserving path + query
+  const apexCases = [
+    ['/', 'https://www.bittkashmir.in/'],
+    ['/?utm_source=google', 'https://www.bittkashmir.in/?utm_source=google'],
+    ['/packages', 'https://www.bittkashmir.in/packages'],
+    ['/packages/kashmir-valley-escape?dest=Gulmarg', 'https://www.bittkashmir.in/packages/kashmir-valley-escape?dest=Gulmarg'],
+    ['/destinations/srinagar', 'https://www.bittkashmir.in/destinations/srinagar'],
+    ['/bookings', 'https://www.bittkashmir.in/bookings'],
+    ['/payments', 'https://www.bittkashmir.in/payments'],
+    ['/contact', 'https://www.bittkashmir.in/contact'],
+    ['/sitemap.xml', 'https://www.bittkashmir.in/sitemap.xml'],
+    ['/robots.txt', 'https://www.bittkashmir.in/robots.txt'],
+  ];
+
+  for (const [reqPath, expectedDest] of apexCases) {
+    const res = simulateVercelRedirect('bittkashmir.in', reqPath);
+    assert.ok(res, `Expected apex redirect for bittkashmir.in${reqPath}`);
+    assert.equal(res.statusCode, 308);
+    assert.equal(res.location, expectedDest);
+
+    // Confirm destination host www.bittkashmir.in does NOT trigger any redirect loop
+    const parsed = new URL(res.location);
+    const secondHop = simulateVercelRedirect(parsed.host, `${parsed.pathname}${parsed.search}`);
+    assert.equal(secondHop, null, `Redirect loop detected for ${res.location}`);
+  }
+
+  // Every route SEO object must use https://www.bittkashmir.in and match og:url == canonical
+  for (const route of getAllPrerenderRoutes()) {
+    const seo = getRouteSEO(route);
+    assert.equal(seo.canonical, seo.ogUrl, `og:url must match canonical on ${route}`);
+    assert.ok(seo.canonical.startsWith('https://www.bittkashmir.in'), `Non-www canonical on ${route}: ${seo.canonical}`);
+    assert.ok(!/https?:\/\/bittkashmir\.in/i.test(seo.canonical), `Apex URL found in canonical on ${route}`);
+    assert.ok(!/https?:\/\/bittkashmir\.in/i.test(JSON.stringify(seo.jsonLd)), `Apex URL found in JSON-LD on ${route}`);
+  }
+
+  // Verify no apex-only https://bittkashmir.in or http://bittkashmir.in strings exist in public HTML/XML/TXT or dist HTML/XML/TXT
+  const apexUrlRegex = /https?:\/\/bittkashmir\.in/i;
+  const sitemapXml = fs.readFileSync(path.join(publicDir, 'sitemap.xml'), 'utf8');
+  const robotsTxt = fs.readFileSync(path.join(publicDir, 'robots.txt'), 'utf8');
+  assert.ok(!apexUrlRegex.test(sitemapXml), 'public/sitemap.xml must not contain non-www bittkashmir.in URLs');
+  assert.ok(!apexUrlRegex.test(robotsTxt), 'public/robots.txt must not contain non-www bittkashmir.in URLs');
+
+  const distDir = path.join(rootDir, 'dist');
+  if (fs.existsSync(path.join(distDir, 'index.html'))) {
+    for (const route of getAllPrerenderRoutes()) {
+      const htmlPath =
+        route === '/' ? path.join(distDir, 'index.html') : path.join(distDir, route.slice(1), 'index.html');
+      const html = fs.readFileSync(htmlPath, 'utf8');
+      assert.ok(!apexUrlRegex.test(html), `Built ${route} contains non-www bittkashmir.in URL`);
+      assert.ok(
+        html.includes('<meta name="google-site-verification" content="C9kN406ad9efLwXTJegiy3ASucf6Uvc8_U6ddpkwep0" />'),
+        `Built ${route} missing Google site verification meta tag`
+      );
+    }
+  }
+});
+
 
 

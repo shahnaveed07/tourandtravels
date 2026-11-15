@@ -34,7 +34,7 @@ export const travelAgencySchema = {
   alternateName: 'Brand Identity Tour and Travels',
   description:
     'Kashmir travel agency at Bismillah Market, Sopore, Baramulla offering tailored Kashmir tour packages, Srinagar houseboat stays, Gulmarg, Pahalgam, Sonamarg & Gurez Valley itineraries, and private cab coordination.',
-  url: SITE_ORIGIN,
+  url: `${SITE_ORIGIN}/`,
   logo: toAbsoluteImageUrl(siteImages.logo.horizontal),
   image: toAbsoluteImageUrl(siteImages.company.storefront),
   telephone: '+91-6006343335',
