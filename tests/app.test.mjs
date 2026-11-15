@@ -602,6 +602,11 @@ test('17. Master SEO verification: schema fidelity, canonical/redirect config, C
     fs.readFileSync(path.join(publicDir, 'googlefea446053fa36602.html'), 'utf8').trim(),
     gscContent
   );
+  const indexHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
+  assert.ok(
+    indexHtml.includes('<meta name="google-site-verification" content="C9kN406ad9efLwXTJegiy3ASucf6Uvc8_U6ddpkwep0" />'),
+    'index.html must include google-site-verification meta tag'
+  );
 
   // 3. Verify CI workflow verifies build & tests cleanly without broken Pages deployment
   const workflowYml = fs.readFileSync(path.join(rootDir, '.github', 'workflows', 'deploy.yml'), 'utf8');
