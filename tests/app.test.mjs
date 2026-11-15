@@ -188,8 +188,8 @@ test('9–10. public/sitemap.xml and public/robots.txt contain all 24 canonical 
   assert.ok(robotsTxt.includes('User-agent: *'), 'robots.txt must include User-agent: *');
   assert.ok(robotsTxt.includes('Allow: /'), 'robots.txt must include Allow: /');
   assert.ok(
-    robotsTxt.includes('Sitemap: https://www.bittkashmir.in/sitemap.xml'),
-    'robots.txt must point to https://www.bittkashmir.in/sitemap.xml'
+    robotsTxt.includes('Sitemap: https://bittkashmir.in/sitemap.xml'),
+    'robots.txt must point to https://bittkashmir.in/sitemap.xml'
   );
 
   const sitemapXml = fs.readFileSync(path.join(publicDir, 'sitemap.xml'), 'utf8');
@@ -200,8 +200,8 @@ test('9–10. public/sitemap.xml and public/robots.txt contain all 24 canonical 
 
   assert.equal(expectedUrls.length, 24, 'Expected 24 indexable routes (1 home + 6 static + 6 dest + 8 pkg + 3 guides)');
   assert.equal(locMatches.length, 24, `Expected 24 <loc> entries in sitemap.xml, found ${locMatches.length}`);
-  assert.ok(locMatches.includes('https://www.bittkashmir.in/payments'), 'sitemap.xml must include https://www.bittkashmir.in/payments');
-  assert.ok(locMatches.includes('https://www.bittkashmir.in/bookings'), 'sitemap.xml must include https://www.bittkashmir.in/bookings');
+  assert.ok(locMatches.includes('https://bittkashmir.in/payments'), 'sitemap.xml must include https://bittkashmir.in/payments');
+  assert.ok(locMatches.includes('https://bittkashmir.in/bookings'), 'sitemap.xml must include https://bittkashmir.in/bookings');
 
   for (const expectedUrl of expectedUrls) {
     assert.ok(
@@ -316,12 +316,12 @@ test('13. All route SEO configurations have unique titles, unique descriptions, 
   }
 
   const paymentsSeo = getRouteSEO('/payments');
-  assert.equal(paymentsSeo.canonical, 'https://www.bittkashmir.in/payments');
+  assert.equal(paymentsSeo.canonical, 'https://bittkashmir.in/payments');
   assert.ok(paymentsSeo.title.includes('Payment Methods'));
 
-  // Filtered package query URLs must resolve to canonical https://www.bittkashmir.in/packages
+  // Filtered package query URLs must resolve to canonical https://bittkashmir.in/packages
   const filteredPackagesSEO = getRouteSEO('/packages?dest=Gulmarg&duration=4%20Days&type=Family');
-  assert.equal(filteredPackagesSEO.canonical, 'https://www.bittkashmir.in/packages');
+  assert.equal(filteredPackagesSEO.canonical, 'https://bittkashmir.in/packages');
 });
 
 test('14. Build-time prerender HTML injection & dist output verification', async () => {
@@ -334,7 +334,7 @@ test('14. Build-time prerender HTML injection & dist output verification', async
   const sampleSeo = getRouteSEO('/packages/kashmir-valley-escape');
   const injected = injectHeadMetadata(templateHtml, sampleSeo, '<h1>Kashmir Valley Escape</h1>');
   assert.ok(injected.includes('<title>Kashmir Valley Escape (4 Days / 3 Nights) | Brand Identity Tour &amp; Travel</title>'));
-  assert.ok(injected.includes(`<link rel="canonical" href="https://www.bittkashmir.in/packages/kashmir-valley-escape" />`));
+  assert.ok(injected.includes(`<link rel="canonical" href="https://bittkashmir.in/packages/kashmir-valley-escape" />`));
   assert.ok(injected.includes('<div id="root"><h1>Kashmir Valley Escape</h1></div>'));
 
   const canonicalCount = (injected.match(/<link\s+rel="canonical"/g) || []).length;
@@ -539,7 +539,7 @@ test('16. Centralized bookingServices configuration, official portal URLs, Whats
   // 3. SEO for /bookings
   const bookingsSeo = getRouteSEO('/bookings');
   assert.equal(bookingsSeo.title, 'Travel & Activity Bookings | Brand Identity Tour & Travel');
-  assert.equal(bookingsSeo.canonical, 'https://www.bittkashmir.in/bookings');
+  assert.equal(bookingsSeo.canonical, 'https://bittkashmir.in/bookings');
 
   // 4. SSR render of /bookings and /services
   const { createServer } = await import('vite');
@@ -587,7 +587,7 @@ test('17. Master SEO verification: schema fidelity, canonical/redirect config, C
     (r) => Array.isArray(r.has) && r.has.some((h) => h.type === 'host' && h.value === 'bittkashmir.in')
   );
   assert.ok(apexRedirect, 'vercel.json must redirect apex bittkashmir.in to https://www.bittkashmir.in');
-  assert.equal(apexRedirect.destination, 'https://www.bittkashmir.in/:path*');
+  assert.equal(apexRedirect.destination, 'https://bittkashmir.in/:path*');
   assert.ok(apexRedirect.statusCode === 308 || apexRedirect.permanent === true, 'vercel.json apex redirect must be permanent (308)');
 
   // 2. Verify CNAME and untouched Google Search Console verification file

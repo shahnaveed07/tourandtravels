@@ -2,7 +2,7 @@
 
 A production-ready, fully responsive static **React + Vite** website crafted for **Brand Identity Tour & Travel** (Bismillah Market, Sopore, Baramulla, Jammu & Kashmir, India — PIN `193201`), showcasing curated Kashmir journeys, alpine destinations, mountain stays, and personalized valley travel coordination.
 
-- **Primary Production URL**: `https://www.bittkashmir.in/`
+- **Primary Production URL**: `https://bittkashmir.in/`
 - **Canonical Origin**: `https://www.bittkashmir.in`
 - **Repository**: `https://github.com/shahnaveed07/tourandtravels`
 
@@ -45,14 +45,14 @@ npm run preview
 
 ---
 
-## 3. Custom Domain & Hosting Configuration (`https://www.bittkashmir.in/`)
+## 3. Custom Domain & Hosting Configuration (`https://bittkashmir.in/`)
 
-The website is configured to run at the domain root (`/`) on **`https://www.bittkashmir.in/`** and supports both **Vercel** (`vercel.json` + static prerendered directories) and **GitHub Pages** (`public/CNAME` + `.github/workflows/deploy.yml` + static prerendered directories + `dist/404.html`).
+The website is configured to run at the domain root (`/`) on **`https://bittkashmir.in/`** and supports both **Vercel** (`vercel.json` + static prerendered directories) and **GitHub Pages** (`public/CNAME` + `.github/workflows/deploy.yml` + static prerendered directories + `dist/404.html`).
 
 ### Build Base Path
 | Variable | Description | Default |
 |---|---|---|
-| `VITE_BASE_PATH` | Optional base path override for Vite. Defaults to `/` for `https://www.bittkashmir.in/`. | `/` |
+| `VITE_BASE_PATH` | Optional base path override for Vite. Defaults to `/` for `https://bittkashmir.in/`. | `/` |
 
 ---
 
@@ -70,7 +70,7 @@ The website is configured to run at the domain root (`/`) on **`https://www.bitt
   3. *Duration filter*: Supports 2 Days through 8 Days.
   4. *Travel style filter*: Filter by Family, Honeymoon, Adventure, Classic tour, or Short break.
   5. *Arrival date filter*: Preserves travel dates across navigation and pre-fills the enquiry modal.
-- **Canonical URL discipline**: Filtered `/packages?...` views retain `https://www.bittkashmir.in/packages` as their canonical URL.
+- **Canonical URL discipline**: Filtered `/packages?...` views retain `https://bittkashmir.in/packages` as their canonical URL.
 
 ### Destination Pages & Travel Guides
 - **Strict Relationship Integrity**: Destination pages display only genuinely related packages.
