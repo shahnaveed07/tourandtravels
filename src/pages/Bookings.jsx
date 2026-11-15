@@ -38,9 +38,9 @@ export default function Bookings({ onEnquire }) {
           </div>
           <span className="eyebrow">OFFICIAL TICKETING PORTALS &amp; TRAVEL ASSISTANCE</span>
           <h1>
-            Travel &amp; activity
+            Kashmir Travel &amp; Activity
             <br />
-            <i>booking hub.</i>
+            <i>Booking Assistance.</i>
           </h1>
           <p>
             Direct access to official portals for Vande Bharat Express train tickets, Gulmarg Gondola cable car passes, and eligible helicopter services in Jammu &amp; Kashmir.
@@ -70,7 +70,7 @@ export default function Bookings({ onEnquire }) {
             {/* BOOKING SERVICE 1 — VANDE BHARAT TRAIN BOOKING */}
             <article className="booking-hub-card" id={vandeBharat.id} aria-labelledby="heading-vande-bharat">
               <div className="booking-hub-media">
-                <img src={vandeBharat.image} alt={vandeBharat.imageAlt} loading="lazy" />
+                <img src={vandeBharat.image} alt={vandeBharat.imageAlt} width={1024} height={765} loading="lazy" decoding="async" />
                 <span className="booking-provider-pill">
                   <TrainFront size={15} /> Official IRCTC Portal
                 </span>
@@ -130,7 +130,7 @@ export default function Bookings({ onEnquire }) {
             {/* BOOKING SERVICE 2 — GULMARG GONDOLA BOOKING */}
             <article className="booking-hub-card" id={gulmargGondola.id} aria-labelledby="heading-gondola">
               <div className="booking-hub-media">
-                <img src={gulmargGondola.image} alt={gulmargGondola.imageAlt} loading="lazy" />
+                <img src={gulmargGondola.image} alt={gulmargGondola.imageAlt} width={1024} height={765} loading="lazy" decoding="async" />
                 <span className="booking-provider-pill">
                   <CableCar size={15} /> Official JKCCC e-Ticket
                 </span>
@@ -188,7 +188,7 @@ export default function Bookings({ onEnquire }) {
             {/* BOOKING SERVICE 3 — HELICOPTER / CHOPPER BOOKING */}
             <article className="booking-hub-card booking-hub-card-heli" id={helicopter.id} aria-labelledby="heading-helicopter">
               <div className="booking-hub-media">
-                <img src={helicopter.image} alt={helicopter.imageAlt} loading="lazy" />
+                <img src={helicopter.image} alt={helicopter.imageAlt} width={1024} height={765} loading="lazy" decoding="async" />
                 <span className="booking-provider-pill">
                   <Plane size={15} /> Aviation &amp; Shrine Board Guidance
                 </span>

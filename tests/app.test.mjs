@@ -333,7 +333,7 @@ test('14. Build-time prerender HTML injection & dist output verification', async
   const templateHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
   const sampleSeo = getRouteSEO('/packages/kashmir-valley-escape');
   const injected = injectHeadMetadata(templateHtml, sampleSeo, '<h1>Kashmir Valley Escape</h1>');
-  assert.ok(injected.includes('<title>Kashmir Valley Escape (4 Days / 3 Nights) — Kashmir Package | Brand Identity Tour &amp; Travel</title>'));
+  assert.ok(injected.includes('<title>Kashmir Valley Escape (4 Days / 3 Nights) | Brand Identity Tour &amp; Travel</title>'));
   assert.ok(injected.includes(`<link rel="canonical" href="https://www.bittkashmir.in/packages/kashmir-valley-escape" />`));
   assert.ok(injected.includes('<div id="root"><h1>Kashmir Valley Escape</h1></div>'));
 
@@ -576,4 +576,83 @@ test('16. Centralized bookingServices configuration, official portal URLs, Whats
   );
   assert.ok(servicesHtml.includes('/bookings'), 'Services page must link to /bookings');
 });
+
+test('17. Master SEO verification: schema fidelity, canonical/redirect config, CI config, verification file, and dist HTML checks', () => {
+  // 1. Verify vercel.json apex -> www redirect and SPA fallback exclusions
+  const vercelConfig = JSON.parse(fs.readFileSync(path.join(rootDir, 'vercel.json'), 'utf8'));
+  assert.equal(vercelConfig.cleanUrls, true);
+  assert.equal(vercelConfig.trailingSlash, false);
+  assert.ok(Array.isArray(vercelConfig.redirects) && vercelConfig.redirects.length >= 1);
+  const apexRedirect = vercelConfig.redirects.find(
+    (r) => Array.isArray(r.has) && r.has.some((h) => h.type === 'host' && h.value === 'bittkashmir.in')
+  );
+  assert.ok(apexRedirect, 'vercel.json must redirect apex bittkashmir.in to https://www.bittkashmir.in');
+  assert.equal(apexRedirect.destination, 'https://www.bittkashmir.in/:path*');
+  assert.ok(apexRedirect.statusCode === 308 || apexRedirect.permanent === true, 'vercel.json apex redirect must be permanent (308)');
+
+  // 2. Verify CNAME and untouched Google Search Console verification file
+  const cname = fs.readFileSync(path.join(publicDir, 'CNAME'), 'utf8').trim();
+  assert.equal(cname, 'www.bittkashmir.in');
+  const gscContent = 'google-site-verification: googlefea446053fa36602.html';
+  assert.equal(
+    fs.readFileSync(path.join(rootDir, 'googlefea446053fa36602.html'), 'utf8').trim(),
+    gscContent
+  );
+  assert.equal(
+    fs.readFileSync(path.join(publicDir, 'googlefea446053fa36602.html'), 'utf8').trim(),
+    gscContent
+  );
+
+  // 3. Verify CI workflow verifies build & tests cleanly without broken Pages deployment
+  const workflowYml = fs.readFileSync(path.join(rootDir, '.github', 'workflows', 'deploy.yml'), 'utf8');
+  assert.ok(workflowYml.includes('npm test'));
+  assert.ok(workflowYml.includes('npm run build'));
+  assert.ok(!workflowYml.includes('deploy-pages'));
+
+  // 4. Verify rich schema types and zero fake reviews/ratings/prices across routes
+  assert.equal(travelAgencySchema.alternateName, 'Brand Identity Tour and Travels');
+  const homeSeo = getRouteSEO('/');
+  assert.ok(homeSeo.jsonLd.some((s) => s['@type'] === 'FAQPage' && s.mainEntity.length === faqs.length));
+  const pkgIndexSeo = getRouteSEO('/packages');
+  assert.ok(pkgIndexSeo.jsonLd.some((s) => s['@type'] === 'CollectionPage' && s.mainEntity?.numberOfItems === packages.length));
+  const samplePkgSeo = getRouteSEO('/packages/grand-kashmir-discovery');
+  assert.ok(samplePkgSeo.jsonLd.some((s) => s['@type'] === 'TouristTrip' && s.itinerary?.numberOfItems === 7));
+  const destSeo = getRouteSEO('/destinations/srinagar');
+  assert.ok(destSeo.jsonLd.some((s) => s['@type'] === 'TouristDestination'));
+  const guideSeo = getRouteSEO('/travel-guides/getting-here-arrival-planning');
+  assert.ok(guideSeo.jsonLd.some((s) => s['@type'] === 'BlogPosting'));
+
+  for (const route of [...getAllPrerenderRoutes(), '/404-not-found']) {
+    const serialized = JSON.stringify(getRouteSEO(route).jsonLd);
+    assert.ok(!serialized.includes('AggregateRating'), `Unexpected AggregateRating in ${route}`);
+    assert.ok(!serialized.includes('"@type":"Review"'), `Unexpected Review schema in ${route}`);
+    assert.ok(!serialized.includes('"@type":"Offer"'), `Unexpected Offer schema in ${route}`);
+  }
+
+  // 5. Verify built dist/ files if dist exists
+  const distDir = path.join(rootDir, 'dist');
+  if (fs.existsSync(path.join(distDir, 'index.html'))) {
+    assert.equal(
+      fs.readFileSync(path.join(distDir, 'googlefea446053fa36602.html'), 'utf8').trim(),
+      gscContent
+    );
+    const html404 = fs.readFileSync(path.join(distDir, '404.html'), 'utf8');
+    assert.ok(html404.includes('<meta name="robots" content="noindex, nofollow" />'));
+
+    for (const route of getAllPrerenderRoutes()) {
+      const htmlPath =
+        route === '/' ? path.join(distDir, 'index.html') : path.join(distDir, route.slice(1), 'index.html');
+      const html = fs.readFileSync(htmlPath, 'utf8');
+      assert.ok(html.includes('<meta name="robots" content="index, follow" />'), `Expected index, follow on ${route}`);
+      assert.ok(!html.includes('shahnaveed07.github.io'), `Found obsolete github.io in built ${route}`);
+      assert.ok(!html.includes('/tourandtravels/'), `Found obsolete /tourandtravels/ in built ${route}`);
+      assert.ok(/<h1[^>]*>[\s\S]+?<\/h1>/i.test(html), `Missing prerendered <h1> in built ${route}`);
+
+      const ldMatch = html.match(/<script[^>]*id="seo-json-ld"[^>]*>([\s\S]*?)<\/script>/i);
+      assert.ok(ldMatch, `Missing #seo-json-ld in built ${route}`);
+      assert.doesNotThrow(() => JSON.parse(ldMatch[1]), `Invalid JSON-LD JSON in built ${route}`);
+    }
+  }
+});
+
 

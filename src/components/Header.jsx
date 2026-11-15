@@ -74,6 +74,9 @@ export default function Header({ onEnquire }) {
                 src={siteImages.logo.horizontal}
                 alt="Brand Identity Tour & Travel"
                 className="brand-logo-img"
+                width={1376}
+                height={768}
+                decoding="async"
               />
             </span>
           </Link>

@@ -1,9 +1,22 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "bittkashmir.in"
+        }
+      ],
+      "destination": "https://www.bittkashmir.in/:path*",
+      "statusCode": 308
+    }
+  ],
   "rewrites": [
     {
-      "source": "/((?!images/|assets/|sitemap\\.xml|robots\\.txt|CNAME|googlefea446053fa36602\\.html).*)",
+      "source": "/((?!images/|assets/|sitemap\\.xml|robots\\.txt|CNAME|favicon\\.svg|404\\.html|googlefea446053fa36602\\.html).*)",
       "destination": "/index.html"
     }
   ]

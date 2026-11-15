@@ -1,4 +1,4 @@
-import { brand, destinations, packages, guides } from './data.js';
+import { brand, destinations, packages, guides, faqs } from './data.js';
 import { siteImages } from './imageCatalog.js';
 
 export const SITE_ORIGIN = 'https://www.bittkashmir.in';
@@ -31,8 +31,9 @@ export const travelAgencySchema = {
   '@type': 'TravelAgency',
   '@id': `${SITE_ORIGIN}/#organization`,
   name: `${brand.name} ${brand.descriptor}`,
+  alternateName: 'Brand Identity Tour and Travels',
   description:
-    'Kashmir travel agency in Sopore, Baramulla offering tailored tour packages, Srinagar houseboat stays, Gulmarg, Pahalgam, Sonamarg & Gurez Valley itineraries, and private cab coordination.',
+    'Kashmir travel agency at Bismillah Market, Sopore, Baramulla offering tailored Kashmir tour packages, Srinagar houseboat stays, Gulmarg, Pahalgam, Sonamarg & Gurez Valley itineraries, and private cab coordination.',
   url: SITE_ORIGIN,
   logo: toAbsoluteImageUrl(siteImages.logo.horizontal),
   image: toAbsoluteImageUrl(siteImages.company.storefront),
@@ -50,10 +51,16 @@ export const travelAgencySchema = {
     postalCode: brand.pinCode,
     addressCountry: 'IN',
   },
-  areaServed: {
-    '@type': 'AdministrativeArea',
-    name: 'Jammu and Kashmir, India',
-  },
+  areaServed: [
+    {
+      '@type': 'AdministrativeArea',
+      name: 'Jammu and Kashmir, India',
+    },
+    {
+      '@type': 'City',
+      name: 'Sopore, Baramulla',
+    },
+  ],
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -71,6 +78,21 @@ export function buildBreadcrumbSchema(items) {
       position: idx + 1,
       name: item.name,
       item: item.url,
+    })),
+  };
+}
+
+export function buildHomeFaqSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
     })),
   };
 }
@@ -100,9 +122,9 @@ export function getRouteSEO(pathname = '/') {
 
   if (cleanPath === '/') {
     const ogImage = toAbsoluteImageUrl(siteImages.hero);
-    const title = 'Brand Identity Tour & Travel — Kashmir Tour Packages, Stays & Private Transfers';
+    const title = 'Brand Identity Tour & Travel | Kashmir Tour Packages & Trip Planning';
     const description =
-      'Plan your Kashmir holiday with Brand Identity Tour & Travel in Sopore, J&K. Curated Srinagar, Gulmarg, Pahalgam, Sonamarg & Gurez Valley tour packages, houseboats and private cabs.';
+      'Plan your Kashmir trip with Brand Identity Tour & Travel in Sopore, Baramulla. Explore Kashmir tour packages, Srinagar, Gulmarg, Pahalgam, Sonamarg, Gurez Valley & stays.';
     return {
       title,
       description,
@@ -125,17 +147,19 @@ export function getRouteSEO(pathname = '/') {
           '@id': `${SITE_ORIGIN}/#website`,
           url: `${SITE_ORIGIN}/`,
           name: 'Brand Identity Tour & Travel',
+          alternateName: 'Brand Identity Tour and Travels',
           publisher: { '@id': `${SITE_ORIGIN}/#organization` },
         },
+        buildHomeFaqSchema(),
       ],
     };
   }
 
   if (cleanPath === '/packages') {
     const ogImage = toAbsoluteImageUrl(siteImages.hero);
-    const title = 'Kashmir Tour Packages (2 to 8 Days) — Brand Identity Tour & Travel';
+    const title = 'Kashmir Tour Packages (2 to 8 Days) | Brand Identity Tour & Travel';
     const description =
-      'Compare 2 to 8 day Kashmir tour packages covering Srinagar, Gulmarg, Pahalgam, Sonamarg and Gurez Valley. Customise family trips, honeymoon escapes, houseboat stays and private cabs.';
+      'Browse custom 2 to 8 day Kashmir tour packages for families, couples & honeymoons covering Srinagar, Gulmarg, Pahalgam, Sonamarg & Gurez Valley with private transport.';
     return {
       title,
       description,
@@ -154,8 +178,25 @@ export function getRouteSEO(pathname = '/') {
         travelAgencySchema,
         buildBreadcrumbSchema([
           { name: 'Home', url: `${SITE_ORIGIN}/` },
-          { name: 'Tour Packages', url: canonical },
+          { name: 'Kashmir Tour Packages', url: canonical },
         ]),
+        {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'Kashmir Tour Packages',
+          url: canonical,
+          description,
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: packages.length,
+            itemListElement: packages.map((pkg, idx) => ({
+              '@type': 'ListItem',
+              position: idx + 1,
+              name: pkg.title,
+              url: `${SITE_ORIGIN}/packages/${pkg.slug}`,
+            })),
+          },
+        },
       ],
     };
   }
@@ -165,8 +206,8 @@ export function getRouteSEO(pathname = '/') {
     const pkg = packages.find((p) => p.slug === slug);
     if (pkg) {
       const ogImage = toAbsoluteImageUrl(pkg.image);
-      const title = `${pkg.title} (${pkg.duration} / ${pkg.nights}) — Kashmir Package | Brand Identity Tour & Travel`;
-      const description = `${pkg.summary} Covers ${pkg.locations.join(', ')} over ${pkg.duration} (${pkg.nights}) with stays, Shikara ride and private transfers.`;
+      const title = `${pkg.title} (${pkg.duration} / ${pkg.nights}) | Brand Identity Tour & Travel`;
+      const description = `${pkg.summary} Covers ${pkg.locations.join(', ')} over ${pkg.duration} (${pkg.nights}) with tailored stays and private cab transfers.`;
       return {
         title,
         description,
@@ -185,9 +226,27 @@ export function getRouteSEO(pathname = '/') {
           travelAgencySchema,
           buildBreadcrumbSchema([
             { name: 'Home', url: `${SITE_ORIGIN}/` },
-            { name: 'Tour Packages', url: `${SITE_ORIGIN}/packages` },
+            { name: 'Kashmir Tour Packages', url: `${SITE_ORIGIN}/packages` },
             { name: pkg.title, url: canonical },
           ]),
+          {
+            '@context': 'https://schema.org',
+            '@type': 'TouristTrip',
+            name: `${pkg.title} (${pkg.duration})`,
+            description: pkg.summary,
+            touristType: pkg.type,
+            provider: { '@id': `${SITE_ORIGIN}/#organization` },
+            itinerary: {
+              '@type': 'ItemList',
+              numberOfItems: pkg.itinerary.length,
+              itemListElement: pkg.itinerary.map((day, idx) => ({
+                '@type': 'ListItem',
+                position: idx + 1,
+                name: `${day[0]}: ${day[1]}`,
+                description: day[2],
+              })),
+            },
+          },
         ],
       };
     }
@@ -198,8 +257,8 @@ export function getRouteSEO(pathname = '/') {
     const place = destinations.find((d) => d.slug === slug);
     if (place) {
       const ogImage = toAbsoluteImageUrl(place.image);
-      const title = `${place.name} Travel Guide, Best Season & Tour Packages — Brand Identity Tour & Travel`;
-      const description = `${place.description} Best season: ${place.bestSeason}. Ideal duration: ${place.suggestedDuration}. Plan your ${place.name} itinerary with local experts.`;
+      const title = `${place.name} Kashmir Travel Guide & Tour Packages | Brand Identity Tour & Travel`;
+      const description = `${place.description} Best season: ${place.bestSeason}. Ideal duration: ${place.suggestedDuration}. Plan custom ${place.name} trips with Sopore local experts.`;
       return {
         title,
         description,
@@ -218,7 +277,7 @@ export function getRouteSEO(pathname = '/') {
           travelAgencySchema,
           buildBreadcrumbSchema([
             { name: 'Home', url: `${SITE_ORIGIN}/` },
-            { name: place.name, url: canonical },
+            { name: `${place.name} Tour Guide`, url: canonical },
           ]),
           {
             '@context': 'https://schema.org',
@@ -243,8 +302,8 @@ export function getRouteSEO(pathname = '/') {
     const guide = guides.find((g) => g.slug === slug);
     if (guide) {
       const ogImage = toAbsoluteImageUrl(guide.image);
-      const title = `${guide.title} — Kashmir Travel Guide | Brand Identity Tour & Travel`;
-      const description = `${guide.description} Practical advice from Brand Identity Tour & Travel in Kashmir.`;
+      const title = `${guide.title} | Brand Identity Tour & Travel`;
+      const description = `${guide.description} Practical local advice from Brand Identity Tour & Travel in Sopore, Kashmir.`;
       return {
         title,
         description,
@@ -296,9 +355,9 @@ export function getRouteSEO(pathname = '/') {
 
   if (cleanPath === '/services') {
     const ogImage = toAbsoluteImageUrl(siteImages.hero);
-    const title = 'Kashmir Travel Services: Custom Tours, Stays, Houseboats & Cabs — Brand Identity Tour & Travel';
+    const title = 'Kashmir Travel Services: Hotels, Houseboats & Private Cabs | Brand Identity Tour & Travel';
     const description =
-      'Complete Kashmir travel coordination: tailor-made tour planning, curated hotels, Dal Lake houseboat stays, Srinagar airport transfers, private cabs, and on-trip local support.';
+      'Personalised Kashmir trip coordination: custom tour planning, hotel booking assistance, Dal Lake houseboat stays, Srinagar airport transfers, private cabs & group tours.';
     return {
       title,
       description,
@@ -317,7 +376,7 @@ export function getRouteSEO(pathname = '/') {
         travelAgencySchema,
         buildBreadcrumbSchema([
           { name: 'Home', url: `${SITE_ORIGIN}/` },
-          { name: 'Services', url: canonical },
+          { name: 'Kashmir Travel Services', url: canonical },
         ]),
       ],
     };
@@ -325,9 +384,9 @@ export function getRouteSEO(pathname = '/') {
 
   if (cleanPath === '/about') {
     const ogImage = toAbsoluteImageUrl(siteImages.company.storefront);
-    const title = 'About Brand Identity Tour & Travel — Local Kashmir Travel Planners in Sopore';
+    const title = 'About Brand Identity Tour & Travel | Travel Agency in Sopore, Kashmir';
     const description =
-      'Meet Brand Identity Tour & Travel at Bismillah Market, Sopore, Baramulla, Jammu & Kashmir. Rooted in local insight, personal route planning, and thoughtful valley coordination.';
+      'Meet Brand Identity Tour & Travel (Brand Identity Tour and Travels) at Bismillah Market, Sopore, Baramulla (193201). Local Kashmir trip planning for stays, cabs & tours.';
     return {
       title,
       description,
@@ -346,7 +405,7 @@ export function getRouteSEO(pathname = '/') {
         travelAgencySchema,
         buildBreadcrumbSchema([
           { name: 'Home', url: `${SITE_ORIGIN}/` },
-          { name: 'About Us', url: canonical },
+          { name: 'About Brand Identity Tour & Travel', url: canonical },
         ]),
       ],
     };
@@ -354,9 +413,9 @@ export function getRouteSEO(pathname = '/') {
 
   if (cleanPath === '/contact') {
     const ogImage = toAbsoluteImageUrl(siteImages.company.storefront);
-    const title = 'Contact Brand Identity Tour & Travel — Sopore, Jammu & Kashmir (+91 6006343335)';
+    const title = 'Contact Brand Identity Tour & Travel | Sopore, Baramulla, Kashmir';
     const description =
-      'Speak with our Kashmir travel coordinators in Bismillah Market, Sopore, Baramulla (PIN 193201). Call +91 6006343335, chat on WhatsApp, or email bookings@bittkashmir.in.';
+      'Visit Brand Identity Tour & Travel at Bismillah Market, Sopore, Baramulla, J&K (PIN 193201). Call +91 6006343335, chat on WhatsApp, or email bookings@bittkashmir.in.';
     return {
       title,
       description,
@@ -385,7 +444,7 @@ export function getRouteSEO(pathname = '/') {
     const ogImage = toAbsoluteImageUrl(siteImages.destinations.gulmarg);
     const title = 'Travel & Activity Bookings | Brand Identity Tour & Travel';
     const description =
-      'Find official booking portals for Vande Bharat Express train tickets (IRCTC), Gulmarg Gondola cable car tickets (JKCCC), and eligible Amarnath Yatra helicopter services in Kashmir.';
+      'Direct links to official portals for Vande Bharat Express train tickets (IRCTC), Gulmarg Gondola cable car passes (JKCCC), Amarnath helicopter info & chopper enquiries.';
     return {
       title,
       description,
@@ -404,7 +463,7 @@ export function getRouteSEO(pathname = '/') {
         travelAgencySchema,
         buildBreadcrumbSchema([
           { name: 'Home', url: `${SITE_ORIGIN}/` },
-          { name: 'Bookings', url: canonical },
+          { name: 'Travel & Activity Bookings', url: canonical },
         ]),
       ],
     };
@@ -412,9 +471,9 @@ export function getRouteSEO(pathname = '/') {
 
   if (cleanPath === '/payments') {
     const ogImage = toAbsoluteImageUrl(siteImages.company.storefront);
-    const title = 'Payment Methods & Booking Guidance — Brand Identity Tour & Travel';
+    const title = 'Payment Methods & Booking Guidance | Brand Identity Tour & Travel';
     const description =
-      'View official payment methods for Brand Identity Tour & Travel in Kashmir: UPI transfer, Mobile Banking (NEFT, IMPS, RTGS), Scan & Pay QR, and booking payment verification.';
+      'View official payment guidance for Brand Identity Tour & Travel in Kashmir: UPI transfer, Scan & Pay QR verification, and post-payment UTR confirmation.';
     return {
       title,
       description,
@@ -441,9 +500,9 @@ export function getRouteSEO(pathname = '/') {
 
   if (cleanPath === '/privacy') {
     const ogImage = toAbsoluteImageUrl(siteImages.hero);
-    const title = 'Privacy Policy — Brand Identity Tour & Travel';
+    const title = 'Privacy Policy | Brand Identity Tour & Travel';
     const description =
-      'Learn how Brand Identity Tour & Travel handles trip enquiries passed directly to WhatsApp or your email application without storing personal data on this website.';
+      'Learn how Brand Identity Tour & Travel formats trip enquiries directly for WhatsApp or email without storing personal data on this website.';
     return {
       title,
       description,
@@ -470,9 +529,9 @@ export function getRouteSEO(pathname = '/') {
 
   if (cleanPath === '/terms') {
     const ogImage = toAbsoluteImageUrl(siteImages.hero);
-    const title = 'Terms & Conditions — Brand Identity Tour & Travel';
+    const title = 'Terms & Conditions | Brand Identity Tour & Travel';
     const description =
-      'Review enquiry, booking confirmation, pricing quotation, and cancellation guidelines for Kashmir tours coordinated by Brand Identity Tour & Travel.';
+      'Review enquiry, booking confirmation, written quotation, and cancellation guidelines for Kashmir tours coordinated by Brand Identity Tour & Travel.';
     return {
       title,
       description,
@@ -499,9 +558,9 @@ export function getRouteSEO(pathname = '/') {
 
   // Fallback / 404 NotFound
   const ogImage = toAbsoluteImageUrl(siteImages.hero);
-  const title = 'Page Not Found (404) — Brand Identity Tour & Travel';
+  const title = 'Page Not Found (404) | Brand Identity Tour & Travel';
   const description =
-    'The page you requested could not be found. Explore curated Kashmir tour packages, valley destinations, and travel guides with Brand Identity Tour & Travel.';
+    'The page you requested could not be found. Explore Kashmir tour packages, valley destinations, and travel guides with Brand Identity Tour & Travel.';
   return {
     title,
     description,

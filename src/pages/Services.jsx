@@ -39,12 +39,12 @@ export default function Services({ onEnquire }) {
           </div>
           <span className="eyebrow">THE DETAILS, THOUGHTFULLY CONNECTED</span>
           <h1>
-            Travel well.
+            Kashmir Travel Services
             <br />
-            <i>We&apos;ll handle the in-between.</i>
+            <i>&amp; Local Trip Coordination.</i>
           </h1>
           <p>
-            From the first route idea to the last transfer, bring the pieces together with one considered plan.
+            From hotels, houseboats, and private cabs to custom valley itineraries planned from our Sopore, Kashmir office.
           </p>
         </div>
       </section>
@@ -215,7 +215,7 @@ export default function Services({ onEnquire }) {
           <div className="culture-gallery-grid">
             {siteImages.stays.slice(0, 6).map((stay) => (
               <figure className="culture-gallery-item" key={stay.src}>
-                <img src={stay.src} alt={stay.alt} loading="lazy" />
+                <img src={stay.src} alt={stay.alt} width={1024} height={765} loading="lazy" decoding="async" />
                 <figcaption>{stay.alt}</figcaption>
               </figure>
             ))}

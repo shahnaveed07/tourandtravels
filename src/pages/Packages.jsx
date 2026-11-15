@@ -122,9 +122,9 @@ export default function Packages({ onEnquire }) {
             <span>/</span>
             <span>Tour packages</span>
           </div>
-          <span className="eyebrow">CURATED KASHMIR JOURNEYS</span>
-          <h1>Find your <i>next somewhere.</i></h1>
-          <p>Choose a route, find your rhythm and let the details fall into place.</p>
+          <span className="eyebrow">CURATED KASHMIR JOURNEYS · 2 TO 8 DAYS</span>
+          <h1>Kashmir Tour Packages<br /><i>&amp; Custom Itineraries.</i></h1>
+          <p>Compare 2 to 8 day routes across Srinagar, Gulmarg, Pahalgam, Sonamarg, and Gurez Valley for families, couples, and private groups.</p>
           <button className="button button-light" onClick={() => onEnquire('', arrivalDate)}>
             Build a custom trip <ArrowUpRight size={16} />
           </button>
@@ -135,9 +135,9 @@ export default function Packages({ onEnquire }) {
         <div className="container">
           <div className="listing-intro">
             <SectionTitle
-              eyebrow="CURATED FOR YOUR KIND OF TRAVEL"
+              eyebrow="TAILORED HOLIDAY PLANS FROM SOPORE, KASHMIR"
               title="Journeys worth looking forward to."
-              text="Explore our curated itineraries. Every route can be tailored around your travel dates, group size, and preferred pace."
+              text="Filter by destination, trip duration, or travel style. Rates shown are indicative starting estimates per person; exact pricing is confirmed in writing based on your dates and hotel category."
             />
             <div className="listing-count">
               <strong>{filtered.length.toString().padStart(2, '0')}</strong>

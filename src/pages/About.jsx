@@ -14,8 +14,8 @@ export default function About({ onEnquire }) {
         <div className="container inner-hero-content">
           <div className="breadcrumbs"><Link to="/">Home</Link><span>/</span><span>About us</span></div>
           <span className="eyebrow">A LOCAL POINT OF VIEW. A PERSONAL WAY TO TRAVEL.</span>
-          <h1>We believe the<br/><i>journey is yours.</i></h1>
-          <p>Good travel begins with listening. The rest is thoughtful planning, local understanding and room for the moments you didn't plan.</p>
+          <h1>About Brand Identity Tour &amp; Travel<br/><i>in Sopore, Kashmir.</i></h1>
+          <p>Local Kashmir travel planning rooted at Bismillah Market, Sopore, Baramulla—focused on practical routes, verified stays, and honest guidance.</p>
         </div>
       </section>
 
@@ -25,16 +25,19 @@ export default function About({ onEnquire }) {
             <img
               src={siteImages.company.storefront}
               alt="Brand Identity Tour & Travel storefront at Bismillah Market, Sopore"
+              width={1024}
+              height={765}
               loading="lazy"
+              decoding="async"
             />
             <span>OUR HEAD OFFICE IN SOPORE</span>
           </div>
           <div>
             <span className="eyebrow">OUR STORY</span>
-            <h2>Rooted in the place.<br/><i>Open to the world.</i></h2>
-            <p>Headquartered at Bismillah Market in Sopore (Baramulla, Jammu & Kashmir), Brand Identity Tour & Travel brings together destination discovery, boutique stay planning, reliable transport, and attentive on-trip coordination under one roof.</p>
-            <p>Our approach is simple: understand what matters to each traveller, create a practical route and make the moving parts feel connected. Every journey should have enough structure to feel easy and enough freedom to feel personal.</p>
-            <p className="about-signature">The Brand Identity team</p>
+            <h2>Rooted in Sopore.<br/><i>Open to the world.</i></h2>
+            <p>Headquartered at Bismillah Market in Sopore (Baramulla, Jammu &amp; Kashmir, PIN 193201), Brand Identity Tour &amp; Travel (also searched locally as Brand Identity Tour and Travels) brings together destination discovery, stay coordination, private transport, and on-trip assistance under one roof.</p>
+            <p>Our approach is simple: understand what matters to each traveller, create a practical route across Srinagar, Gulmarg, Pahalgam, Sonamarg, Gurez Valley, and Doodhpathri, and confirm every inclusion clearly in writing.</p>
+            <p className="about-signature">Brand Identity Tour &amp; Travel Team · Sopore</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', alignItems: 'center' }}>
               <button className="text-link" onClick={() => onEnquire()}>Start a conversation <ArrowUpRight size={15}/></button>
               <a
@@ -70,7 +73,10 @@ export default function About({ onEnquire }) {
             <img
               src={siteImages.company.office}
               alt="Brand Identity Tour & Travel reception and traveller lounge"
+              width={1024}
+              height={765}
               loading="lazy"
+              decoding="async"
             />
             <figcaption>
               <small>SOPORE RECEPTION</small>
@@ -81,7 +87,10 @@ export default function About({ onEnquire }) {
             <img
               src={siteImages.company.meetingRoom}
               alt="Brand Identity Tour & Travel itinerary planning room"
+              width={1024}
+              height={765}
               loading="lazy"
+              decoding="async"
             />
             <figcaption>
               <small>ITINERARY CONSULTATION ROOM</small>
@@ -120,7 +129,7 @@ export default function About({ onEnquire }) {
           <div className="culture-gallery-grid">
             {[...siteImages.culture.slice(0, 4), ...siteImages.gallery.slice(0, 4)].map((item) => (
               <figure className="culture-gallery-item" key={item.src}>
-                <img src={item.src} alt={item.alt} loading="lazy" />
+                <img src={item.src} alt={item.alt} width={1024} height={765} loading="lazy" decoding="async" />
                 <figcaption>{item.alt}</figcaption>
               </figure>
             ))}

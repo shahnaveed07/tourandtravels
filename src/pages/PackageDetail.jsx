@@ -41,7 +41,11 @@ export default function PackageDetail({ onEnquire }) {
       <section className="detail-hero">
         <img
           src={item.image}
-          alt={`${item.title} scenery`}
+          alt={`${item.title} Kashmir tour scenery`}
+          width={item.imageWidth || 1024}
+          height={item.imageHeight || 572}
+          fetchPriority="high"
+          decoding="eager"
           onError={(e) => {
             e.currentTarget.onerror = null;
             e.currentTarget.src = siteImages.hero;
@@ -82,9 +86,9 @@ export default function PackageDetail({ onEnquire }) {
         <div className="container detail-layout">
           <div className="detail-main">
             <span className="eyebrow">THE JOURNEY</span>
-            <h2>A little more of <i>what's waiting.</i></h2>
+            <h2>{item.duration} {item.title} — <i>Day-by-Day Itinerary.</i></h2>
             <p className="detail-lead">
-              A carefully designed route created to help you imagine the days ahead. The final plan can be personalized to your travel dates, group size, and specific preferences.
+              A carefully designed Kashmir route created to help you visualise the days ahead. Your final plan is personalised to your travel dates, group size, stay category, and preferred pace.
             </p>
 
             {/* Day-wise Itinerary */}
@@ -163,7 +167,7 @@ export default function PackageDetail({ onEnquire }) {
           <aside className="detail-sidebar">
             <div className="booking-card">
               <span className="eyebrow">YOUR JOURNEY, YOUR WAY</span>
-              <small>Starting price from</small>
+              <small>Indicative starting estimate</small>
               <strong className="booking-price">{item.price}<em> / person</em></strong>
               <div className="booking-fact">
                 <Clock3 size={16} />

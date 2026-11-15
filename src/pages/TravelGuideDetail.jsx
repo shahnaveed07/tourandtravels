@@ -33,6 +33,10 @@ export default function TravelGuideDetail({ onEnquire }) {
         <img
           src={guide.image}
           alt={guide.title}
+          width={1024}
+          height={572}
+          fetchPriority="high"
+          decoding="eager"
           onError={(e) => {
             e.currentTarget.onerror = null;
             e.currentTarget.src = siteImages.hero;
@@ -109,6 +113,10 @@ export default function TravelGuideDetail({ onEnquire }) {
               >
                 Plan a journey <ArrowUpRight size={16} />
               </button>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '14px' }}>
+                <Link to="/packages" className="text-link">Browse packages <ArrowUpRight size={14} /></Link>
+                <Link to="/bookings" className="text-link">Official booking links <ArrowUpRight size={14} /></Link>
+              </div>
             </div>
 
             {relatedDestinations.length > 0 && (

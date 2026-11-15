@@ -1439,9 +1439,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .packages-dropdown { grid-template-columns: 1fr; gap: 16px; width: 100%; }
   .destination-dropdown { width: 100%; }
 
-  .hero-section { min-height: 520px; }
+  .hero-section { height: auto; min-height: 520px; padding: 36px 0 96px; }
+  .hero-content { height: auto; }
+  .hero-copy { margin-top: 0; padding-bottom: 18px; }
   .hero-side-note, .hero-caption { display: none; }
-  .hero-copy h1 { font-size: clamp(44px, 10vw, 64px); }
+  .hero-bottom { bottom: 56px; }
+  .hero-bottom-center { display: none; }
+  .hero-copy h1 { font-size: clamp(40px, 10.5vw, 56px); margin: 14px 0 14px; }
   .trip-finder { grid-template-columns: 1fr; padding: 14px; }
   .finder-field { border-right: 0; border-bottom: 1px solid var(--line); min-height: 50px; padding: 0 4px; }
   .quick-services { grid-template-columns: repeat(2, 1fr); row-gap: 16px; }

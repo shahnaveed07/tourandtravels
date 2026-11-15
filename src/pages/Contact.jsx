@@ -17,14 +17,14 @@ export default function Contact({ onEnquire }) {
             <span>/</span>
             <span>Contact</span>
           </div>
-          <span className="eyebrow">A GOOD JOURNEY STARTS WITH A CONVERSATION</span>
+          <span className="eyebrow">BISMILLAH MARKET, SOPORE · BARAMULLA · PIN 193201</span>
           <h1>
-            Let&apos;s talk about
+            Contact Brand Identity Tour &amp; Travel
             <br />
-            <i>somewhere.</i>
+            <i>Sopore, Baramulla, Kashmir.</i>
           </h1>
           <p>
-            Tell us where you want to go in Kashmir, when you plan to travel, and who is coming along.
+            Call +91 6006343335, message us on WhatsApp, email bookings@bittkashmir.in, or visit our Sopore travel desk in Jammu &amp; Kashmir.
           </p>
         </div>
       </section>
@@ -173,7 +173,11 @@ export default function Contact({ onEnquire }) {
             <div className="contact-visual">
               <img
                 src={siteImages.company.storefront}
-                alt="Brand Identity Tour & Travel storefront at Bismillah Market, Sopore"
+                alt="Brand Identity Tour & Travel storefront at Bismillah Market, Sopore, Baramulla"
+                width={1024}
+                height={765}
+                loading="lazy"
+                decoding="async"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = siteImages.hero;

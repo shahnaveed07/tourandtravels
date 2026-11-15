@@ -38,7 +38,11 @@ export default function Destination({ onEnquire }) {
       <section className="destination-detail-hero">
         <img
           src={place.image}
-          alt={`${place.name} landscape`}
+          alt={`${place.name} Kashmir landscape`}
+          width={place.imageWidth || 1024}
+          height={place.imageHeight || 572}
+          fetchPriority="high"
+          decoding="eager"
           onError={(e) => {
             e.currentTarget.onerror = null;
             e.currentTarget.src = siteImages.hero;
@@ -54,7 +58,7 @@ export default function Destination({ onEnquire }) {
             <span>{place.name}</span>
           </div>
           <span className="eyebrow">{place.eyebrow}</span>
-          <h1>{place.name}.</h1>
+          <h1>{place.name}, Kashmir.</h1>
           <p>{place.description}</p>
           <div className="destination-quick-facts">
             {place.bestSeason && (
@@ -76,12 +80,15 @@ export default function Destination({ onEnquire }) {
         <div className="container destination-detail-grid">
           <div>
             <span className="eyebrow">DESTINATION OVERVIEW</span>
-            <h2>Make room for<br /><i>{place.name}.</i></h2>
+            <h2>{place.name} Travel Guide<br /><i>&amp; Local Planning.</i></h2>
             <p className="destination-overview-text">
               {place.overview || place.description}
             </p>
+            {place.accessNote && (
+              <p>{place.accessNote}</p>
+            )}
             <p>
-              Whether you are planning a relaxed day trip or anchoring a week-long route around {place.name}, our team arranges private transfers, authentic valley stays, and experienced local coordination.
+              Whether you are planning a relaxed day trip or anchoring a week-long route around {place.name}, our Sopore-based team arranges private transfers, valley stays, and experienced local coordination.
             </p>
             <div className="destination-cta-block">
               <button className="text-link" onClick={() => onEnquire(`Enquiry about ${place.name}`)}>
@@ -157,7 +164,7 @@ export default function Destination({ onEnquire }) {
               </div>
               <h3>Looking for an exclusive {place.name} itinerary?</h3>
               <p>
-                We currently do not offer a fixed fixed-departure package solely for {place.name}. Because {place.name} is a tranquil and offbeat region, we tailor private bespoke itineraries based on your preferred dates, group size, and vehicle choice.
+                We currently do not offer a fixed-departure package solely for {place.name}. Because {place.name} is a tranquil and offbeat region, we tailor private bespoke itineraries based on your preferred dates, group size, and vehicle choice.
               </p>
               <button
                 className="button button-dark"
