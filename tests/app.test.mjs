@@ -193,6 +193,8 @@ test('9–10. public/sitemap.xml and public/robots.txt contain all 24 canonical 
   );
 
   const sitemapXml = fs.readFileSync(path.join(publicDir, 'sitemap.xml'), 'utf8');
+  assert.ok(sitemapXml.startsWith('<?xml version="1.0" encoding="UTF-8"?>'), 'sitemap.xml must start with UTF-8 XML declaration');
+  assert.ok(sitemapXml.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'), 'sitemap.xml must declare sitemaps.org 0.9 namespace');
   assert.ok(!sitemapXml.includes('<lastmod>'), 'sitemap.xml must not include fake lastmod dates');
 
   const locMatches = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
@@ -200,6 +202,8 @@ test('9–10. public/sitemap.xml and public/robots.txt contain all 24 canonical 
 
   assert.equal(expectedUrls.length, 24, 'Expected 24 indexable routes (1 home + 6 static + 6 dest + 8 pkg + 3 guides)');
   assert.equal(locMatches.length, 24, `Expected 24 <loc> entries in sitemap.xml, found ${locMatches.length}`);
+  assert.equal(new Set(locMatches).size, 24, 'sitemap.xml must not contain duplicate URLs');
+  assert.ok(locMatches.every((u) => u.startsWith('https://www.bittkashmir.in') && !u.includes('?')), 'All sitemap URLs must use https://www.bittkashmir.in without query strings');
   assert.ok(locMatches.includes('https://www.bittkashmir.in/payments'), 'sitemap.xml must include https://www.bittkashmir.in/payments');
   assert.ok(locMatches.includes('https://www.bittkashmir.in/bookings'), 'sitemap.xml must include https://www.bittkashmir.in/bookings');
 
@@ -246,6 +250,20 @@ test('12. Internal links, hash anchors, and external target="_blank" security at
     );
   }
 
+  // Collect declared routes from App.jsx
+  const appContent = fs.readFileSync(path.join(srcDir, 'App.jsx'), 'utf8');
+  const allowedStaticRoutes = new Set(
+    [...appContent.matchAll(/<Route\s+path="([^"]+)"/g)]
+      .map((m) => m[1])
+      .filter((p) => !p.includes(':') && p !== '*')
+  );
+  const validDynamicPrefixes = [
+    ...destinations.map((d) => `/destinations/${d.slug}`),
+    ...packages.map((p) => `/packages/${p.slug}`),
+    ...guides.map((g) => `/travel-guides/${g.slug}`),
+  ];
+  const validStaticAndDynamic = new Set([...allowedStaticRoutes, ...validDynamicPrefixes]);
+
   for (const filePath of srcFiles) {
     const content = fs.readFileSync(filePath, 'utf8');
     const relPath = path.relative(rootDir, filePath);
@@ -253,6 +271,16 @@ test('12. Internal links, hash anchors, and external target="_blank" security at
     // Check for empty or placeholder href/to values
     assert.ok(!/href\s*=\s*["'](?:#|javascript:void\(0\)|)["']/i.test(content), `Invalid empty/# href in ${relPath}`);
     assert.ok(!/\bto\s*=\s*["'](?:#|javascript:void\(0\)|)["']/i.test(content), `Invalid empty/# Link to in ${relPath}`);
+
+    // Check all static string <Link to="/..."> targets resolve cleanly
+    const staticLinkMatches = [...content.matchAll(/<(?:Link|NavLink)\b[^>]*\bto="(\/[^"]*)"/g)].map((m) => m[1]);
+    for (const rawTarget of staticLinkMatches) {
+      const cleanPath = rawTarget.split('?')[0].split('#')[0];
+      assert.ok(
+        validStaticAndDynamic.has(cleanPath),
+        `Unknown internal route target "${rawTarget}" in ${relPath}`
+      );
+    }
 
     // Check that every target="_blank" in JSX has rel="noopener noreferrer"
     const anchorTagsWithBlank = content.match(/<a\b[^>]*target=["']_blank["'][^>]*>/g) || [];
@@ -274,8 +302,8 @@ test('13. All route SEO configurations have unique titles, unique descriptions, 
     const seo = getRouteSEO(route);
     assert.ok(seo.title && seo.title.trim().length >= 20, `Route ${route} must have a descriptive title`);
     assert.ok(
-      seo.description && seo.description.trim().length >= 50,
-      `Route ${route} must have a descriptive meta description`
+      seo.description && seo.description.trim().length >= 50 && seo.description.trim().length <= 190,
+      `Route ${route} meta description (${seo.description.length} chars) must stay concise between 50 and 190 chars`
     );
 
     assert.ok(
@@ -333,7 +361,7 @@ test('14. Build-time prerender HTML injection & dist output verification', async
   const templateHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
   const sampleSeo = getRouteSEO('/packages/kashmir-valley-escape');
   const injected = injectHeadMetadata(templateHtml, sampleSeo, '<h1>Kashmir Valley Escape</h1>');
-  assert.ok(injected.includes('<title>Kashmir Valley Escape (4 Days / 3 Nights) | Brand Identity Tour &amp; Travel</title>'));
+  assert.ok(injected.includes('<title>Kashmir Valley Escape (4 Days) | Brand Identity Tour &amp; Travel</title>'));
   assert.ok(injected.includes(`<link rel="canonical" href="https://www.bittkashmir.in/packages/kashmir-valley-escape" />`));
   assert.ok(injected.includes('<div id="root"><h1>Kashmir Valley Escape</h1></div>'));
 
