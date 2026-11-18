@@ -3,17 +3,6 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "bittkashmir.in"
-        }
-      ],
-      "destination": "https://www.bittkashmir.in/",
-      "statusCode": 308
-    },
-    {
       "source": "/(.*)",
       "has": [
         {

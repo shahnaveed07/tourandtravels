@@ -606,29 +606,18 @@ test('16. Centralized bookingServices configuration, official portal URLs, Whats
 });
 
 test('17. Master SEO verification: schema fidelity, canonical/redirect config, CI config, verification file, and dist HTML checks', () => {
-  // 1. Verify vercel.json apex -> www redirects (explicit root / + wildcard /(.*)) and SPA fallback exclusions
+  // 1. Verify vercel.json apex -> www redirect (single host-specific /(.*) wildcard rule) and SPA fallback exclusions
   const vercelConfig = JSON.parse(fs.readFileSync(path.join(rootDir, 'vercel.json'), 'utf8'));
   assert.equal(vercelConfig.cleanUrls, true);
   assert.equal(vercelConfig.trailingSlash, false);
-  assert.ok(Array.isArray(vercelConfig.redirects) && vercelConfig.redirects.length >= 2);
+  assert.ok(Array.isArray(vercelConfig.redirects) && vercelConfig.redirects.length === 1);
 
-  const rootApexRedirect = vercelConfig.redirects.find(
-    (r) =>
-      r.source === '/' &&
-      Array.isArray(r.has) &&
-      r.has.some((h) => h.type === 'host' && h.value === 'bittkashmir.in')
+  const pathApexRedirect = vercelConfig.redirects[0];
+  assert.equal(pathApexRedirect.source, '/(.*)', 'vercel.json must use a single /(.*) wildcard redirect covering root / and all subpaths');
+  assert.ok(
+    Array.isArray(pathApexRedirect.has) && pathApexRedirect.has.some((h) => h.type === 'host' && h.value === 'bittkashmir.in'),
+    'vercel.json redirect must scope strictly to host bittkashmir.in'
   );
-  assert.ok(rootApexRedirect, 'vercel.json must explicitly redirect apex root (/) on bittkashmir.in to https://www.bittkashmir.in/');
-  assert.equal(rootApexRedirect.destination, 'https://www.bittkashmir.in/');
-  assert.ok(rootApexRedirect.statusCode === 308 || rootApexRedirect.permanent === true, 'Root apex redirect must be permanent (308)');
-
-  const pathApexRedirect = vercelConfig.redirects.find(
-    (r) =>
-      r.source === '/(.*)' &&
-      Array.isArray(r.has) &&
-      r.has.some((h) => h.type === 'host' && h.value === 'bittkashmir.in')
-  );
-  assert.ok(pathApexRedirect, 'vercel.json must redirect all subpaths (/(.*)) on bittkashmir.in to https://www.bittkashmir.in/$1');
   assert.equal(pathApexRedirect.destination, 'https://www.bittkashmir.in/$1');
   assert.ok(pathApexRedirect.statusCode === 308 || pathApexRedirect.permanent === true, 'Wildcard apex redirect must be permanent (308)');
 
@@ -650,11 +639,14 @@ test('17. Master SEO verification: schema fidelity, canonical/redirect config, C
     'index.html must include google-site-verification meta tag'
   );
 
-  // 3. Verify CI workflow verifies build & tests cleanly without broken Pages deployment
+  // 3. Verify CI workflow and post-deploy live smoke workflow
   const workflowYml = fs.readFileSync(path.join(rootDir, '.github', 'workflows', 'deploy.yml'), 'utf8');
   assert.ok(workflowYml.includes('npm test'));
   assert.ok(workflowYml.includes('npm run build'));
   assert.ok(!workflowYml.includes('deploy-pages'));
+  const liveSmokeYml = fs.readFileSync(path.join(rootDir, '.github', 'workflows', 'live-smoke.yml'), 'utf8');
+  assert.ok(liveSmokeYml.includes('deployment_status'));
+  assert.ok(liveSmokeYml.includes('npm run test:live'));
 
   // 4. Verify rich schema types and zero fake reviews/ratings/prices across routes
   assert.equal(travelAgencySchema.alternateName, 'Brand Identity Tour and Travels');
